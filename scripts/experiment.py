@@ -41,8 +41,8 @@ def prepare_config(path,mode=None):
     cfg=load_config(path)
     if cfg['recipe_id']!=OWNER or cfg['container_name']!='spark-ring-glm53-rocenante-experiment':
         raise ValueError('Use the isolated RoCEnante recipe/container ownership namespace')
-    if cfg['api_port']==8888 or cfg['bootstrap_port']==29551 or 'rocenante' not in Path(cfg['cache_root']).name:
-        raise ValueError('Experiment needs separate ports and local rocenante cache')
+    if cfg['bootstrap_port']==29551 or 'rocenante' not in Path(cfg['cache_root']).name:
+        raise ValueError('Experiment needs a separate bootstrap port and local rocenante cache')
     canonical(cfg)
     e=cfg.setdefault('experiment',{})
     defaults={'mode':'rocenante','transport':'prepared-rocenante-tp4','min_gather_bytes':1,

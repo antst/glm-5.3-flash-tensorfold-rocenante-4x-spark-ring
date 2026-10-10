@@ -29,6 +29,15 @@ class ExperimentTests(unittest.TestCase):
             self.assertTrue(str(cache).endswith('/rocenante'))
             self.assertTrue(any('dst=/opt/spark-ring/mesh-health.json,readonly' in v for v in args))
             self.assertIn('SIRCL_ENABLED=0',args)
+    def test_shared_api_port_retains_bootstrap_cache_and_owner_isolation(self):
+        cfg=self.config()
+        self.assertEqual(cfg['api_port'],8888)
+        argv=ExperimentOperator(cfg).command(0,Path('/unused/nccl'),'sha')[1]
+        self.assertEqual(argv[argv.index('--port')+1],'8888')
+        for field,value in (('bootstrap_port',29551),('cache_root','/var/tmp/spark-ring-original-cache'),('container_name','spark-ring-glm53-tp4')):
+            bad=copy.deepcopy(cfg);bad[field]=value
+            with self.subTest(field=field),patch('experiment.load_config',return_value=bad),self.assertRaises(ValueError):
+                prepare_config('/unused')
     def test_ab_modes_have_identical_model_transport_settings(self):
         a=self.config('nccl');b=self.config('rocenante')
         for rank in range(4):

@@ -97,9 +97,11 @@ to the Sparks by this recipe. Remote operator actions use `sudo -n -s`; do not
 disable host checks or add automatic key acceptance to make a plan execute.
 
 After compiling, return to the management host and run plans, network
-preparation, qualification and startup from the shared checkout. The experiment
-uses API port 18888; pause the original port-8888 deployment using its own
-launcher before GPU or network maintenance. Follow [recovery](system-changes.md)
-for ownership-safe rollback and post-reboot restart. Existing model/image inputs
-can be reused, while both recipes retain their separate libraries, caches,
-containers and qualification receipts.
+preparation, qualification and startup from the shared checkout. Set the current
+API port to **8888** for both alternative recipes. Stop each stack with its own
+launcher before switching or doing GPU/network maintenance; start only one
+recipe. The rank-zero client URL stays stable, without a redirect. Follow
+[recovery](system-changes.md) for ownership-safe rollback and post-reboot restart.
+Existing model/image inputs can be reused, while both recipes retain separate
+libraries, local compiler/HF caches, containers, bootstrap ports and qualification
+receipts.

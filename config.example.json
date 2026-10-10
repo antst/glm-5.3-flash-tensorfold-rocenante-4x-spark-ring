@@ -7,7 +7,7 @@
   "container_name": "spark-ring-glm53-rocenante-experiment",
   "recipe_id": "tensorfold-rocenante-experiment-v1",
   "bootstrap_port": 29561,
-  "api_port": 18888,
+  "api_port": 8888,
   "fabric_address_range": "10.77.0.0/16",
   "fabric_prefixlen": 24,
   "mtu": 9000,

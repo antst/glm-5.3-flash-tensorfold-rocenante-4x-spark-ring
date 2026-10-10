@@ -13,6 +13,14 @@ See the [finite tuning study](tuning.md) for the tested alternatives and tradeof
 Exact samples, ranges, source/settings pins and receipt hashes are in
 [final-benchmarks.json](../results/final-benchmarks.json).
 
+These retained performance runs used the source qualified for **v0.1.0**,
+with the experimental API on port **18888**. **v0.1.1** moves API admission
+and the default endpoint to **8888**; compute and transport settings are
+unchanged. The port migration is validated separately with fresh source-bound
+GPU qualification and 30-request model checks. The benchmark suites were not
+rerun for v0.1.1, and all measurements and raw-source hashes below retain
+their original run scope.
+
 Four Sparks, pinned Mia TensorFold, P8 (eight decode lanes), 1M configured context. C1/C4/C8 count concurrent clients; C1 still uses the P8 profile.
 
 Both final arms passed 30 semantic/equality requests, 120 SparkDash requests and the full 54-request RigMark suite. Source, configuration, image, patched NCCL library and settings match; only transport mode differs. The JSON retains exact receipt precision, samples and hashes.

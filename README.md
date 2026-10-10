@@ -53,10 +53,13 @@ ignored `state/`. Each host's local model copies are read-only inputs reused by
 both recipes. Native
 libraries and the added preparation framework have their own pinned identities.
 
-The experimental owner/container, API port 18888, bootstrap port 29561 and
-cache/state directories differ from phase one. The two full model copies cannot
-run concurrently on the same GPUs. Fabric changes and GPU checks require a
-coordinated stop of the baseline, using its own launcher.
+The experimental owner/container, bootstrap port 29561 and cache/state
+directories remain separate from phase one. Both alternative recipes use the
+same rank-zero API port **8888**, keeping clients on one stable URL. Stop both
+stacks with their own launchers before switching, then start only the selected
+recipe. The two full model copies cannot run concurrently on the same GPUs.
+Fabric changes and GPU checks require the baseline to be stopped. No port
+redirect or automatic handoff is needed.
 
 The source manifest excludes private inputs, builds, model weights, image
 layers and native binaries. See [provenance.json](provenance.json) for pins.
@@ -65,12 +68,12 @@ host-local work on the four Sparks. Build compilation runs on an ARM64 Spark.
 
 ## Release checkout
 
-The first source release is [v0.1.0](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.0). On the management host,
+The current source release is [v0.1.1](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.1). The initial v0.1.0 release remains historical. On the management host,
 clone it into a shared path mounted at the same absolute location on all four
 Sparks:
 
 ```sh
-git clone --branch v0.1.0 https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring.git /shared/spark-ring-tensorfold-rocenante
+git clone --branch v0.1.1 https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring.git /shared/spark-ring-tensorfold-rocenante
 cd /shared/spark-ring-tensorfold-rocenante
 ```
 
@@ -84,7 +87,9 @@ Copy `config.example.json` to ignored `local/config.json`. Set the actual shared
 path, explicit `admin@IP` destinations, management interfaces and trusted host
 key aliases. List the nodes in physical f0-next/f1-previous ring order. Keep both
 Socket Direct functions on each cable in the fabric inventory. Existing model
-snapshots and Mia's digest-pinned image can be reused from phase one.
+snapshots and Mia's digest-pinned image can be reused from phase one. Set
+`api_port` to `8888`; retain this recipe's own container, bootstrap port and local
+compiler/HF caches.
 
 Check sources and perform an offline model launch plan:
 
@@ -136,14 +141,15 @@ python3 -B scripts/experiment.py status --config local/config.json
 python3 -B scripts/experiment.py logs --config local/config.json
 ```
 
-The candidate serves on the rank-zero management IP at port 18888:
+The selected recipe serves on the rank-zero management IP at port 8888:
 
 ```sh
-python3 -B scripts/chat.py --url http://192.0.2.11:18888/v1
+python3 -B scripts/chat.py --url http://192.0.2.11:8888/v1
 ```
 
-Replace that documentation IP with the configured rank-zero address. See the
-client's `--help` for a one-shot prompt and generation settings.
+Replace that documentation IP with the configured rank-zero address. The same
+URL works when switching to the exclusive original recipe. See the client's
+`--help` for a one-shot prompt and generation settings.
 
 Validate the running eight-lane model and retain a new private receipt:
 

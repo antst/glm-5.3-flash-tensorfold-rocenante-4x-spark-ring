@@ -1,0 +1,119 @@
+{
+  "schema": "tensorfold-stable-api-validation/v1",
+  "validated_utc": "2026-10-10T12:27:16.734835+00:00",
+  "release": "v0.1.1",
+  "api_port": 8888,
+  "previous_test_api_port": 18888,
+  "world_size": 4,
+  "serving_lanes": 8,
+  "bootstrap_port": 29561,
+  "mesh_health_port": 29661,
+  "mode": "rocenante",
+  "profile": {
+    "context": 1048576,
+    "parallel": 8,
+    "multi_window": 64,
+    "cache_entries": 32,
+    "max_tokens": 32768,
+    "cache_gib": 24.0,
+    "reserve_gib": 20.0,
+    "protocol": "auto",
+    "thread_thresholds": null,
+    "nccl_channels": 4
+  },
+  "runtime_source_change": {
+    "file": "scripts/experiment.py",
+    "before_sha256": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
+    "after_sha256": "dac941cfef7cf899c4f939142be5142c086dd85adc3f9e3038973b485ac7de1a",
+    "scope": "Allow API8888; preserve independent owner/container/bootstrap/cache. Compute/transport code and knobs unchanged."
+  },
+  "current_source_sha256": {
+    "common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+    "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+    "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+    "experiment.py": "dac941cfef7cf899c4f939142be5142c086dd85adc3f9e3038973b485ac7de1a",
+    "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f",
+    "rocenante_adapter.py": "ebbd0c83359448c617dbcc9e1b34d8d2e8529504165fbf8d95de631f647927b0",
+    "qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
+    "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+    "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+    "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e"
+  },
+  "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+  "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+  "gpu_qualification": {
+    "nccl": {
+      "passed": true,
+      "run_id": "20261010T121712Z-227489f5",
+      "receipt_sha256": "41cff0850b8815e975c2d37dc8c61b4c2760a5545e2143a75d7a0a83399c4bb7"
+    },
+    "rocenante": {
+      "passed": true,
+      "run_id": "20261010T121810Z-0dad4590",
+      "receipt_sha256": "16a6ba48044e26a482a5f604791fd5b058e4533e7b0c5cbd90cfea7822702a52",
+      "flags": {
+        "qualified": true,
+        "byte_exact_passed": true,
+        "cuda_graph_passed": true,
+        "mixed_size_passed": true,
+        "inplace_passed": true,
+        "payload_all_hcas_passed": true,
+        "native_health_passed": true,
+        "host_configuration_unchanged": true,
+        "qp_diagnostics_all_hcas_passed": true,
+        "hardware_mesh_payload_passed": true,
+        "hardware_mesh_passed": true,
+        "asymmetric_cache_passed": true
+      }
+    },
+    "same_full_source_identity": true,
+    "oracle_hash_bound": true,
+    "all_16_hca_functions": true,
+    "all_8_hardware_diagonal_rules": true
+  },
+  "model_validation": {
+    "passed": true,
+    "requests": 30,
+    "receipt_sha256": "50f3db29a4580f3706b236fb4db2a6f03a54e8b8b7d0caa7965702170795d1a5",
+    "serial_draft_concurrent_equality": true,
+    "eight_clients_checked": true,
+    "live_source_and_command_binding": true,
+    "context_limit_verified": 1048576,
+    "same_visible_output_hashes_as_v0_1_0_native": true,
+    "all_16_hca_functions": true,
+    "all_8_hardware_diagonal_rules": true,
+    "host_configuration_unchanged": true
+  },
+  "cpu_suite": {
+    "passed": true,
+    "tests": 90,
+    "skipped": 0,
+    "pinned_image": true,
+    "gpu_context_created": false,
+    "receipt_sha256": "0e0e9e74b8d6fb630be840f487f7ea4c6cc85f2cfff050aceef71d7fa61325e7"
+  },
+  "benchmark_scope": {
+    "release": "v0.1.0",
+    "runtime_sources": {
+      "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+      "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+      "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+      "common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+      "experiment.py": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
+      "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+      "qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
+      "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+      "rocenante_adapter.py": "ebbd0c83359448c617dbcc9e1b34d8d2e8529504165fbf8d95de631f647927b0",
+      "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f"
+    },
+    "results": "final-benchmarks.json",
+    "results_sha256": "378e5f21bb90729f877baec764fd2898ba90d0297e9d7a26b8a43c21dd11fc6f",
+    "rerun_for_port_migration": false
+  },
+  "untested": {
+    "full_1m_input": true,
+    "eight_simultaneous_1m_inputs": true,
+    "vision": true,
+    "physical_reboot": true
+  }
+}

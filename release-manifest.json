@@ -21,20 +21,20 @@
       "sha256": "3b42432f52e018d9947f3c7276c3a5754279b8bb9a308b7dec064c2b808d44eb"
     },
     "README.md": {
-      "bytes": 8695,
-      "sha256": "73c4ee6cdf46ab86e292e7a5509a8f49d18c7865fdeb3979e2c11000cb8b4a0b"
+      "bytes": 9132,
+      "sha256": "ccab785bc0bf3021b14381d4053dee3816fda1837ebc45e3c078404ba151bab4"
     },
     "config.example.json": {
-      "bytes": 7152,
-      "sha256": "f07ee15945e4ed35c558b4215f580a92b9fffb5acb6c68bcaaa9dca2778ed48b"
+      "bytes": 7151,
+      "sha256": "4375e7a6f45fd7075fae6f63e41d3714bac2ef58d8258f29fcac2b4fa3d428b3"
     },
     "docs/benchmark-method.md": {
-      "bytes": 11677,
-      "sha256": "492d0c61edf5df0d18c1990debde22c4df64be8890e3aa432862671d79fb2d0f"
+      "bytes": 12197,
+      "sha256": "ec6622adce50cfac98abac2609787c6f9c284321679e3f349f47f7bb79d56be6"
     },
     "docs/build.md": {
-      "bytes": 6194,
-      "sha256": "b509adc4ad10ec294eafdcbef488d036f97d6acd35d776c7122bfd9dcf80a240"
+      "bytes": 6327,
+      "sha256": "3c611be5b6e10cf2493f3c3df80c63d1c22a462423ba85e915b5785dae95bbb8"
     },
     "docs/design.md": {
       "bytes": 8101,
@@ -45,12 +45,12 @@
       "sha256": "434c0f844195dfb48b8f0d3a8f1792cabc4de45e362c93e8d3817bd251cbded7"
     },
     "docs/performance.md": {
-      "bytes": 11516,
-      "sha256": "66e932119bdd914924da2e5423ea464cd399001edd8d2b512746a11da2e03734"
+      "bytes": 11995,
+      "sha256": "29a4ee4e57a8dfc9730e67547d654a6fb4a46744d48dfb3249090ebb0a261089"
     },
     "docs/system-changes.md": {
-      "bytes": 11819,
-      "sha256": "41835b232a62207ba4c287639cd1d2e8848e1ed616af91ba77eb6612191803a4"
+      "bytes": 14921,
+      "sha256": "bd87316086361cdde7a09ffaf1477548bb1b6764e94de36c1d13fb5246ed3b4f"
     },
     "docs/tuning.md": {
       "bytes": 3416,
@@ -61,8 +61,12 @@
       "sha256": "38769d5766d182fe5c03187fbc6440b0daa9d60bfd4eac01f3a5e00cf4137584"
     },
     "provenance.json": {
-      "bytes": 7767,
-      "sha256": "1e412858fbdfefaa7220847ea34550b2d31bb827a6a3274169ee52d2143556b6"
+      "bytes": 9109,
+      "sha256": "e2acc43fe75e4346ad2c23da95e2cb2f5d2746166ed4b1bd8031ec1e8e2c15ed"
+    },
+    "results/api-port-8888-validation.json": {
+      "bytes": 5197,
+      "sha256": "ffbe6b8540b0df13b836daa44c3179cece0287129210e4afcf6af608e82c4987"
     },
     "results/baseline-reference.json": {
       "bytes": 712,
@@ -125,8 +129,8 @@
       "sha256": "5ecc4e1defb3007fc248f5f33a6305d8d5c810ddd82666ee2bb31989e488f16e"
     },
     "scripts/experiment.py": {
-      "bytes": 16652,
-      "sha256": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c"
+      "bytes": 16638,
+      "sha256": "dac941cfef7cf899c4f939142be5142c086dd85adc3f9e3038973b485ac7de1a"
     },
     "scripts/network.py": {
       "bytes": 67655,
@@ -165,8 +169,8 @@
       "sha256": "7ccd4239cbb225cbe774ab44ae7aee639cfcc55e85b16ea7b415099615f85ac1"
     },
     "tests/test_experiment.py": {
-      "bytes": 9192,
-      "sha256": "aefb9862d0beeb532b52679728cc40774c28b71f988e752203c6c11e184a17c0"
+      "bytes": 9851,
+      "sha256": "b4b9cf7e94e5493fc013b2a0a17600590eeefaeb7183bb3013f5e8bc341f17c2"
     },
     "tests/test_network.py": {
       "bytes": 30978,

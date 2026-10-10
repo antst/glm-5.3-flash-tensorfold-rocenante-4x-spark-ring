@@ -1,6 +1,6 @@
 {
   "schema": "tensorfold-rocenante-provenance/v1",
-  "status": "four-rank hardware/model qualified; matched benchmarking complete; v0.1.0 source recipe",
+  "status": "four-rank hardware/model qualified at API8888; v0.1.1 source recipe; retained v0.1.0 matched benchmarks",
   "baseline_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring",
   "baseline_commit": "d6f455248bfc9c83187d89e000ec8fbdf7c19546",
   "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
@@ -140,9 +140,25 @@
     "vision_tested": false,
     "physical_reboot_tested": false,
     "max_tested_prefill_tokens": 65536,
-    "clock_power_changes": false
+    "clock_power_changes": false,
+    "source_release": "v0.1.0"
   },
   "cpu_suite": {
+    "passed": true,
+    "tests": 90,
+    "skipped": 0,
+    "pinned_image": true,
+    "gpu_context_created": false,
+    "receipt_sha256": "0e0e9e74b8d6fb630be840f487f7ea4c6cc85f2cfff050aceef71d7fa61325e7"
+  },
+  "recipe_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring",
+  "source_release": {
+    "version": "v0.1.1",
+    "url": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.1",
+    "scope": "Portable recipe sources and sanitized results; native binaries and model weights are external build/input artifacts"
+  },
+  "selected_configuration_scope": "Exact configuration and runtime source identity of the retained v0.1.0 benchmark runs; current API8888 source/qualification is separately bound in api_port_migration.",
+  "historical_v0_1_0_cpu_suite": {
     "tests": 89,
     "skipped": 0,
     "passed": true,
@@ -150,10 +166,22 @@
     "gpu_context_created": false,
     "receipt_sha256": "2e0c9747e92cc67514da1719a2f2ab8aef18af4c6e9ad75f5f5d2c25f5e94d75"
   },
-  "recipe_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring",
-  "source_release": {
-    "version": "v0.1.0",
-    "url": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.0",
-    "scope": "Portable recipe sources and sanitized results; native binaries and model weights are external build/input artifacts"
+  "api_port_migration": {
+    "from": 18888,
+    "to": 8888,
+    "release": "v0.1.1",
+    "validation_result": "results/api-port-8888-validation.json",
+    "validation_result_sha256": "ffbe6b8540b0df13b836daa44c3179cece0287129210e4afcf6af608e82c4987",
+    "runtime_source_change": {
+      "file": "scripts/experiment.py",
+      "before_sha256": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
+      "after_sha256": "dac941cfef7cf899c4f939142be5142c086dd85adc3f9e3038973b485ac7de1a",
+      "scope": "Allow API8888; preserve independent owner/container/bootstrap/cache. Compute/transport code and knobs unchanged."
+    },
+    "fresh_gpu_qualification_passed": true,
+    "fresh_model_requests": 30,
+    "network_setup_unchanged": true,
+    "compute_transport_settings_unchanged": true,
+    "performance_suites_rerun": false
   }
 }

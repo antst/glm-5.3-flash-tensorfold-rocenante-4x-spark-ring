@@ -5,11 +5,18 @@ native builds, logs and receipts. The superseded SIRCL prototype is retained
 for audit and has never been deployed. Original TensorFold image, model
 snapshots, published phase-one sources and original library stay independent.
 
-During candidate operation, the experiment serves on the rank-zero management
-address at port 18888. The independent original deployment on port 8888 is
-paused because the same four GPUs cannot hold both full model copies. Recovery
-starts the original with its own launcher after stopping the candidate and
-removing the owned mesh. There is no automatic handoff or port redirect.
+The initial development and retained benchmark runs used port **18888** for the
+candidate while the independent original deployment used 8888. Release v0.1.1
+converges both alternative recipes on the same rank-zero API port **8888**;
+18888 is a historical test endpoint. Benchmark records remain unchanged.
+
+Only one recipe runs at a time: the same four GPUs cannot hold both full model
+copies. Stop both stacks through their own launchers before switching, then
+start the selected recipe. Returning to the original also removes the candidate's
+owned mesh with the recovery steps below. Owner/container identities, bootstrap
+ports and local cache/state paths stay separate; sharing the API port does not
+merge ownership. Clients keep the same rank-zero URL. No automatic handoff or
+port redirect is installed or needed.
 
 The user authorized the mesh routes and hardware forwarding required by the
 current RoCEnante profile, followed by development, testing and performance
@@ -68,6 +75,53 @@ four hosts, including owned-route removal and preservation checks. A partial
 host reboot requires recreating all four selected model ranks together.
 Physical reboot recovery is covered by CPU mocks; an actual host reboot has
 not been tested.
+
+## Upgrade v0.1.0 to v0.1.1 without changing the mesh
+
+For an API-only upgrade, retain the existing mesh and inventory. Before editing
+any configuration or switching revisions, use the existing **v0.1.0** checkout
+and its **18888** configuration to stop the owned workers:
+
+```sh
+python3 -B scripts/experiment.py stop --config local/config.json
+```
+
+Ensure the original recipe is also stopped through its own launcher. Preserve
+the prior private configuration, qualification receipts and logs in a new
+ignored archive before replacing any canonical receipt. Confirm the tracked
+checkout is clean; retain any local changes separately rather than resetting
+or discarding them. Then fetch and select the release:
+
+```sh
+git status --short --untracked-files=no
+git fetch origin tag v0.1.1
+git checkout --detach v0.1.1
+```
+
+Set only the ignored local configuration's top-level `api_port` to **8888**.
+Keep the retained mesh/inventory, bootstrap **29561**, guardian **29661**,
+cache paths, vendor sources, libraries, model snapshots and performance knobs
+unchanged. This API-only upgrade needs no network rollback, preparation or
+application. Check the retained inventory, then rerun both qualifications:
+v0.1.1's two-line API-port guard change alters the bound `experiment.py`
+source hash, so the earlier source-bound receipts cannot authorize new workers.
+Start RoCEnante only after both qualifications pass, and validate it into a new
+output directory:
+
+```sh
+python3 -B scripts/network.py check --config local/config.json --inventory state/network-inventory.json
+python3 -B scripts/qualify.py run --config local/config.json --transport nccl
+python3 -B scripts/qualify.py run --config local/config.json --transport rocenante
+python3 -B scripts/experiment.py start --config local/config.json --mode rocenante
+python3 -B scripts/validate-model.py --config local/config.json --mode rocenante --output state/model-validation-api8888-NEW
+```
+
+The validator requires 30 new model requests and bound traffic/identity proof;
+preserve its new output alongside the earlier logs and receipts. The two recipe
+owners remain exclusive. The occupied-port preflight protects **8888** and
+fails rather than stopping another owner's listener. The release's migration
+checks are recorded in [api-port-8888-validation.json](../results/api-port-8888-validation.json);
+the retained v0.1.0 performance measurements were not rerun.
 
 The mesh is deliberately volatile. After a reboot, run the following from the
 shared checkout on the management host, with all model workers stopped. If the
@@ -156,9 +210,13 @@ identities and semantic/long-context behavior after restoration: historical
 model-success receipts and the candidate's NCCL 2.32.3/RoCEnante proof do not
 certify newly started original NCCL 2.30.7 workers.
 
-Update clients to the selected rank-zero management address and port: the
-candidate uses 18888, and baseline recovery returns to 8888. No port redirect
-is installed. Both full model copies cannot run on the same GPUs concurrently.
+Clients use the selected rank-zero management address at port **8888** for either
+exclusive recipe. Stop the candidate with its own launcher and the original
+with its own launcher before switching; the examples above preserve each
+recipe's bootstrap, container, library and cache ownership. Start only the
+chosen stack, verify it, and keep the client URL unchanged. No port redirect
+is needed. The retained 18888 measurements describe the initial test endpoint,
+not the current default.
 
 For a lightweight final observation between workloads, use the metadata and
 network checks below from the management host. Choose new receipt filenames;

@@ -133,10 +133,18 @@ correctness, or reboot recovery. Those remain separate untested scopes.
 
 ## Reproduce the final benchmarks
 
-Run from the shared recipe checkout against an idle endpoint. Use the same
-selected config for both modes; stop and start with `experiment.py` when
-switching modes. Qualify both transports after any bound configuration change.
+Run from the shared recipe checkout against an idle endpoint at the common
+rank-zero API port **8888**. Use the same selected config for the matched NCCL
+and native modes; stop and start with `experiment.py` when switching those modes.
+When switching between the original and this recipe, stop both with their own
+launchers and follow [recovery](system-changes.md) before starting the selected
+stack. The client URL stays stable; owner/container, bootstrap and local cache
+separation remains. Qualify both transports after any bound configuration change.
 Run the model validator before timing each newly started arm.
+
+Retained final benchmark receipts were measured on the initial 18888 test
+endpoint. The current reproduction commands below use 8888; historical metrics
+and endpoint records are not rewritten.
 
 The maintained clients use Python's standard library. Fetch a clean copy of
 the pinned RigMark source into ignored state, and prepare its required appliance
@@ -160,8 +168,8 @@ output directory must be new:
 
 ```sh
 python3 -B scripts/validate-model.py --config local/config.json --mode rocenante --output state/final-native-model
-python3 -B scripts/run-sparkdash.py --url http://192.0.2.11:18888 --output state/final-native-sparkdash --tokens 400 --repeats 3 --concurrency 1 4 8 --workloads prose code structured --serving-lanes 8 --context-window 1048576 --metadata local/rigmark-metadata.json
-python3 -B scripts/run-rigmark.py --source state/rigmark-source --url http://192.0.2.11:18888 --output state/final-native-rigmark --metadata local/rigmark-metadata.json
+python3 -B scripts/run-sparkdash.py --url http://192.0.2.11:8888 --output state/final-native-sparkdash --tokens 400 --repeats 3 --concurrency 1 4 8 --workloads prose code structured --serving-lanes 8 --context-window 1048576 --metadata local/rigmark-metadata.json
+python3 -B scripts/run-rigmark.py --source state/rigmark-source --url http://192.0.2.11:8888 --output state/final-native-rigmark --metadata local/rigmark-metadata.json
 ```
 
 Repeat with the identical profile in `nccl` mode and separate metadata/output
