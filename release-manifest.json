@@ -21,8 +21,8 @@
       "sha256": "3b42432f52e018d9947f3c7276c3a5754279b8bb9a308b7dec064c2b808d44eb"
     },
     "README.md": {
-      "bytes": 7993,
-      "sha256": "ecde9980650288ff128a60540878bd832b44f23f340cc85eeeba98ac8351d0eb"
+      "bytes": 8695,
+      "sha256": "73c4ee6cdf46ab86e292e7a5509a8f49d18c7865fdeb3979e2c11000cb8b4a0b"
     },
     "config.example.json": {
       "bytes": 7152,
@@ -45,8 +45,8 @@
       "sha256": "434c0f844195dfb48b8f0d3a8f1792cabc4de45e362c93e8d3817bd251cbded7"
     },
     "docs/performance.md": {
-      "bytes": 8788,
-      "sha256": "9edf1b0e3e2b562bfbda8cdd497cb8f983f8772065c85806ca3188a32a01c8ed"
+      "bytes": 11516,
+      "sha256": "66e932119bdd914924da2e5423ea464cd399001edd8d2b512746a11da2e03734"
     },
     "docs/system-changes.md": {
       "bytes": 11819,
@@ -61,8 +61,8 @@
       "sha256": "38769d5766d182fe5c03187fbc6440b0daa9d60bfd4eac01f3a5e00cf4137584"
     },
     "provenance.json": {
-      "bytes": 7387,
-      "sha256": "a7f4ffc27d924682731f8299e90fe60e576a9ae8b1441c5791239059883cff31"
+      "bytes": 7767,
+      "sha256": "1e412858fbdfefaa7220847ea34550b2d31bb827a6a3274169ee52d2143556b6"
     },
     "results/baseline-reference.json": {
       "bytes": 712,

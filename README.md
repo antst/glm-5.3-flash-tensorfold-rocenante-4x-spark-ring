@@ -63,6 +63,21 @@ layers and native binaries. See [provenance.json](provenance.json) for pins.
 The operator runs from the shared checkout on the management host. SSH executes
 host-local work on the four Sparks. Build compilation runs on an ARM64 Spark.
 
+## Release checkout
+
+The first source release is [v0.1.0](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.0). On the management host,
+clone it into a shared path mounted at the same absolute location on all four
+Sparks:
+
+```sh
+git clone --branch v0.1.0 https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring.git /shared/spark-ring-tensorfold-rocenante
+cd /shared/spark-ring-tensorfold-rocenante
+```
+
+The release includes pinned source, the source manifest and sanitized benchmark
+results. Build the native libraries using [the build guide](docs/build.md), then
+adapt the private configuration and qualify your own cluster before serving.
+
 ## Prepare
 
 Copy `config.example.json` to ignored `local/config.json`. Set the actual shared

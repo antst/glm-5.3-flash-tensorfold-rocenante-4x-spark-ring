@@ -17,6 +17,15 @@ Four Sparks, pinned Mia TensorFold, P8 (eight decode lanes), 1M configured conte
 
 Both final arms passed 30 semantic/equality requests, 120 SparkDash requests and the full 54-request RigMark suite. Source, configuration, image, patched NCCL library and settings match; only transport mode differs. The JSON retains exact receipt precision, samples and hashes.
 
+The **original recipe** uses patched NCCL 2.30.7 on the initial ring. Its fresh
+120-request SparkDash rerun was measured before the hardware-mesh changes;
+[matched-phase-one-baseline.json](../results/matched-phase-one-baseline.json)
+retains its C1/C4/C8 medians and ranges. The **matched NCCL 2.32.3 control**
+below uses the new recipe, fabric and settings with native dispatch disabled.
+It is a separate control, not the original recipe. Original-versus-native
+comparisons include the NCCL upgrade and recipe/fabric changes; the matched
+2.32.3 comparison isolates dispatch within the new setup.
+
 ## Difference from the matched NCCL control
 
 Percent differences use the unrounded JSON medians. Both profiles retain P8; C1/C4/C8 denote clients. Positive values indicate higher throughput.
@@ -35,11 +44,11 @@ Percent differences use the unrounded JSON medians. Both profiles retain P8; C1/
 
 The C8 code and counting wave ranges overlap between modes. Prose has a modest +3.25% decode median difference; C8 E2E differences are +1.10–2.25%. These three-wave results support workload-specific observations, not statistical significance or a universal speedup. The finite parameter screens use a different output length and repeat count.
 
-## Final SparkDash matrix
+## Final SparkDash matrix: NCCL 2.32.3 control and native
 
 400 output tokens, three waves per cell, greedy sampler, thinking disabled, DFlash retained. Values are tokens/s: median (minimum–maximum). Aggregate decode uses usage tokens minus one per stream divided by the span from earliest first visible content to latest last visible content. E2E includes prefill and queueing.
 
-| Workload | Clients | NCCL decode | Native decode | NCCL E2E | Native E2E |
+| Workload | Clients | NCCL 2.32.3 control decode | Native decode | NCCL 2.32.3 control E2E | Native E2E |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Prose | C1 | 88.01 (87.83–88.27) | 98.14 (97.86–98.14) | 86.19 (85.89–86.28) | 95.84 (95.53–95.84) |
 | Prose | C4 | 156.91 (156.59–157.34) | 166.82 (165.95–169.76) | 155.16 (155.05–155.33) | 164.41 (164.17–166.41) |
@@ -51,18 +60,22 @@ The C8 code and counting wave ranges overlap between modes. Prose has a modest +
 | Counting | C4 | 369.32 (368.84–371.60) | 386.16 (384.03–397.09) | 359.92 (359.72–360.69) | 374.59 (373.55–379.02) |
 | Counting | C8 | 491.81 (490.18–495.05) | 495.10 (493.40–497.30) | 481.02 (479.60–487.10) | 487.35 (485.53–489.58) |
 
-## Published Mia P8 references
+## Mia and our original/final P8 recipes
 
-| Workload | Clients | Mia TP2 | Mia TP3 | Final TP4 native decode |
-| --- | ---: | ---: | ---: | ---: |
-| Prose | C1 | — | 65.7 | 98.14 |
-| Prose | C4 | 103.2 | 121.8 | 166.82 |
-| Prose | C8 | 130.8 | 166.0 | 223.04 |
-| Code | C1 | — | 100.4 | 145.84 |
-| Code | C4 | 126.7 | 165.3 | 227.59 |
-| Code | C8 | 167.0 | 211.5 | 292.26 |
+| Workload | Clients | Mia TP2/P8 | Mia TP3/P8 | Original TP4/P8, NCCL 2.30.7 decode | Final TP4/P8 native decode |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Prose | C1 | — | 65.7 | 87.98 (87.55–88.43) | 98.14 (97.86–98.14) |
+| Prose | C4 | 103.2 | 121.8 | 157.76 (157.01–157.93) | 166.82 (165.95–169.76) |
+| Prose | C8 | 130.8 | 166.0 | 215.85 (215.62–220.46) | 223.04 (219.55–223.98) |
+| Code | C1 | — | 100.4 | 135.46 (135.45–136.05) | 145.84 (145.75–146.39) |
+| Code | C4 | 126.7 | 165.3 | 219.47 (218.70–226.16) | 227.59 (223.61–229.66) |
+| Code | C8 | 167.0 | 211.5 | 291.45 (290.64–292.07) | 292.26 (290.11–300.85) |
+| Counting | C1 | — | — | 169.10 (168.92–169.88) | 182.46 (182.01–182.73) |
+| Counting | C4 | — | — | 374.88 (374.66–374.98) | 386.16 (384.03–397.09) |
+| Counting | C8 | — | — | 498.30 (496.26–537.49) | 495.10 (493.40–497.30) |
 
-A dash means unpublished: Mia TP2/P8 C1 is unavailable for both workloads;
+Values are aggregate decode tokens/s, median (minimum–maximum) for our runs.
+A dash means unpublished: Mia TP2/P8 C1 is unavailable for both prose/code workloads;
 Mia TP3/P8 supplies the C1 points. No P8 counting reference is published.
 TP2/P4 values belong to another lane profile and are not substitutes.
 
@@ -72,18 +85,26 @@ TP2/P4 values belong to another lane profile and are not substitutes.
 
 Exact pinned RigMark protocol, seed and client settings; 15 official completed-output gates, 18 cold/replay prefill requests and 21 C1/C2/C4 short-code responses. Decode includes separately emitted reasoning where present. Concurrent headline rates are E2E. Warm replay measures prefix reuse, not fresh-input processing. Code/prose completion gates establish non-truncated output; they do not prove arbitrary generated-code correctness.
 
-| Metric, tokens/s | Alex TP4 v0.0.1 | Final NCCL | Final native |
-| --- | ---: | ---: | ---: |
-| Completed code decode | 71.326 | 111.01 (106.44–114.12) | 122.20 (117.44–125.13) |
-| Completed prose decode | 31.236 | 62.96 (60.14–63.11) | 71.23 (67.98–71.52) |
-| Completed structured decode | 109.2 | 157.54 (157.23–157.74) | 172.14 (171.62–172.41) |
-| 8192 cold prefill | 1978.119 | 1827.84 (1440.60–1831.98) | 1824.95 (1817.01–1824.99) |
-| 32768 cold prefill | 1971.556 | 1856.83 (1854.94–1858.70) | 1844.85 (1844.77–1846.11) |
-| 65536 cold prefill | 1964.652 | 1835.44 (1833.53–1835.77) | 1823.91 (1822.50–1824.81) |
-| 65536 cached replay | 36074.876 | 1090975.68 (944758.39–1149613.21) | 1003537.25 (988745.06–1035700.18) |
-| C1 short-code aggregate E2E | 43.023 | 83.46 (77.80–84.33) | 92.69 (86.50–95.67) |
-| C2 short-code aggregate E2E | 72.456 | 115.78 (114.12–118.46) | 123.64 (121.45–127.17) |
-| C4 short-code aggregate E2E | 110.814 | 161.43 (144.33–166.88) | 161.07 (160.22–169.52) |
+| Metric, tokens/s | Alex TP4 v0.0.1 | Original phase one, NCCL 2.30.7 | Matched NCCL 2.32.3 control | Final native |
+| --- | ---: | ---: | ---: | ---: |
+| Completed code decode | 71.326 | 111.723 (106.840–115.079) | 111.01 (106.44–114.12) | 122.20 (117.44–125.13) |
+| Completed prose decode | 31.236 | 62.945 (60.386–63.532) | 62.96 (60.14–63.11) | 71.23 (67.98–71.52) |
+| Completed structured decode | 109.2 | 157.059 (156.996–157.218) | 157.54 (157.23–157.74) | 172.14 (171.62–172.41) |
+| 8192 cold prefill | 1978.119 | 1798.647 (1798.448–1802.576) | 1827.84 (1440.60–1831.98) | 1824.95 (1817.01–1824.99) |
+| 32768 cold prefill | 1971.556 | 1836.370 (1831.133–1842.939) | 1856.83 (1854.94–1858.70) | 1844.85 (1844.77–1846.11) |
+| 65536 cold prefill | 1964.652 | 1816.426 (1816.192–1817.239) | 1835.44 (1833.53–1835.77) | 1823.91 (1822.50–1824.81) |
+| 65536 cached replay | 36074.876 | 983831.985 (948395.126–995292.045) | 1090975.68 (944758.39–1149613.21) | 1003537.25 (988745.06–1035700.18) |
+| C1 short-code aggregate E2E | 43.023 | 82.748 (77.535–85.969) | 83.46 (77.80–84.33) | 92.69 (86.50–95.67) |
+| C2 short-code aggregate E2E | 72.456 | 118.949 (114.014–121.843) | 115.78 (114.12–118.46) | 123.64 (121.45–127.17) |
+| C4 short-code aggregate E2E | 110.814 | 162.275 (157.384–165.935) | 161.43 (144.33–166.88) | 161.07 (160.22–169.52) |
+
+The original NCCL 2.30.7 column is the separately published full RigMark run,
+not a new RigMark rerun performed beside the final arms. Its medians/ranges
+come from the [phase-one raw receipt](https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring/blob/v0.1.0/results/rigmark-result.json).
+That raw receipt retained unknown Git identity; the separate
+[phase-one source proof](https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring/blob/v0.1.0/results/rigmark-source-proof.json)
+verifies the clean pinned RigMark checkout. All recipe columns retain their
+own run timing and source scope; Alex remains the exact v0.0.1 published arm.
 
 Against the matched local control, native cold-prefill median throughput is
 0.16% lower at 8K, 0.65% lower at 32K and 0.63% lower at 64K.
@@ -98,6 +119,11 @@ counters nor these timings establish a kernel, clock or collective cause.
 ## Historical phase one and screening
 
 [Published phase one](https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring/blob/v0.1.0/docs/benchmark-comparison.md) used NCCL 2.30.7. Its P8/C8 decode medians were 215.71 prose, 290.75 code and 537.49 counting tokens/s; these are separate historical measurements, not this final control. Its cold 64K rate was 1816.426 versus Alex 1964.652 tokens/s, with cause unresolved.
+The fresh original SparkDash rerun used in the Mia comparison above measured
+498.2960967729492 tokens/s for C8 counting, not the historical 537.4867239431126
+median. Its highest wave was 537.4946492822849 tokens/s. The historical median,
+the fresh median and the fresh maximum are distinct observations; none replaces
+the matched NCCL 2.32.3 control or the final native result.
 
 Tuning screens used 256 output tokens and two C1/C8 waves, plus one cold/replay pair at 8K/64K. They select candidates and must not be mixed with final 400-token/three-wave results or the full RigMark suite.
 
