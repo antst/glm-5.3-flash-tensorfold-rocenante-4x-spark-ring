@@ -1,0 +1,39 @@
+{
+  "schema": "tensorfold-rocenante-hardware-qualification/v1",
+  "run_id": "20261010T022518Z-88753714",
+  "finished_utc": "2026-10-10T02:28:13.292330+00:00",
+  "flags": {
+    "qualified": true,
+    "byte_exact_passed": true,
+    "cuda_graph_passed": true,
+    "mixed_size_passed": true,
+    "inplace_passed": true,
+    "payload_all_hcas_passed": true,
+    "native_health_passed": true,
+    "host_configuration_unchanged": true,
+    "qp_diagnostics_all_hcas_passed": true,
+    "hardware_mesh_payload_passed": true,
+    "hardware_mesh_passed": true,
+    "asymmetric_cache_passed": true
+  },
+  "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+  "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+  "qualification_sha256": "ef00635a72fe7ac059ba295fb932e2e3b496daa3740bb72ea8cfe05220394ad4",
+  "oracle_qualification_sha256": "42832986da8957c02e1ec0e4d818dbbd3a8cd86203ef3bdfd25d2d9e96ad9086",
+  "cases_per_rank_per_layout": 120,
+  "extra_alias_types_per_layout": 4,
+  "mixed_order_sequences_per_layout": 9,
+  "cache_layouts": [
+    "symmetric fresh processes",
+    "asymmetric fresh processes: rank-zero retained filesystem compiler/proxy cache; other ranks empty"
+  ],
+  "hosts": 4,
+  "hca_functions": 16,
+  "origin_qp_paths_per_rank": 6,
+  "hardware_diagonal_rules": 8,
+  "math": "byte-exact raw rank-major FP32/BF16/int32/int64 gather; no SIRCL or quantized communication",
+  "limits": [
+    "Standalone collectives and graph correctness are qualified; full-model inference/performance is tested separately.",
+    "Single-collective graph timings include Python enqueue and final GPU synchronization; they do not predict complete multi-collective model graph latency."
+  ]
+}

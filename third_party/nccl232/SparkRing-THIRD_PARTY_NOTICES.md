@@ -1,0 +1,478 @@
+# Third-Party Notices
+
+SparkRing is licensed under the Apache License, Version 2.0. The full license
+text is in the `LICENSE` file at the root of this repository.
+
+Copyright 2026 SparkRing contributors.
+
+This document identifies third-party material contained in this repository and
+third-party projects that this repository references, patches, or interoperates
+with. SparkRing-authored material uses Apache-2.0; included third-party
+material retains its own licenses and notices as identified below.
+
+## MiaAI-Lab DSpark recipe test fixture
+
+`runtime/deepseek-vision-exp/upstream/docker-compose.dspark.yml.gz` contains an
+unmodified Compose file from
+[MiaAI-Lab's DSpark recipe](https://github.com/MiaAI-Lab/DeepSeek-v4-Flash-DSpark-2x-DGX-Spark)
+at revision `7440c53c1f0352886e47b1909051784879fa0a24`, under the MIT License,
+Copyright (c) 2026 Tony Deangelo. The complete license is preserved in
+`runtime/deepseek-vision-exp/upstream/LICENSE`. The file is an offline test
+fixture; operators use the complete upstream checkout to obtain its hotfixes.
+
+## 1. NVIDIA NCCL (portions included)
+
+The following patch files under
+`spark_transport/nccl/` contain portions of NVIDIA
+NCCL:
+
+- `nccl-2.29.7-skip-tree-pat.patch` — against NCCL v2.29.7,
+  `src/transport/generic.cc`
+- `nccl-2.30.7-skip-tree-pat.patch` — against NCCL v2.30.7-1,
+  `src/transport/generic.cc`
+- `nccl-2.30.7-advertise-all-listener-gids.patch` — against NCCL v2.30.7-1,
+  `src/transport/net_ib/connect.cc`
+- `nccl-2.30.7-dual-pci-domain.patch` — cumulative against NCCL revision
+  `73cf112295c33aee2b895f329f592f2a9b4b0f97`, including connection routing,
+  bounded handle encoding, PCI-root selection, and CPU compatibility tests
+- `nccl-2.30.7-switchless-cycle.patch` — against NCCL v2.30.7-1,
+  `src/transport/generic.cc` and `src/transport/net_ib/connect.cc`
+
+The context and removed lines in these unified diffs are verbatim NVIDIA NCCL
+source code:
+
+> Copyright (c) 2015-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+The NCCL files these patches modify are licensed under the Apache License,
+Version 2.0, per NCCL's
+[pinned LICENSE.txt](https://raw.githubusercontent.com/NVIDIA/nccl/73cf112295c33aee2b895f329f592f2a9b4b0f97/LICENSE.txt).
+That license also identifies retained BSD and separately licensed portions of
+the complete project. The complete NCCL source tree is not distributed in this
+repository. Applying these patches and building or distributing a patched
+`libnccl` binary requires compliance with NCCL's complete `LICENSE.txt`,
+including preservation of its copyright notices and license text.
+
+The lines added by `nccl-2.30.7-advertise-all-listener-gids.patch` and
+`nccl-2.30.7-switchless-cycle.patch` are original SparkRing work. The
+image builder under `runtime/glm53-flash/` uses only
+`nccl-2.30.7-switchless-cycle.patch`. The TP4 image recipe under
+`runtime/sparkring/source_image/` uses its separately pinned cumulative
+`patches/nccl.patch`, described in Section 14. For the lines added by the two
+skip-tree patches, see Section 2.
+
+## 2. josephdrose/nccl-spark-switchless (approach credit)
+
+The switchless skip-Tree/skip-PAT approach reproduced by
+`nccl-2.29.7-skip-tree-pat.patch` and `nccl-2.30.7-skip-tree-pat.patch`
+originates from Joseph Rose's `josephdrose/nccl-spark-switchless`. That
+repository states no license. The guard reproduced in these patches is a
+minimal (approximately four-line) environment-variable check — the
+`NCCL_SKIP_TREE_CONNECT` check and its log message. No other code from that
+project is included in this repository. This entry records credit for those
+two compatibility patches. The public GLM-5.3 builder does not consume them;
+its `NCCL_SWITCHLESS_RING_ONLY` parameter and diagnostics are an independent
+SparkRing implementation.
+
+## 3. vLLM (referenced, patched, and selected source included)
+
+`integrations/vllm/deepseek_warmup/fixtures/` contains compressed DFlash
+speculator, GPU warmup and request-state sources extracted from the DeepSeek image identified
+by the adjacent `source.json`. Their vLLM contributor headers and Apache-2.0
+license are retained. The adjacent patch changes DSpark startup preparation;
+the fixtures support offline branch and shape-planning tests. Their provenance
+is the exact image and file hashes, not a claim of an unmodified upstream tree.
+
+`runtime/glm53-spark-mtp3-mesh/compute/vllm-compute-files.tar.gz` includes
+24 vLLM Python files for GLM metadata reuse, dense-kernel integration,
+the NVFP4 proposal head, deferred-weight ownership, and independent draft
+and rejection-sampling randomness. The adjacent patch provides a readable diff;
+`source-lock.json` records the base, donor revisions, and exact file hashes.
+These files derive from Local Inference Lab's vLLM fork at `3512b066` and
+`a8c796f3`, loader correction `17e341b9`, and independent-RNG backport
+`44e6766e` from [PR 653](https://github.com/local-inference-lab/vllm/pull/653),
+under Apache-2.0 with their contributor notices retained.
+
+The unified diffs under `runtime/deepseek0731-gb10/patches/` contain context
+and removed lines from vLLM, pinned to the source revision recorded by that
+runtime contract. The added lines port upstream vLLM fixes and SparkRing's
+DeepSeek GB10 integration. The maintained adapters under `integrations/vllm/`
+and the vLLM-facing files under `spark_transport/experiments/` are original
+SparkRing work. `spark_transport/integrations/vllm/` contains generated
+compatibility exports, recorded in `profiles/compatibility.json`. Adapter
+installation is not a general verification of the upstream vLLM source tree.
+
+`runtime/deepseek0731-gb10/upstream/` includes two unmodified, compressed vLLM
+protocol files from Local Inference Lab revision
+`e2666d9a65f41fc376607531453cbd57c4c71016`, their source/hash manifest, and the
+upstream Apache-2.0 license. The files retain their contributor notices and
+serve as offline inputs for Responses API model and streaming-event tests.
+
+`integrations/vllm/ipc_wait/upstream/` contains compressed SHM broadcast source
+fixtures from that same revision and the identified ARM64 R37 image, with their
+original contributor headers. Its source manifest records each origin and hash;
+the Apache-2.0 license is included. These files support CPU IPC tests and are
+not runtime replacement modules.
+
+vLLM is licensed under the Apache License, Version 2.0, Copyright the vLLM team
+and contributors. Obtaining and running vLLM is subject to its own license and
+notices. SparkRing is not a fork of vLLM.
+
+## 4. B12X / Eldritch vLLM fork (historical runtime attribution)
+
+The repository retains attribution for a private vLLM-derivative runtime
+("B12X" / "Eldritch") identified by the version string
+`0.11.2.dev279+eldritch.final.fcc6141.b12x284a2ea.fi25dd814.cu132.20260626`.
+That fork is not included in, and not published from, this repository.
+This historical identity does not describe every deployment's dependencies;
+the runtime-specific sections below identify their public source compositions.
+The separate vendored RoCEnante communication package is described in Section
+11; it is not the complete B12X model-kernel package or the Eldritch runtime.
+
+## 5. eugr/spark-vllm-docker (acknowledgment; no code included)
+
+Mod-packaging and build-cache concepts were studied from
+`eugr/spark-vllm-docker` (MIT License, Copyright 2026 Eugene Rakhmatulin). No
+code from that project was copied into this repository.
+
+## 6. RTL8127 driver (external input)
+
+RTL8127 kernel-integration experiments reference Realtek's GPL `r8127`
+(11.014.00) driver source, obtained separately under its own license. Neither
+that driver nor a kernel-handoff implementation is included here.
+
+## 7. References are not inclusion
+
+Documentation and version strings in this repository refer to third-party
+projects, including NVIDIA NCCL, vLLM, FlashInfer, the B12X/Eldritch vLLM
+fork, `josephdrose/nccl-spark-switchless`, `josephdrose/joe-spark-patches`,
+and `eugr/spark-vllm-docker`. A reference to an upstream project or design is
+not a claim that its source code is included here. Building any of the optional
+patched dependencies described in this repository requires obtaining each
+upstream project under, and complying with, that project's own license and
+notices.
+
+## 8. License headers
+
+Third-party SPDX identifiers and copyright headers must be retained verbatim.
+The vendored communication source described in Section 11 retains its
+upstream headers and license text.
+
+## 9. EXL3 R7 runtime builder components
+
+The `runtime/exl3-r7/` builder package assembles an ARM64/SM121 container image
+from the following upstream components. Git revisions or package versions and
+wheel hashes identify them in `runtime/exl3-r7/pins.json` and
+`runtime/exl3-r7/prepare_build_deps.py`. Build receipts and OCI labels retain
+their selected identities. The builder fetches complete
+component source trees at build time from their public repositories. Selected
+source subsets and fixtures included in SparkRing are identified separately
+in this document, including the vLLM files in Section 3.
+
+### 9a. local-inference-lab vLLM fork
+
+- Repository: `https://github.com/local-inference-lab/vllm.git`
+- Exact commit: `e2666d9a65f41fc376607531453cbd57c4c71016`
+- License: Apache License 2.0 (inherited from `vllm-project/vllm`)
+- Role: Built into the image as the serving engine; patched with a receipt-gated
+  integration patch (SHA-256 pinned in `pins.json`).
+
+### 9b. B12X (local-inference-lab/b12x)
+
+- Repository: `https://github.com/local-inference-lab/b12x.git`
+- Exact commit: `7cecbb2c4819636ae7f05f8b116f2c45ee2cff7b`
+- License: Apache License 2.0
+- Role: SM120/SM121 CuTe DSL kernel library for mixed-Trellis MoE, MLA
+  attention, and fused GEMM. Built into the image as a pip package from source.
+
+### 9c. ExLlamaV3 (brandonmmusic-max/exllamav3)
+
+- Repository: `https://github.com/brandonmmusic-max/exllamav3.git`
+- Exact commit: `704aefd743b390af4bd0fb429d1906f9b964c7d8`
+- License: MIT License
+- Role: EXL3 quantization encoder and extension. Cloned at build time, patched
+  with the inherited ARM64 external-collectives patch (SHA-256 pinned in the
+  Containerfile), and built in place.
+
+### 9d. InstantTensor (voipmonitor/InstantTensor)
+
+- Repository: `https://github.com/voipmonitor/InstantTensor.git`
+- Exact commit: `49b4010afc1cae0441e71fe0b0bffc24fa05e932`
+- License: Apache License 2.0
+- Role: Ultra-fast distributed Safetensors weight loader. Cloned and installed
+  as a pip package from source.
+
+### 9e. NVIDIA CUTLASS
+
+- Repository: `https://github.com/NVIDIA/cutlass.git`
+- Exact commit: `da5e086dab31d63815acafdac9a9c5893b1c69e2`
+- License: BSD-3-Clause
+- Role: CUDA Templates for high-performance linear algebra; consumed as a source
+  dependency by the vLLM build. Staged locally via
+  `prepare_build_deps.py` with a receipt-gated inventory.
+
+### 9f. Triton kernels (triton-lang/triton)
+
+- Repository: `https://github.com/triton-lang/triton.git`
+- Exact commit: `0add68262ab0a2e33b84524346cb27cbb2787356`
+- Subdirectory: `python/triton_kernels/triton_kernels`
+- License: MIT License
+- Role: Triton kernel sources consumed by the vLLM build. Staged locally via
+  `prepare_build_deps.py` with a receipt-gated inventory.
+
+### 9g. QuACK kernels
+
+- Package: `quack-kernels` 0.5.0 from the Python Package Index
+- Wheel SHA-256: `08821ebfb8e638cc20308d5c59410c6dbb3b637ccc7b07bd57c7a9261a06af74`
+- License: Apache License 2.0; the wheel contains its `LICENSE` file
+- Role: CuTe DSL kernels used by the R7 runtime. The builder applies six
+  hash-bound Python 3.12 annotation compatibility edits to `layout_utils.py`
+  and `copy_utils.py`, then verifies the resulting file hashes. The edits are
+  SparkRing-authored; the remaining files retain their upstream license.
+
+### 9h. Apache TVM FFI
+
+- Repository: `https://github.com/apache/tvm-ffi`
+- Package: `apache-tvm-ffi` 0.1.10
+- ARM64 wheel SHA-256: `3829216a8500c2f61062e48c627f6db6c3fa49416b3ffa85bc04243ae5d759f7`
+- License: Apache License 2.0
+- Notice: Copyright 2024-present The Apache Software Foundation; the wheel
+  contains the upstream `LICENSE` and `NOTICE` files.
+- Role: ARM64 FFI runtime installed under `/opt/sparkring-r7-tvm-ffi` and
+  selected by the profile's `PYTHONPATH`.
+
+### 9i. Inherited base image
+
+The R7 image is built from an operator-supplied ARM64 parent image. The parent
+is identified by an immutable sha256 image ID (`BASE_IMAGE_ID`), never a
+mutable tag alone, and the build uses the resolved image ID. This repository
+does not establish one universal parent-image license: the builder therefore
+requires the audited SPDX expression for the exact parent as
+`BASE_IMAGE_LICENSES`. The value is recorded as
+`org.sparkring.parent.licenses` and included in the image's combined OCI
+license expression. A registry publisher must audit the parent image's source,
+license, and redistribution terms before publishing a derived image.
+
+### 9j. OCI provenance labels
+
+The built image records component revisions and package identities in its
+labels. Labels also identify the source repository
+(`org.opencontainers.image.source`), license
+(`org.opencontainers.image.licenses`), and the parent image's immutable ID
+(`org.sparkring.parent.image-id`). Building or distributing the image requires
+compliance with each component's license, including preservation of copyright
+notices and license texts.
+
+## 10. GLM-5.3 Flash profile artifacts (referenced; not included)
+
+The qualified GLM-5.3 Flash TP4/DCP4 operator image identified by
+`runtime/glm53-flash-jj-r8-gb10/pins.json` references model and runtime
+artifacts that are not distributed in this repository:
+
+- `local-inference-lab/GLM-5.3-Flash-NVFP4` revision
+  `520de24eabf507659eaef7c70f14fd584527facc`, MIT, used as the ModelOpt
+  mixed-precision target checkpoint;
+- `incoai/GLM-5.3-Flash-DFlash2` revision
+  `dc77ff1c99eeb2df044ee3d4f0094eb033fee410`, CC BY-NC-ND 4.0, used as
+  the BF16 speculative drafter; its model card limits use to research and
+  evaluation and directs commercial licensing inquiries to Inco AI;
+- `FujitsuPolycom/vllm` commit
+  `e02b174693e13859de61811b5e8cd13d5308e259`, Apache-2.0, used as the
+  active Python serving runtime. That composition includes public B12X KDA
+  prefill commit `54371894ecaa77f2725a1c99e018f3fe93d358dd`, per-process KDA
+  workspace-isolation commit `57a6169a5c229a5ca8c24791762b1fc51c89e58d`,
+  sparse-MLA DSA commit `d662a1b0890271915c25439f22247ee22234739a`,
+  C4 indexer-binding commit `d6687475a3f2dbe7848663fd3e5174d90921a3da`,
+  and sparse-MLA cache-length commit
+  `83cb22a0e3f7ec4d2fb43f6ead34ba4d4a87a634`;
+- `local-inference-lab/vllm` commit
+  `da4d7be6c97434f6942292ed8abbf4b32dc44355`, Apache-2.0, used as the
+  source parent for retained ARM64 native extensions built at
+  `3633d61c3c7b04bb4d598cadbdc342f3be40482d`; and
+- `voipmonitor/b12x` commit
+  `9ae41c5cb9935d740456479954b0089f80bd2ef2`, used as the GB10 attention,
+  KDA, linear, and MoE kernel implementation under Apache-2.0 and its
+  repository notices.
+
+SparkRing records these identities and validates compatible image content; it
+does not include model weights or the complete vLLM/B12X source trees in this
+Git repository. The selected vLLM files in Section 3 and B12X communication
+source in Section 11 are included. Published runtime images contain the
+pinned vLLM and B12X packages under their respective licenses. Operators
+must obtain each artifact under its own terms. The exact operator-image
+composition is in `runtime/glm53-flash-jj-r8-gb10/pins.json` and
+`runtime/glm53-flash-jj-r8-gb10/glm53-dcp4-sircl-public-image-receipt.json`.
+
+The separate source-complete TP4/DCP1 builder under `runtime/glm53-flash/`
+remains bound to `local-inference-lab/vllm` commit
+`da4d7be6c97434f6942292ed8abbf4b32dc44355` and
+`local-inference-lab/b12x` commit
+`2fcf23a0ce269be27b2e03fece73d46e90e6aeea`. Its identities are recorded in
+`runtime/glm53-flash/pins.json`; they do not identify the qualified TP4/DCP4
+operator image above.
+
+## 11. B12X RoCEnante communication source (included)
+
+`third_party/b12x_roce/b12x/comm/roce/` contains the selected RoCEnante
+communication package derived from
+[`local-inference-lab/b12x` PR 295](https://github.com/local-inference-lab/b12x/pull/295),
+whose recorded upstream base commit is
+`ffb7442d04a9f50b950df1fb17280acad881b7d5`. The included source is modified
+for the six-QP, two-path peer mapping used by SparkRing's hardware-forwarded
+mesh. It does not include the other B12X modules or model kernels.
+
+The complete selected package, canonical tree digest, and source revision
+are recorded in `third_party/b12x_roce/provenance.json`. Its upstream
+Apache-2.0 license is retained as `third_party/b12x_roce/LICENSE`, and
+copyright notices remain in the source files. Distribution must preserve
+those notices and that license.
+
+`runtime/releases/glm53-spark-mtp3-managed-mesh-tp4/compatibility-sources.tar.gz`
+retains the matching C proxy and SparkRing adapter, with provenance and the
+published bundle manifest, for source reproduction. These sources retain the
+same Apache-2.0 licensing; the repository's `LICENSE` supplies the license text.
+
+The SparkRing vLLM adapter also draws integration ideas from
+[`local-inference-lab/vllm` PR 597](https://github.com/local-inference-lab/vllm/pull/597),
+including capability agreement and the synchronized output-health boundary.
+The adapter has its own source binding; PRs 295 and 597 are design and donor
+references rather than two unchanged installed packages.
+
+The MTP3 profile references
+`local-inference-lab/GLM-5.3-Flash-NVFP4-Spark` revision
+`df116c4fb16b1d37ae43d2cfd624de26ffbc832e`. Its weights are not included.
+Operators must obtain and use that checkpoint under its own license and
+notices. MTP uses its included prediction layer and does not require
+an external DFlash checkpoint.
+
+## 12. B12X selector source and MoE scale sharing
+
+The MTP3 compute package downloads B12X revision
+`ef308bac0f3b3eb8fea63e4013afc0c2ea1c6301`, including its shared native NVFP4
+scales for A4/A16 MoE paths. Three selector Python files are included in
+`runtime/glm53-spark-mtp3-mesh/compute/b12x-selector-files.tar.gz` from
+[B12X PR 316](https://github.com/local-inference-lab/b12x/pull/316), revision
+`9ac142824b4edb750892a0fb63d914230086495d`. They implement the top-k-512
+candidate buffer, exact overflow handling, and omission of unused terminal
+scores. These files are licensed under Apache-2.0; source notices are retained.
+The repository's [LICENSE](LICENSE) supplies the Apache-2.0 text for the included
+source, and the downloaded B12X archive retains its upstream license. The compute source lock
+binds the source archive and each base/result file hash.
+
+## 13. MiaAI DeepSeek DGX Spark launcher (adapted GID policy)
+
+The NCCL host-channel-adapter selector handling, per-member RoCEv2 GID
+validation, and automatic unset-index policy in
+`scripts/nccl_ib_gid_policy.sh`, together with the corresponding CPU-only test
+cases in `scripts/test_deepseek_v4_pair_launcher.py`, adapt the behavior and
+test approach from
+`MiaAI-Lab/DeepSeek-v4-Flash-DSpark-2x-DGX-Spark` at commit
+`d3d48f5c49a627ea29ba465d29854228a8e6ee91`. SparkRing's implementation is
+tailored to its one-rank-per-host pair and cycle launchers.
+
+The upstream project is distributed under the MIT License:
+
+> Copyright (c) 2026 Tony Deangelo
+>
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+>
+> The above copyright notice and this permission notice shall be included in all
+> copies or substantial portions of the Software.
+>
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
+
+## 14. GLM TP4 source image patches
+
+The unified diffs in `runtime/sparkring/source_image/patches/` contain upstream
+source context and modifications used to reproduce the serving packages and
+NCCL library. `glm53-tp4-lock.json` binds the public base commits, patch hashes,
+resulting source trees, and installed file inventories.
+
+| Patch | Public source base | License and scope |
+|---|---|---|
+| `vllm.patch` | Local Inference Lab vLLM, `2a979314dc97b03173a0a76fc15664ec924db32b` | Apache-2.0; vLLM and contributor notices retained |
+| `b12x.patch` | Local Inference Lab B12X, `85a08f47750db333a33ab3eae245a0a08452d04c` | Apache-2.0; B12X kernel and contributor notices retained |
+| `sparkcache.patch` | FujitsuPolycom SparkCache, `6be08c1fff14d66de6dbbbd60c00dba3816e649a` | Apache-2.0; package and snapshot-library sources; installation does not enable the serving connector |
+| `nccl.patch` | NVIDIA NCCL, `73cf112295c33aee2b895f329f592f2a9b4b0f97` | Apache-2.0 for modified NCCL files; preserves switchless routing and independent PCIe-domain selection |
+
+Preparation downloads the pinned source repositories and retains their license
+files in the build archives. NCCL's complete license and third-party notices
+remain applicable to the built library. Source preparation does not distribute
+model weights. The parent image also contains CUDA, framework and kernel
+dependencies governed by their respective licenses; rebuilding this recipe
+does not replace or remove those obligations.
+
+## 15. DeepSeek-V4.1-Flash GB10 profile artifacts
+
+### 15a. tonyd2wild/DeepSeek-V4.1-Flash-vLLM-DGX-Spark (patches included)
+
+`runtime/deepseek-v41-gb10/patches/` contains seven Python files derived from
+https://github.com/tonyd2wild/DeepSeek-V4.1-Flash-vLLM-DGX-Spark (`patch/` directory, boot 9,
+MIT License, Copyright (c) 2026 tonyd2wild; SM12x page-size and top-k fixes authored by Kai as
+credited in that repository). They are bind-mounted over the vLLM `dsv41-feat` tree at launch and
+are modified files of vLLM (Apache-2.0). Six retain the recorded upstream bytes;
+`engram.py` additionally contains SparkRing contributor changes for balanced
+hash-column assignment and packed single-read shards. The Engram-on-disk
+method originates in the upstream project.
+
+`runtime/deepseek-v41-gb10/tools/prewarm5.py` and
+`runtime/deepseek-v41-gb10/tools/verify5.py` are from the same repository, as are
+the benchmark method, prompt set and harnesses referenced by
+`performance/records/deepseek-v41-flash/`. The exact mounted patch files and
+mount manifest are recorded in `runtime/deepseek-v41-gb10/patches/MD5SUMS`;
+that manifest does not cover the two tools. `.ruff.toml` excludes the patch
+and tool directories from linting.
+
+### 15b. vLLM `dsv41-feat` branch (referenced; built into the operator's image)
+
+`runtime/deepseek-v41-gb10/build-image.sh` copies the Python tree of `vllm-project/vllm`
+commit `e47aa780bccf59f59dfa2cbb18e17a10b4fe69ba` (Apache-2.0) over the `vllm/vllm-openai`
+nightly image and rebuilds `_C_stable_libtorch` from that tree with NVIDIA CUTLASS v4.7.1
+(BSD-3-Clause). This builder obtains its vLLM tree externally; the selected
+vLLM source subsets included in SparkRing are described in Sections 3 and 15a.
+
+### 15c. FlashInfer (referenced; built into the operator's image)
+
+The image builds FlashInfer commit `07869c61ba581e6d6b8ad8d142f4a6c89b707cc1` (Apache-2.0)
+with its pinned CUTLASS, CCCL and spdlog submodules. No FlashInfer source is included here.
+
+### 15d. Model weights (not included)
+
+`deepseek-ai/DeepSeek-V4.1-Flash` is distributed by DeepSeek under the MIT License. No weights or
+model files are included; operators fetch the checkpoint themselves.
+
+
+## 16. Mia DeepSeek V4.1 SGLang adapter (external build input)
+
+`runtime/deepseek-v41-sglang/build-image.sh` clones
+[MiaAI-Lab/DeepSeek-v4.1-Flash-DGX-Sparks](https://github.com/MiaAI-Lab/DeepSeek-v4.1-Flash-DGX-Sparks)
+at commit `79f656a65f189239cc575bf5c5d1b5cf579d4c41` (AGPL-3.0). The adapter,
+`boot.py`, row store, and Engram packer remain in that external repository and
+the operator-built image; none of those files are vendored here. The external
+Dockerfile also carries SGLang's Apache-2.0 FlashMLA wrapper. SparkRing's auth
+patch targets the Apache-2.0 SGLang auth module in the pinned base image and
+preserves its surrounding source; its optional NVFP4 draft overlay patch does the
+same for SGLang's Apache-2.0 `modelopt_quant` module (one platform branch). Operators retain the external components'
+licenses and notices with their builds.
+
+The optional shared-image builder `runtime/images/sglang_extension.py` independently
+pins Mia commit `e59e6eb67479aa68f6fa700c600dc90a0729b5ec` in
+[its composition manifest](runtime/deepseek-v41-sglang/combined-image/manifest.json).
+Its build context records integration edits to CUDA
+runtime selection and checkpoint-revision metadata; the resulting image retains
+the complete adapter source and its license under `/opt/dsv41`.
+`runtime/deepseek-v41-sglang/patches/` contains Apache-2.0 SGLang patches from
+commits `0d5e663b8f8d80a6caec2a7f7ce4eed6394756b7` and
+`cb8dd033ab54af8904733199dbae94270c3395ce`, with the second adapted to the pinned
+backend's candidate-mask interface. The patch headers retain upstream authorship;
+the adjacent manifest records original and adapted content hashes.

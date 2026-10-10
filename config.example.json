@@ -1,0 +1,252 @@
+{
+  "shared_root": "/shared/spark-ring-tensorfold-rocenante",
+  "model_root": "/var/tmp/spark-ring-models",
+  "cache_root": "/var/tmp/spark-ring-tensorfold-rocenante-cache",
+  "library": "/shared/spark-ring-tensorfold-rocenante/lib/nccl/libnccl.so.2",
+  "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+  "container_name": "spark-ring-glm53-rocenante-experiment",
+  "recipe_id": "tensorfold-rocenante-experiment-v1",
+  "bootstrap_port": 29561,
+  "api_port": 18888,
+  "fabric_address_range": "10.77.0.0/16",
+  "fabric_prefixlen": 24,
+  "mtu": 9000,
+  "ssh_options": {
+    "known_hosts_file": "known_hosts"
+  },
+  "profile": {
+    "context": 1048576,
+    "parallel": 8,
+    "multi_window": 64,
+    "cache_entries": 32,
+    "max_tokens": 32768,
+    "cache_gib": 24.0,
+    "reserve_gib": 20.0,
+    "protocol": "auto",
+    "thread_thresholds": null,
+    "nccl_channels": 4
+  },
+  "nodes": [
+    {
+      "name": "spark1",
+      "ssh": "admin@192.0.2.11",
+      "host_key_alias": "spark1",
+      "management_address": "192.0.2.11",
+      "management_interface": "enP7s7",
+      "fabric": [
+        {
+          "interface": "enp1s0f0np0",
+          "hca": "rocep1s0f0",
+          "address": "10.77.41.1",
+          "prefixlen": 24,
+          "physical_port": 0,
+          "rail": 0,
+          "peer_rank": 1,
+          "peer_interface": "enp1s0f1np1"
+        },
+        {
+          "interface": "enP2p1s0f0np0",
+          "hca": "roceP2p1s0f0",
+          "address": "10.77.141.1",
+          "prefixlen": 24,
+          "physical_port": 0,
+          "rail": 1,
+          "peer_rank": 1,
+          "peer_interface": "enP2p1s0f1np1"
+        },
+        {
+          "interface": "enp1s0f1np1",
+          "hca": "rocep1s0f1",
+          "address": "10.77.12.1",
+          "prefixlen": 24,
+          "physical_port": 1,
+          "rail": 0,
+          "peer_rank": 3,
+          "peer_interface": "enp1s0f0np0"
+        },
+        {
+          "interface": "enP2p1s0f1np1",
+          "hca": "roceP2p1s0f1",
+          "address": "10.77.112.1",
+          "prefixlen": 24,
+          "physical_port": 1,
+          "rail": 1,
+          "peer_rank": 3,
+          "peer_interface": "enP2p1s0f0np0"
+        }
+      ]
+    },
+    {
+      "name": "spark4",
+      "ssh": "admin@192.0.2.14",
+      "host_key_alias": "spark4",
+      "management_address": "192.0.2.14",
+      "management_interface": "enP7s7",
+      "fabric": [
+        {
+          "interface": "enp1s0f0np0",
+          "hca": "rocep1s0f0",
+          "address": "10.77.34.4",
+          "prefixlen": 24,
+          "physical_port": 0,
+          "rail": 0,
+          "peer_rank": 2,
+          "peer_interface": "enp1s0f1np1"
+        },
+        {
+          "interface": "enP2p1s0f0np0",
+          "hca": "roceP2p1s0f0",
+          "address": "10.77.134.4",
+          "prefixlen": 24,
+          "physical_port": 0,
+          "rail": 1,
+          "peer_rank": 2,
+          "peer_interface": "enP2p1s0f1np1"
+        },
+        {
+          "interface": "enp1s0f1np1",
+          "hca": "rocep1s0f1",
+          "address": "10.77.41.4",
+          "prefixlen": 24,
+          "physical_port": 1,
+          "rail": 0,
+          "peer_rank": 0,
+          "peer_interface": "enp1s0f0np0"
+        },
+        {
+          "interface": "enP2p1s0f1np1",
+          "hca": "roceP2p1s0f1",
+          "address": "10.77.141.4",
+          "prefixlen": 24,
+          "physical_port": 1,
+          "rail": 1,
+          "peer_rank": 0,
+          "peer_interface": "enP2p1s0f0np0"
+        }
+      ]
+    },
+    {
+      "name": "spark3",
+      "ssh": "admin@192.0.2.13",
+      "host_key_alias": "spark3",
+      "management_address": "192.0.2.13",
+      "management_interface": "enP7s7",
+      "fabric": [
+        {
+          "interface": "enp1s0f0np0",
+          "hca": "rocep1s0f0",
+          "address": "10.77.23.3",
+          "prefixlen": 24,
+          "physical_port": 0,
+          "rail": 0,
+          "peer_rank": 3,
+          "peer_interface": "enp1s0f1np1"
+        },
+        {
+          "interface": "enP2p1s0f0np0",
+          "hca": "roceP2p1s0f0",
+          "address": "10.77.123.3",
+          "prefixlen": 24,
+          "physical_port": 0,
+          "rail": 1,
+          "peer_rank": 3,
+          "peer_interface": "enP2p1s0f1np1"
+        },
+        {
+          "interface": "enp1s0f1np1",
+          "hca": "rocep1s0f1",
+          "address": "10.77.34.3",
+          "prefixlen": 24,
+          "physical_port": 1,
+          "rail": 0,
+          "peer_rank": 1,
+          "peer_interface": "enp1s0f0np0"
+        },
+        {
+          "interface": "enP2p1s0f1np1",
+          "hca": "roceP2p1s0f1",
+          "address": "10.77.134.3",
+          "prefixlen": 24,
+          "physical_port": 1,
+          "rail": 1,
+          "peer_rank": 1,
+          "peer_interface": "enP2p1s0f0np0"
+        }
+      ]
+    },
+    {
+      "name": "spark2",
+      "ssh": "admin@192.0.2.12",
+      "host_key_alias": "spark2",
+      "management_address": "192.0.2.12",
+      "management_interface": "enP7s7",
+      "fabric": [
+        {
+          "interface": "enp1s0f0np0",
+          "hca": "rocep1s0f0",
+          "address": "10.77.12.2",
+          "prefixlen": 24,
+          "physical_port": 0,
+          "rail": 0,
+          "peer_rank": 0,
+          "peer_interface": "enp1s0f1np1"
+        },
+        {
+          "interface": "enP2p1s0f0np0",
+          "hca": "roceP2p1s0f0",
+          "address": "10.77.112.2",
+          "prefixlen": 24,
+          "physical_port": 0,
+          "rail": 1,
+          "peer_rank": 0,
+          "peer_interface": "enP2p1s0f1np1"
+        },
+        {
+          "interface": "enp1s0f1np1",
+          "hca": "rocep1s0f1",
+          "address": "10.77.23.2",
+          "prefixlen": 24,
+          "physical_port": 1,
+          "rail": 0,
+          "peer_rank": 2,
+          "peer_interface": "enp1s0f0np0"
+        },
+        {
+          "interface": "enP2p1s0f1np1",
+          "hca": "roceP2p1s0f1",
+          "address": "10.77.123.2",
+          "prefixlen": 24,
+          "physical_port": 1,
+          "rail": 1,
+          "peer_rank": 2,
+          "peer_interface": "enP2p1s0f0np0"
+        }
+      ]
+    }
+  ],
+  "experiment": {
+    "mode": "rocenante",
+    "transport": "prepared-rocenante-tp4",
+    "max_gather_bytes": 4194304,
+    "paths_per_peer": 2,
+    "network_policy": "explicit-owned-mesh",
+    "sircl_enabled": false,
+    "scope": "all-gather",
+    "min_gather_bytes": 1,
+    "vendor_root": "third_party/prepared-b12x",
+    "vendor_manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89",
+    "timeout_seconds": 600,
+    "compile_workers": 0,
+    "forward_window_bytes": 65536,
+    "forward_chunk_bytes": 16384,
+    "native_blocks": 8
+  },
+  "network": {
+    "endpoint_route_strategy": "adjacent_gateway",
+    "marker_binary": "lib/mesh/mlx5-rdma-tx-marker",
+    "marker_receipt": "lib/mesh/build-receipt.json",
+    "upstream_planner": "third_party/sparkring/fabric.py",
+    "upstream_planner_sha256": "b201ede9554bd6a02cc09a07a6accf242a63b2d46744bab9132ee4a7e318dbda",
+    "health_port": 29661
+  }
+}

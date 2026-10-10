@@ -1,0 +1,146 @@
+{
+  "schema": "tensorfold-rocenante-matched-baseline/v1",
+  "measurement": "phase-one TensorFold EXL3 with patched NCCL2.30.7; before fabric modification",
+  "raw_result_sha256": "5d011c1245b988e459f5d5387d9d04b21dbc869f277981b8adccec83d5c2a1f5",
+  "started_utc": "2026-10-10T01:46:14.114777+00:00",
+  "finished_utc": "2026-10-10T01:49:31.434180+00:00",
+  "passed": true,
+  "protocol": {
+    "tokens": 400,
+    "repeats": 3,
+    "workloads": [
+      "prose",
+      "code",
+      "structured"
+    ],
+    "concurrency": [
+      1,
+      4,
+      8
+    ],
+    "configured_context_window": 1048576,
+    "configured_serving_lanes": 8,
+    "expected_inference_requests": 120,
+    "warmup_tokens": 32
+  },
+  "request_audit": {
+    "expected_inference_requests": 120,
+    "requests_before": 280,
+    "requests_after": 400,
+    "requests_delta": 120,
+    "request_count_verified": true,
+    "external_requests_or_counter_change_detected": false,
+    "limitations": "Counters cover warmups and measured requests, not /health or /v1/models. Matching counts cannot prove absence of all other resource contention."
+  },
+  "metrics": {
+    "decode": "SparkDash: sum(completion_tokens-1) / (latest last content timestamp-earliest first content timestamp)",
+    "end_to_end": "sum(completion_tokens) / full concurrent client request wall time",
+    "ttft": "request start to first nonempty content event; repeated prompts may reuse prefixes"
+  },
+  "rows": [
+    {
+      "kind": "prose",
+      "concurrency": 1,
+      "sparkdash_aggregate_decode_tokens_per_second_median": 87.98487728398005,
+      "decode_range": [
+        87.55233362780592,
+        88.43278778663776
+      ],
+      "aggregate_end_to_end_tokens_per_second_median": 86.07773334572349,
+      "ttft_median_seconds": 0.11228185147047043
+    },
+    {
+      "kind": "prose",
+      "concurrency": 4,
+      "sparkdash_aggregate_decode_tokens_per_second_median": 157.75830667437106,
+      "decode_range": [
+        157.01090685652161,
+        157.92975787438348
+      ],
+      "aggregate_end_to_end_tokens_per_second_median": 155.69236043543088,
+      "ttft_median_seconds": 0.303713645786047
+    },
+    {
+      "kind": "prose",
+      "concurrency": 8,
+      "sparkdash_aggregate_decode_tokens_per_second_median": 215.84692703984888,
+      "decode_range": [
+        215.61526032850142,
+        220.46044690909156
+      ],
+      "aggregate_end_to_end_tokens_per_second_median": 214.482109283321,
+      "ttft_median_seconds": 0.43508373759686947
+    },
+    {
+      "kind": "code",
+      "concurrency": 1,
+      "sparkdash_aggregate_decode_tokens_per_second_median": 135.45734724121255,
+      "decode_range": [
+        135.44614921234057,
+        136.05152525011306
+      ],
+      "aggregate_end_to_end_tokens_per_second_median": 129.45464109031792,
+      "ttft_median_seconds": 0.14696504175662994
+    },
+    {
+      "kind": "code",
+      "concurrency": 4,
+      "sparkdash_aggregate_decode_tokens_per_second_median": 219.46640011570034,
+      "decode_range": [
+        218.70407817864526,
+        226.16194512089285
+      ],
+      "aggregate_end_to_end_tokens_per_second_median": 215.32866262605748,
+      "ttft_median_seconds": 0.25680726021528244
+    },
+    {
+      "kind": "code",
+      "concurrency": 8,
+      "sparkdash_aggregate_decode_tokens_per_second_median": 291.45202930694825,
+      "decode_range": [
+        290.64186147149485,
+        292.0705527843438
+      ],
+      "aggregate_end_to_end_tokens_per_second_median": 288.16481349365796,
+      "ttft_median_seconds": 0.5577251110225916
+    },
+    {
+      "kind": "structured",
+      "concurrency": 1,
+      "sparkdash_aggregate_decode_tokens_per_second_median": 169.09956963658408,
+      "decode_range": [
+        168.91637235908632,
+        169.8772582821723
+      ],
+      "aggregate_end_to_end_tokens_per_second_median": 162.25832694313996,
+      "ttft_median_seconds": 0.10011117532849312
+    },
+    {
+      "kind": "structured",
+      "concurrency": 4,
+      "sparkdash_aggregate_decode_tokens_per_second_median": 374.8834283826799,
+      "decode_range": [
+        374.66219500372216,
+        374.98076217425194
+      ],
+      "aggregate_end_to_end_tokens_per_second_median": 365.8281062288347,
+      "ttft_median_seconds": 0.282178932800889
+    },
+    {
+      "kind": "structured",
+      "concurrency": 8,
+      "sparkdash_aggregate_decode_tokens_per_second_median": 498.2960967729492,
+      "decode_range": [
+        496.2649629885665,
+        537.4946492822849
+      ],
+      "aggregate_end_to_end_tokens_per_second_median": 490.67477412427337,
+      "ttft_median_seconds": 0.40917730890214443
+    }
+  ],
+  "limits": [
+    "GPU telemetry snapshot was captured earlier, before this measured run, rather than under benchmark load.",
+    "Three waves are a matched reference, not a claim of universal maximum throughput.",
+    "Mia and Alex publications use their own machines and configurations; compare as published whole-system results."
+  ]
+}

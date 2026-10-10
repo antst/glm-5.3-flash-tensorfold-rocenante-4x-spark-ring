@@ -1,0 +1,4914 @@
+{
+  "arms": {
+    "control": {
+      "arm_receipt_sha256": "6564a4c2ef66caab686672900cb8bae1a23d03f1541d81a691ffe552f5c7c899",
+      "benchmark_traffic": {
+        "rigmark": {
+          "asic_rules": [
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 0,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 0,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 1,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 1,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 2,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 2,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 3,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 3,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            }
+          ],
+          "functions": [
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 3318119648,
+                "rx_vport_rdma_unicast_packets": 27952344,
+                "tx_vport_rdma_unicast_bytes": 924992078290,
+                "tx_vport_rdma_unicast_packets": 245181397
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 924908239164,
+                "rx_vport_rdma_unicast_packets": 244537112,
+                "tx_vport_rdma_unicast_bytes": 3234103388,
+                "tx_vport_rdma_unicast_packets": 27305202
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 3346120394,
+                "rx_vport_rdma_unicast_packets": 28200293,
+                "tx_vport_rdma_unicast_bytes": 929042147196,
+                "tx_vport_rdma_unicast_packets": 246358018
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 929002867364,
+                "rx_vport_rdma_unicast_packets": 246055776,
+                "tx_vport_rdma_unicast_bytes": 3306757048,
+                "tx_vport_rdma_unicast_packets": 27896704
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 3298886084,
+                "rx_vport_rdma_unicast_packets": 27803566,
+                "tx_vport_rdma_unicast_bytes": 924973052426,
+                "tx_vport_rdma_unicast_packets": 245035969
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 924992078290,
+                "rx_vport_rdma_unicast_packets": 245181397,
+                "tx_vport_rdma_unicast_bytes": 3318119648,
+                "tx_vport_rdma_unicast_packets": 27952344
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 3281473902,
+                "rx_vport_rdma_unicast_packets": 27702609,
+                "tx_vport_rdma_unicast_bytes": 928977570950,
+                "tx_vport_rdma_unicast_packets": 245861467
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 929042147196,
+                "rx_vport_rdma_unicast_packets": 246358018,
+                "tx_vport_rdma_unicast_bytes": 3346120394,
+                "tx_vport_rdma_unicast_packets": 28200293
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 3268850438,
+                "rx_vport_rdma_unicast_packets": 27572113,
+                "tx_vport_rdma_unicast_bytes": 924942973752,
+                "tx_vport_rdma_unicast_packets": 244803822
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 924973052426,
+                "rx_vport_rdma_unicast_packets": 245035969,
+                "tx_vport_rdma_unicast_bytes": 3298886084,
+                "tx_vport_rdma_unicast_packets": 27803566
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 3283689416,
+                "rx_vport_rdma_unicast_packets": 27719336,
+                "tx_vport_rdma_unicast_bytes": 928979922802,
+                "tx_vport_rdma_unicast_packets": 245880393
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 928977570950,
+                "rx_vport_rdma_unicast_packets": 245861467,
+                "tx_vport_rdma_unicast_bytes": 3281473902,
+                "tx_vport_rdma_unicast_packets": 27702609
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 3234103388,
+                "rx_vport_rdma_unicast_packets": 27305202,
+                "tx_vport_rdma_unicast_bytes": 924908239164,
+                "tx_vport_rdma_unicast_packets": 244537112
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 924942973752,
+                "rx_vport_rdma_unicast_packets": 244803822,
+                "tx_vport_rdma_unicast_bytes": 3268850438,
+                "tx_vport_rdma_unicast_packets": 27572113
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 3306757048,
+                "rx_vport_rdma_unicast_packets": 27896704,
+                "tx_vport_rdma_unicast_bytes": 929002867364,
+                "tx_vport_rdma_unicast_packets": 246055776
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 928979922802,
+                "rx_vport_rdma_unicast_packets": 245880393,
+                "tx_vport_rdma_unicast_bytes": 3283689416,
+                "tx_vport_rdma_unicast_packets": 27719336
+              },
+              "rank": 3
+            }
+          ],
+          "gpu_boundaries": [
+            {
+              "after": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 19.85,
+                "power_limit": null,
+                "temperature_gpu": 62.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 11.73,
+                "power_limit": null,
+                "temperature_gpu": 57.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 0
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 13.5,
+                "power_limit": null,
+                "temperature_gpu": 62.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 12.17,
+                "power_limit": null,
+                "temperature_gpu": 58.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 1
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 15.33,
+                "power_limit": null,
+                "temperature_gpu": 62.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2385.0,
+                "clocks_current_memory": null,
+                "power_draw": 13.92,
+                "power_limit": null,
+                "temperature_gpu": 58.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 2
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 15.9,
+                "power_limit": null,
+                "temperature_gpu": 64.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 14.28,
+                "power_limit": null,
+                "temperature_gpu": 59.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 3
+            }
+          ],
+          "hca_function_count": 16,
+          "native_all_eight_rules_required": false,
+          "qualified": true
+        },
+        "sparkdash": {
+          "asic_rules": [
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 0,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 0,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 1,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 1,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 2,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 2,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 3,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 0,
+              "hardware_packets": 0,
+              "positive_hardware_payload": false,
+              "rank": 3,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            }
+          ],
+          "functions": [
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 1102345994,
+                "rx_vport_rdma_unicast_packets": 9496653,
+                "tx_vport_rdma_unicast_bytes": 155964932536,
+                "tx_vport_rdma_unicast_packets": 44702614
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 155954742716,
+                "rx_vport_rdma_unicast_packets": 44626072,
+                "tx_vport_rdma_unicast_bytes": 1091930184,
+                "tx_vport_rdma_unicast_packets": 9416466
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 1122278782,
+                "rx_vport_rdma_unicast_packets": 9663431,
+                "tx_vport_rdma_unicast_bytes": 159494847994,
+                "tx_vport_rdma_unicast_packets": 45718217
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 159500708986,
+                "rx_vport_rdma_unicast_packets": 45764547,
+                "tx_vport_rdma_unicast_bytes": 1127983720,
+                "tx_vport_rdma_unicast_packets": 9707244
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 1112741492,
+                "rx_vport_rdma_unicast_packets": 9577902,
+                "tx_vport_rdma_unicast_bytes": 155975129510,
+                "tx_vport_rdma_unicast_packets": 44780661
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 155964932536,
+                "rx_vport_rdma_unicast_packets": 44702614,
+                "tx_vport_rdma_unicast_bytes": 1102345994,
+                "tx_vport_rdma_unicast_packets": 9496653
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 1110035154,
+                "rx_vport_rdma_unicast_packets": 9570479,
+                "tx_vport_rdma_unicast_bytes": 159482197212,
+                "tx_vport_rdma_unicast_packets": 45618698
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 159494847994,
+                "rx_vport_rdma_unicast_packets": 45718217,
+                "tx_vport_rdma_unicast_bytes": 1122278782,
+                "tx_vport_rdma_unicast_packets": 9663431
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 1093344458,
+                "rx_vport_rdma_unicast_packets": 9427605,
+                "tx_vport_rdma_unicast_bytes": 155956012344,
+                "tx_vport_rdma_unicast_packets": 44634878
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 155975129510,
+                "rx_vport_rdma_unicast_packets": 44780661,
+                "tx_vport_rdma_unicast_bytes": 1112741492,
+                "tx_vport_rdma_unicast_packets": 9577902
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 1119457296,
+                "rx_vport_rdma_unicast_packets": 9641982,
+                "tx_vport_rdma_unicast_bytes": 159492258822,
+                "tx_vport_rdma_unicast_packets": 45700515
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 159482197212,
+                "rx_vport_rdma_unicast_packets": 45618698,
+                "tx_vport_rdma_unicast_bytes": 1110035154,
+                "tx_vport_rdma_unicast_packets": 9570479
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 1091930184,
+                "rx_vport_rdma_unicast_packets": 9416466,
+                "tx_vport_rdma_unicast_bytes": 155954742716,
+                "tx_vport_rdma_unicast_packets": 44626072
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 155956012344,
+                "rx_vport_rdma_unicast_packets": 44634878,
+                "tx_vport_rdma_unicast_bytes": 1093344458,
+                "tx_vport_rdma_unicast_packets": 9427605
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 1127983720,
+                "rx_vport_rdma_unicast_packets": 9707244,
+                "tx_vport_rdma_unicast_bytes": 159500708986,
+                "tx_vport_rdma_unicast_packets": 45764547
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 159492258822,
+                "rx_vport_rdma_unicast_packets": 45700515,
+                "tx_vport_rdma_unicast_bytes": 1119457296,
+                "tx_vport_rdma_unicast_packets": 9641982
+              },
+              "rank": 3
+            }
+          ],
+          "gpu_boundaries": [
+            {
+              "after": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 20.66,
+                "power_limit": null,
+                "temperature_gpu": 59.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 9.27,
+                "power_limit": null,
+                "temperature_gpu": 42.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 0
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 12.59,
+                "power_limit": null,
+                "temperature_gpu": 60.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 10.01,
+                "power_limit": null,
+                "temperature_gpu": 42.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 1
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2385.0,
+                "clocks_current_memory": null,
+                "power_draw": 14.34,
+                "power_limit": null,
+                "temperature_gpu": 60.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 11.82,
+                "power_limit": null,
+                "temperature_gpu": 42.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 2
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 15.06,
+                "power_limit": null,
+                "temperature_gpu": 61.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 11.45,
+                "power_limit": null,
+                "temperature_gpu": 43.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 3
+            }
+          ],
+          "hca_function_count": 16,
+          "native_all_eight_rules_required": false,
+          "qualified": true
+        }
+      },
+      "config_sha256": "667d14701075bb4a11fd8a05187712ca5c730a4e1cdd9d283bf6c09d6322363a",
+      "controller_geometry_and_health": [
+        {
+          "captured_native_bytes": 0,
+          "captured_native_calls": 0,
+          "eager_native_bytes": 0,
+          "eager_native_calls": 0,
+          "guarded_replays": 0,
+          "initialized": true,
+          "native_active": false,
+          "native_blocks": 8,
+          "native_threads": 512,
+          "rank": 0,
+          "runtime_native_blocks": null,
+          "runtime_native_threads": null
+        },
+        {
+          "captured_native_bytes": 0,
+          "captured_native_calls": 0,
+          "eager_native_bytes": 0,
+          "eager_native_calls": 0,
+          "guarded_replays": 0,
+          "initialized": true,
+          "native_active": false,
+          "native_blocks": 8,
+          "native_threads": 512,
+          "rank": 1,
+          "runtime_native_blocks": null,
+          "runtime_native_threads": null
+        },
+        {
+          "captured_native_bytes": 0,
+          "captured_native_calls": 0,
+          "eager_native_bytes": 0,
+          "eager_native_calls": 0,
+          "guarded_replays": 0,
+          "initialized": true,
+          "native_active": false,
+          "native_blocks": 8,
+          "native_threads": 512,
+          "rank": 2,
+          "runtime_native_blocks": null,
+          "runtime_native_threads": null
+        },
+        {
+          "captured_native_bytes": 0,
+          "captured_native_calls": 0,
+          "eager_native_bytes": 0,
+          "eager_native_calls": 0,
+          "guarded_replays": 0,
+          "initialized": true,
+          "native_active": false,
+          "native_blocks": 8,
+          "native_threads": 512,
+          "rank": 3,
+          "runtime_native_blocks": null,
+          "runtime_native_threads": null
+        }
+      ],
+      "engine_source_sha256": {
+        "cuda/comm.py": "92f1be63fc4bf1ba77675eb74a13716d07e39bc74839579a82ee47b34bf2f986",
+        "families/glm5_next/cuda/dflash2.py": "497d9dc2d9994686111e8a3ffff838a64d05e0069d681cd05c71465f07af00f9",
+        "families/glm5_next/cuda/dflash2_multi.py": "a06c6862870f8fafa2cdfc028e62ffdd803c00e821552488638675a960a2396f",
+        "families/glm5_next/cuda/engine.py": "475132412952660b73982e27c3a1dbb3cf64f57dc584b876b4edabf3325593c6",
+        "families/glm5_next/cuda/forward.py": "f54b7f768477da64460814902cb324361f17b80c9c1897271a264fa9f824245e",
+        "families/glm5_next/cuda/graphs.py": "43e31efc653c61d3e0c0a6fef4bc78afaa057582d16c7a8613986d3a73a4465d",
+        "families/glm5_next/cuda/hcsplit.py": "fb5c8e31820859b621e7da8d9aa7edc296b87c56d1a4f09adf43bc8647c52232",
+        "families/glm5_next/cuda/multi.py": "a7c4cd5ddda71d53b28d3132ee11d8f59c030e96742d6c60d28a78394097b290",
+        "families/glm5_next/cuda/verify.py": "e0d450b84fe6b4e285ae0bb5942e92aa86762a554e29aae8e38d53c447b1e13f"
+      },
+      "evidence_sha256": {
+        "config-executed.json": "667d14701075bb4a11fd8a05187712ca5c730a4e1cdd9d283bf6c09d6322363a",
+        "rigmark-after.json": "fff511db58e0fa6a43bcb162830572f909f15ef92cc217fe74c0bb09ced7db99",
+        "rigmark-before.json": "139096662db04bed8008768d74e29ad68f73c46f44faaee880336c5e0e5a374c",
+        "rigmark-input-metadata.json": "6339cfb16b0c3863784fd93abbfd5f4f317461e1546a7db7a6aa6be88c91565d",
+        "rigmark-traffic.json": "469de64fe8b8c23287fb3729dded95b239523012e9836ea5e0cfdb90768d0689",
+        "rigmark/metadata.json": "6339cfb16b0c3863784fd93abbfd5f4f317461e1546a7db7a6aa6be88c91565d",
+        "rigmark/result.json": "7d5fbca3c52d7ab1d0ae4c7802acdfb3b76bb415cf85191937de435fed85d86c",
+        "rigmark/run-audit.json": "d7d2b677c5942e96f1230c31a3a19d9f122890d9d679a238afb04b7b094f682f",
+        "runner-executed.py": "6c303141e5f0757b6c89eed9d5c247a6953a96abf366a1b1f16c37f6038b9cdb",
+        "sparkdash-after.json": "9abfe0eb66571056dc892e5ee48d26ec73d9435bc4a51c867058fdf8494ab843",
+        "sparkdash-before.json": "02e1ad7167326fcf430e1d32a38ce362506cf5c700b4449ec3f8ca46c9551fe2",
+        "sparkdash-traffic.json": "78fad566795672261d5c6b6155cd2fde1391f14a68dd34ad4d710ee1a197c043",
+        "sparkdash/result.json": "c232bffa9e57e1da83d16bac20f81f513ac81e52ce7c0ffa6424cbbb00b03136",
+        "validation/model-qualification.json": "07c13c320bbd3fe6127a79372718e63df4cfe028ce7df54b9a7e1def79387f1f"
+      },
+      "input_sha256": {
+        "scripts/capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+        "scripts/cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+        "scripts/collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+        "scripts/common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+        "scripts/experiment.py": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
+        "scripts/network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+        "scripts/qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
+        "scripts/rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+        "scripts/rocenante_adapter.py": "ebbd0c83359448c617dbcc9e1b34d8d2e8529504165fbf8d95de631f647927b0",
+        "scripts/run-rigmark.py": "326efc308b075926fcc9dbd89ba12d6d6b3f34a83a51a27a31c792936d629eb1",
+        "scripts/run-sparkdash.py": "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+        "scripts/runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f",
+        "scripts/validate-model.py": "659e82d7e297f046182d74d81ea500979a7425ba412d76db7c194c434f9857a5",
+        "state/assess-benchmark-network.py": "076645337f4e3069d1e289b35ee47ee6b98ec5076c5322b631498ef9a5ff6bfe",
+        "state/capture-benchmark-context.py": "f820f1b62b6db95100cec12b5f44fcb2303da41282e6c149ce5af1ded933ddf5",
+        "state/run-owned-action.py": "654110f41065832eb60dd43a967309b6843f76f9ff823968788b45dc3d26c615"
+      },
+      "mode": "nccl",
+      "passed": true,
+      "rigmark": {
+        "completed_decode_tokens_per_second": {
+          "code": {
+            "maximum": 114.12,
+            "median": 111.006,
+            "minimum": 106.444,
+            "samples": [
+              114.12,
+              111.708,
+              107.517,
+              111.006,
+              106.444
+            ]
+          },
+          "prose": {
+            "maximum": 63.106,
+            "median": 62.957,
+            "minimum": 60.144,
+            "samples": [
+              62.177,
+              60.144,
+              62.957,
+              63.106,
+              62.995
+            ]
+          },
+          "structured": {
+            "maximum": 157.737,
+            "median": 157.541,
+            "minimum": 157.229,
+            "samples": [
+              157.737,
+              157.734,
+              157.229,
+              157.436,
+              157.541
+            ]
+          }
+        },
+        "concurrent_end_to_end_tokens_per_second": {
+          "1": {
+            "maximum": 84.325,
+            "median": 83.462,
+            "minimum": 77.803,
+            "samples": [
+              83.462,
+              84.325,
+              77.803
+            ]
+          },
+          "2": {
+            "maximum": 118.461,
+            "median": 115.781,
+            "minimum": 114.121,
+            "samples": [
+              118.461,
+              115.781,
+              114.121
+            ]
+          },
+          "4": {
+            "maximum": 166.875,
+            "median": 161.43,
+            "minimum": 144.327,
+            "samples": [
+              144.327,
+              166.875,
+              161.43
+            ]
+          }
+        },
+        "official_completion_gates": 15,
+        "prefill_tokens_per_second": {
+          "32768": {
+            "cold": {
+              "maximum": 1858.704,
+              "median": 1856.829,
+              "minimum": 1854.944,
+              "samples": [
+                1856.829,
+                1854.944,
+                1858.704
+              ]
+            },
+            "warm_replay": {
+              "maximum": 693091.924,
+              "median": 682609.783,
+              "minimum": 582055.882,
+              "samples": [
+                582055.882,
+                682609.783,
+                693091.924
+              ]
+            }
+          },
+          "65536": {
+            "cold": {
+              "maximum": 1835.766,
+              "median": 1835.44,
+              "minimum": 1833.533,
+              "samples": [
+                1833.533,
+                1835.766,
+                1835.44
+              ]
+            },
+            "warm_replay": {
+              "maximum": 1149613.205,
+              "median": 1090975.679,
+              "minimum": 944758.39,
+              "samples": [
+                1149613.205,
+                944758.39,
+                1090975.679
+              ]
+            }
+          },
+          "8192": {
+            "cold": {
+              "maximum": 1831.979,
+              "median": 1827.836,
+              "minimum": 1440.603,
+              "samples": [
+                1440.603,
+                1831.979,
+                1827.836
+              ]
+            },
+            "warm_replay": {
+              "maximum": 210207.59,
+              "median": 200332.583,
+              "minimum": 182234.779,
+              "samples": [
+                200332.583,
+                210207.59,
+                182234.779
+              ]
+            }
+          }
+        },
+        "prompts_sha256": "0c3ac4015813af6a1b967659bd2289990fde895a5e43ae065b894d1e1f909ecb",
+        "requests": 54,
+        "revision": "d8353e93b274e8d880ab14a5df2a55c87d7bee16",
+        "settings": {
+          "concurrency": [
+            1,
+            2,
+            4
+          ],
+          "concurrency_runs": 3,
+          "concurrency_tokens": 256,
+          "concurrency_workload": "code",
+          "decode_tokens": 4096,
+          "extra_body": {
+            "chat_template_kwargs": {
+              "reasoning_effort": "low"
+            }
+          },
+          "prefill_depths": [
+            8192,
+            32768,
+            65536
+          ],
+          "prefill_runs": 3,
+          "runs": 5,
+          "seed": 20260912,
+          "temperature": 0.0,
+          "top_p": 1.0
+        }
+      },
+      "rigmark_supplied_metadata_sha256": "6339cfb16b0c3863784fd93abbfd5f4f317461e1546a7db7a6aa6be88c91565d",
+      "runner_sha256": "6c303141e5f0757b6c89eed9d5c247a6953a96abf366a1b1f16c37f6038b9cdb",
+      "semantic_validation": {
+        "answer_sha256": {
+          "arithmetic": "62515c9e12079ed84fbbb71fb98f063d9d740c656939d79809d7aa288f635e9b",
+          "code": "af8b23065d71b84f6c7be767e45d0b0efbe98a52a968ee50f476ce7f02db5741",
+          "fact": "b8c580431d63129009bb431abf8039bf8c7d202adb3695f5cccf1bebfbac6fc9"
+        },
+        "passed": true,
+        "requests": 30
+      },
+      "sparkdash": {
+        "clients": [
+          1,
+          4,
+          8
+        ],
+        "measured_requests": 117,
+        "repeats": 3,
+        "requests": 120,
+        "rows": [
+          {
+            "clients": 1,
+            "decode_tokens_per_second": {
+              "maximum": 134.3803351097356,
+              "median": 130.06879077788454,
+              "minimum": 128.8898800343169,
+              "samples": [
+                134.3803351097356,
+                130.06879077788454,
+                128.8898800343169
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 128.21133865795605,
+              "median": 124.42121377280033,
+              "minimum": 123.06380002730128,
+              "samples": [
+                128.21133865795605,
+                124.42121377280033,
+                123.06380002730128
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.15323958173394203,
+              "median": 0.14880229532718658,
+              "minimum": 0.14614765346050262,
+              "samples": [
+                0.14880229532718658,
+                0.14614765346050262,
+                0.15323958173394203
+              ]
+            },
+            "workload": "code"
+          },
+          {
+            "clients": 4,
+            "decode_tokens_per_second": {
+              "maximum": 217.97768419642458,
+              "median": 216.55636020095605,
+              "minimum": 211.64358909923726,
+              "samples": [
+                217.97768419642458,
+                211.64358909923726,
+                216.55636020095605
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 211.78478929548388,
+              "median": 209.5436424863207,
+              "minimum": 207.82349757278598,
+              "samples": [
+                211.78478929548388,
+                207.82349757278598,
+                209.5436424863207
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.44355712458491325,
+              "median": 0.2633220050483942,
+              "minimum": 0.15631641447544098,
+              "samples": [
+                0.23086094856262207,
+                0.44273731857538223,
+                0.4426097758114338,
+                0.44355712458491325,
+                0.36201445758342743,
+                0.15631641447544098,
+                0.15641775354743004,
+                0.36185072362422943,
+                0.2632775567471981,
+                0.2632557451725006,
+                0.26330889388918877,
+                0.26333511620759964
+              ]
+            },
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "decode_tokens_per_second": {
+              "maximum": 293.7918213715941,
+              "median": 291.65718379603635,
+              "minimum": 288.90534068298575,
+              "samples": [
+                288.90534068298575,
+                293.7918213715941,
+                291.65718379603635
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 283.79953211144544,
+              "median": 283.6849725501755,
+              "minimum": 282.9898131061744,
+              "samples": [
+                282.9898131061744,
+                283.79953211144544,
+                283.6849725501755
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.628960907459259,
+              "median": 0.40913733281195164,
+              "minimum": 0.2576461546123028,
+              "samples": [
+                0.2577344812452793,
+                0.628960907459259,
+                0.2576461546123028,
+                0.6289345696568489,
+                0.2580542154610157,
+                0.6289089694619179,
+                0.6283765882253647,
+                0.2579895779490471,
+                0.41019346937537193,
+                0.40886159613728523,
+                0.4093420021235943,
+                0.40960780158638954,
+                0.40927112102508545,
+                0.4090035445988178,
+                0.4089321568608284,
+                0.41014449670910835,
+                0.33393923938274384,
+                0.3327089287340641,
+                0.544232215732336,
+                0.5435195006430149,
+                0.5439894795417786,
+                0.33269306644797325,
+                0.33330557867884636,
+                0.3333888612687588
+              ]
+            },
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "decode_tokens_per_second": {
+              "maximum": 88.27046988367113,
+              "median": 88.01462014173019,
+              "minimum": 87.82952330758418,
+              "samples": [
+                88.01462014173019,
+                87.82952330758418,
+                88.27046988367113
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 86.28120298690789,
+              "median": 86.18752134421624,
+              "minimum": 85.89005783785746,
+              "samples": [
+                86.18752134421624,
+                85.89005783785746,
+                86.28120298690789
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.11431331187486649,
+              "median": 0.11240135133266449,
+              "minimum": 0.10578126087784767,
+              "samples": [
+                0.10578126087784767,
+                0.11240135133266449,
+                0.11431331187486649
+              ]
+            },
+            "workload": "prose"
+          },
+          {
+            "clients": 4,
+            "decode_tokens_per_second": {
+              "maximum": 157.3379012103053,
+              "median": 156.9103318168971,
+              "minimum": 156.5880283965486,
+              "samples": [
+                157.3379012103053,
+                156.9103318168971,
+                156.5880283965486
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 155.329002724869,
+              "median": 155.16021463428598,
+              "minimum": 155.052253480222,
+              "samples": [
+                155.16021463428598,
+                155.329002724869,
+                155.052253480222
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.32465115934610367,
+              "median": 0.2993147522211075,
+              "minimum": 0.1250937320291996,
+              "samples": [
+                0.32436180114746094,
+                0.32465115934610367,
+                0.166386678814888,
+                0.16751721873879433,
+                0.12724674120545387,
+                0.31116175651550293,
+                0.3115954250097275,
+                0.3117401711642742,
+                0.2990197539329529,
+                0.299335777759552,
+                0.29929372668266296,
+                0.1250937320291996
+              ]
+            },
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "decode_tokens_per_second": {
+              "maximum": 217.04790730407223,
+              "median": 216.030449425222,
+              "minimum": 215.58762565177184,
+              "samples": [
+                217.04790730407223,
+                215.58762565177184,
+                216.030449425222
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 215.00301162568107,
+              "median": 214.66098527499068,
+              "minimum": 214.20088922917117,
+              "samples": [
+                215.00301162568107,
+                214.20088922917117,
+                214.66098527499068
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.46593567356467247,
+              "median": 0.433665506541729,
+              "minimum": 0.1293107122182846,
+              "samples": [
+                0.46438293159008026,
+                0.1740737482905388,
+                0.46593567356467247,
+                0.46396278962492943,
+                0.46444858983159065,
+                0.46558113396167755,
+                0.4648232087492943,
+                0.17545082792639732,
+                0.4341396205127239,
+                0.43368367478251457,
+                0.4339316450059414,
+                0.1301506832242012,
+                0.4336473383009434,
+                0.4341134540736675,
+                0.43416350334882736,
+                0.435017354786396,
+                0.42452071607112885,
+                0.42409538477659225,
+                0.1293107122182846,
+                0.4239296577870846,
+                0.4240170456469059,
+                0.4240345135331154,
+                0.42405590415000916,
+                0.4249832108616829
+              ]
+            },
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "decode_tokens_per_second": {
+              "maximum": 167.20137134234878,
+              "median": 166.32448564156297,
+              "minimum": 166.20578915562902,
+              "samples": [
+                166.20578915562902,
+                167.20137134234878,
+                166.32448564156297
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 160.88123438690045,
+              "median": 159.79082524499253,
+              "minimum": 159.5749076967121,
+              "samples": [
+                159.5749076967121,
+                160.88123438690045,
+                159.79082524499253
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.10243114456534386,
+              "median": 0.10202691331505775,
+              "minimum": 0.09839727729558945,
+              "samples": [
+                0.10243114456534386,
+                0.09839727729558945,
+                0.10202691331505775
+              ]
+            },
+            "workload": "structured"
+          },
+          {
+            "clients": 4,
+            "decode_tokens_per_second": {
+              "maximum": 371.5975630725088,
+              "median": 369.3212293961966,
+              "minimum": 368.83506280649027,
+              "samples": [
+                371.5975630725088,
+                369.3212293961966,
+                368.83506280649027
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 360.68862605626293,
+              "median": 359.91568861773493,
+              "minimum": 359.71766311974955,
+              "samples": [
+                359.71766311974955,
+                360.68862605626293,
+                359.91568861773493
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.30274491384625435,
+              "median": 0.28160238824784756,
+              "minimum": 0.11190804839134216,
+              "samples": [
+                0.15102645009756088,
+                0.30183156579732895,
+                0.15083054453134537,
+                0.30274491384625435,
+                0.28161561489105225,
+                0.28094013780355453,
+                0.11190804839134216,
+                0.28158916160464287,
+                0.11650631204247475,
+                0.28357088193297386,
+                0.28442005068063736,
+                0.28412575274705887
+              ]
+            },
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "decode_tokens_per_second": {
+              "maximum": 495.0511194214816,
+              "median": 491.80991592068074,
+              "minimum": 490.18303479984144,
+              "samples": [
+                490.18303479984144,
+                495.0511194214816,
+                491.80991592068074
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 487.098251827014,
+              "median": 481.0165209260347,
+              "minimum": 479.60475425461567,
+              "samples": [
+                479.60475425461567,
+                487.098251827014,
+                481.0165209260347
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.4460882097482681,
+              "median": 0.43027119897305965,
+              "minimum": 0.11923926323652267,
+              "samples": [
+                0.4442250616848469,
+                0.4434782825410366,
+                0.4430353306233883,
+                0.4435310438275337,
+                0.44370586052536964,
+                0.15853578969836235,
+                0.1583545245230198,
+                0.44393153861165047,
+                0.11923926323652267,
+                0.41637198999524117,
+                0.41632550954818726,
+                0.41648170351982117,
+                0.41706275567412376,
+                0.4164290577173233,
+                0.41702088341116905,
+                0.417507067322731,
+                0.4460882097482681,
+                0.44505221396684647,
+                0.16163485497236252,
+                0.44584081321954727,
+                0.44502395018935204,
+                0.44588981941342354,
+                0.4453362077474594,
+                0.16076507046818733
+              ]
+            },
+            "workload": "structured"
+          }
+        ],
+        "tokens": 400,
+        "warmup_requests": 3
+      },
+      "transport_receipt_sha256": {
+        "nccl": "a57534e648dc09c1cdab467aa928995eb7059ba9ece4ea2fad24269f0949c40e",
+        "rocenante": "7ea1f896fae91fc40b4e26e48d14e8372fb4cba6a77f20bf9257fc0103234e95"
+      }
+    },
+    "native": {
+      "arm_receipt_sha256": "5ce79162fe4df1b8ffe2e9a2c6fbf362ef58fc6815f1468b471234b277dca2ac",
+      "benchmark_traffic": {
+        "rigmark": {
+          "asic_rules": [
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 61504841948,
+              "hardware_packets": 19758810,
+              "positive_hardware_payload": true,
+              "rank": 0,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 61503926022,
+              "hardware_packets": 19744037,
+              "positive_hardware_payload": true,
+              "rank": 0,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 61505357596,
+              "hardware_packets": 19761820,
+              "positive_hardware_payload": true,
+              "rank": 1,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 61505927562,
+              "hardware_packets": 19771013,
+              "positive_hardware_payload": true,
+              "rank": 1,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 61505833260,
+              "hardware_packets": 19769492,
+              "positive_hardware_payload": true,
+              "rank": 2,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 61505004444,
+              "hardware_packets": 19756124,
+              "positive_hardware_payload": true,
+              "rank": 2,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 61503718880,
+              "hardware_packets": 19740696,
+              "positive_hardware_payload": true,
+              "rank": 3,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 61504756574,
+              "hardware_packets": 19757433,
+              "positive_hardware_payload": true,
+              "rank": 3,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            }
+          ],
+          "functions": [
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 61438608376,
+                "rx_vport_rdma_unicast_packets": 18673468,
+                "tx_vport_rdma_unicast_bytes": 780589179534,
+                "tx_vport_rdma_unicast_packets": 190450577
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 842095088812,
+                "rx_vport_rdma_unicast_packets": 210226602,
+                "tx_vport_rdma_unicast_bytes": 122941535330,
+                "tx_vport_rdma_unicast_packets": 38401391
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 122945858144,
+                "rx_vport_rdma_unicast_packets": 38460500,
+                "tx_vport_rdma_unicast_bytes": 842096185518,
+                "tx_vport_rdma_unicast_packets": 210233677
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 780591967730,
+                "rx_vport_rdma_unicast_packets": 190490241,
+                "tx_vport_rdma_unicast_bytes": 61439331972,
+                "tx_vport_rdma_unicast_packets": 18679832
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 61438651342,
+                "rx_vport_rdma_unicast_packets": 18674161,
+                "tx_vport_rdma_unicast_bytes": 780589776594,
+                "tx_vport_rdma_unicast_packets": 190460207
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 842093105556,
+                "rx_vport_rdma_unicast_packets": 210194614,
+                "tx_vport_rdma_unicast_bytes": 122943450324,
+                "tx_vport_rdma_unicast_packets": 38432278
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 122945123010,
+                "rx_vport_rdma_unicast_packets": 38448643,
+                "tx_vport_rdma_unicast_bytes": 842096923380,
+                "tx_vport_rdma_unicast_packets": 210245578
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 780590827922,
+                "rx_vport_rdma_unicast_packets": 190471857,
+                "tx_vport_rdma_unicast_bytes": 61439930582,
+                "tx_vport_rdma_unicast_packets": 18689487
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 122942681028,
+                "rx_vport_rdma_unicast_packets": 38419870,
+                "tx_vport_rdma_unicast_bytes": 842094483878,
+                "tx_vport_rdma_unicast_packets": 210216845
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 780589776594,
+                "rx_vport_rdma_unicast_packets": 190460207,
+                "tx_vport_rdma_unicast_bytes": 61438651342,
+                "tx_vport_rdma_unicast_packets": 18674161
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 61440445740,
+                "rx_vport_rdma_unicast_packets": 18697796,
+                "tx_vport_rdma_unicast_bytes": 780590864998,
+                "tx_vport_rdma_unicast_packets": 190472455
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 842096447716,
+                "rx_vport_rdma_unicast_packets": 210237906,
+                "tx_vport_rdma_unicast_bytes": 122946046128,
+                "tx_vport_rdma_unicast_packets": 38463532
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 122942658398,
+                "rx_vport_rdma_unicast_packets": 38419505,
+                "tx_vport_rdma_unicast_bytes": 842094258260,
+                "tx_vport_rdma_unicast_packets": 210213206
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 780589727304,
+                "rx_vport_rdma_unicast_packets": 190459412,
+                "tx_vport_rdma_unicast_bytes": 61438962148,
+                "tx_vport_rdma_unicast_packets": 18679174
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 61439331972,
+                "rx_vport_rdma_unicast_packets": 18679832,
+                "tx_vport_rdma_unicast_bytes": 780591967730,
+                "tx_vport_rdma_unicast_packets": 190490241
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 842096698258,
+                "rx_vport_rdma_unicast_packets": 210241947,
+                "tx_vport_rdma_unicast_bytes": 122945450184,
+                "tx_vport_rdma_unicast_packets": 38453920
+              },
+              "rank": 3
+            }
+          ],
+          "gpu_boundaries": [
+            {
+              "after": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 15.51,
+                "power_limit": null,
+                "temperature_gpu": 63.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 12.2,
+                "power_limit": null,
+                "temperature_gpu": 59.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 0
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 24.89,
+                "power_limit": null,
+                "temperature_gpu": 64.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 12.62,
+                "power_limit": null,
+                "temperature_gpu": 60.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 1
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 15.51,
+                "power_limit": null,
+                "temperature_gpu": 64.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2385.0,
+                "clocks_current_memory": null,
+                "power_draw": 14.19,
+                "power_limit": null,
+                "temperature_gpu": 60.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 2
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 23.6,
+                "power_limit": null,
+                "temperature_gpu": 65.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 15.04,
+                "power_limit": null,
+                "temperature_gpu": 61.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 3
+            }
+          ],
+          "hca_function_count": 16,
+          "native_all_eight_rules_required": true,
+          "qualified": true
+        },
+        "sparkdash": {
+          "asic_rules": [
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 50542702298,
+              "hardware_packets": 15683025,
+              "positive_hardware_payload": true,
+              "rank": 0,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 50542372396,
+              "hardware_packets": 15677704,
+              "positive_hardware_payload": true,
+              "rank": 0,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 50542916266,
+              "hardware_packets": 15684881,
+              "positive_hardware_payload": true,
+              "rank": 1,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 50542907276,
+              "hardware_packets": 15684736,
+              "positive_hardware_payload": true,
+              "rank": 1,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 50542501486,
+              "hardware_packets": 15678191,
+              "positive_hardware_payload": true,
+              "rank": 2,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 50542353864,
+              "hardware_packets": 15675810,
+              "positive_hardware_payload": true,
+              "rank": 2,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 50541916014,
+              "hardware_packets": 15670343,
+              "positive_hardware_payload": true,
+              "rank": 3,
+              "rule_index": 0,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            },
+            {
+              "counter_source": "explicit_hardware",
+              "drops": 0,
+              "hardware_bytes": 50542113360,
+              "hardware_packets": 15673526,
+              "positive_hardware_payload": true,
+              "rank": 3,
+              "rule_index": 1,
+              "software_counter_available": true,
+              "software_fallback_forbidden": true
+            }
+          ],
+          "functions": [
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 50324024204,
+                "rx_vport_rdma_unicast_packets": 12879408,
+                "tx_vport_rdma_unicast_bytes": 52701031760,
+                "tx_vport_rdma_unicast_packets": 13442766
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 103245282570,
+                "rx_vport_rdma_unicast_packets": 29150767,
+                "tx_vport_rdma_unicast_bytes": 100865760542,
+                "tx_vport_rdma_unicast_packets": 28546853
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 100867360092,
+                "rx_vport_rdma_unicast_packets": 28569462,
+                "tx_vport_rdma_unicast_bytes": 103244412970,
+                "tx_vport_rdma_unicast_packets": 29133551
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 52703604828,
+                "rx_vport_rdma_unicast_packets": 13482672,
+                "tx_vport_rdma_unicast_bytes": 50324305008,
+                "tx_vport_rdma_unicast_packets": 12882342
+              },
+              "rank": 0
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 50325986504,
+                "rx_vport_rdma_unicast_packets": 12911058,
+                "tx_vport_rdma_unicast_bytes": 52701638988,
+                "tx_vport_rdma_unicast_packets": 13452560
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 103243404156,
+                "rx_vport_rdma_unicast_packets": 29120470,
+                "tx_vport_rdma_unicast_bytes": 100866726502,
+                "tx_vport_rdma_unicast_packets": 28562433
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 100868764516,
+                "rx_vport_rdma_unicast_packets": 28592114,
+                "tx_vport_rdma_unicast_bytes": 103244558112,
+                "tx_vport_rdma_unicast_packets": 29135892
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 52701496704,
+                "rx_vport_rdma_unicast_packets": 13448670,
+                "tx_vport_rdma_unicast_bytes": 50324452816,
+                "tx_vport_rdma_unicast_packets": 12884726
+              },
+              "rank": 1
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 100867465046,
+                "rx_vport_rdma_unicast_packets": 28574345,
+                "tx_vport_rdma_unicast_bytes": 103244454188,
+                "tx_vport_rdma_unicast_packets": 29137406
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 52701638988,
+                "rx_vport_rdma_unicast_packets": 13452560,
+                "tx_vport_rdma_unicast_bytes": 50325986504,
+                "tx_vport_rdma_unicast_packets": 12911058
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 50326039210,
+                "rx_vport_rdma_unicast_packets": 12910313,
+                "tx_vport_rdma_unicast_bytes": 52702741292,
+                "tx_vport_rdma_unicast_packets": 13468744
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 103244972892,
+                "rx_vport_rdma_unicast_packets": 29142582,
+                "tx_vport_rdma_unicast_bytes": 100869317928,
+                "tx_vport_rdma_unicast_packets": 28601040
+              },
+              "rank": 2
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 0,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 100866546826,
+                "rx_vport_rdma_unicast_packets": 28559535,
+                "tx_vport_rdma_unicast_bytes": 103245541606,
+                "tx_vport_rdma_unicast_packets": 29154945
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 1,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 52702340828,
+                "rx_vport_rdma_unicast_packets": 13463880,
+                "tx_vport_rdma_unicast_bytes": 50325549032,
+                "tx_vport_rdma_unicast_packets": 12904002
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 2,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 50324305008,
+                "rx_vport_rdma_unicast_packets": 12882342,
+                "tx_vport_rdma_unicast_bytes": 52703604828,
+                "tx_vport_rdma_unicast_packets": 13482672
+              },
+              "rank": 3
+            },
+            {
+              "errors": {
+                "local_ack_timeout_err": 0,
+                "out_of_buffer": 0,
+                "packet_seq_err": 0,
+                "req_cqe_error": 0,
+                "req_rnr_retries_exceeded": 0,
+                "req_transport_retries_exceeded": 0,
+                "resp_cqe_error": 0
+              },
+              "hca_index": 3,
+              "payload": {
+                "rx_vport_rdma_unicast_bytes": 103245242778,
+                "rx_vport_rdma_unicast_packets": 29146935,
+                "tx_vport_rdma_unicast_bytes": 100868393074,
+                "tx_vport_rdma_unicast_packets": 28586123
+              },
+              "rank": 3
+            }
+          ],
+          "gpu_boundaries": [
+            {
+              "after": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 21.43,
+                "power_limit": null,
+                "temperature_gpu": 61.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 9.82,
+                "power_limit": null,
+                "temperature_gpu": 45.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 0
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 13.24,
+                "power_limit": null,
+                "temperature_gpu": 62.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 10.55,
+                "power_limit": null,
+                "temperature_gpu": 46.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 1
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2385.0,
+                "clocks_current_memory": null,
+                "power_draw": 15.24,
+                "power_limit": null,
+                "temperature_gpu": 61.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 12.3,
+                "power_limit": null,
+                "temperature_gpu": 46.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 2
+            },
+            {
+              "after": {
+                "clocks_current_graphics": 2411.0,
+                "clocks_current_memory": null,
+                "power_draw": 15.76,
+                "power_limit": null,
+                "temperature_gpu": 63.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "before": {
+                "clocks_current_graphics": 2405.0,
+                "clocks_current_memory": null,
+                "power_draw": 12.06,
+                "power_limit": null,
+                "temperature_gpu": 47.0,
+                "utilization_gpu": 0.0,
+                "utilization_memory": 0.0
+              },
+              "rank": 3
+            }
+          ],
+          "hca_function_count": 16,
+          "native_all_eight_rules_required": true,
+          "qualified": true
+        }
+      },
+      "config_sha256": "667d14701075bb4a11fd8a05187712ca5c730a4e1cdd9d283bf6c09d6322363a",
+      "controller_geometry_and_health": [
+        {
+          "captured_native_bytes": 5109219712,
+          "captured_native_calls": 26919,
+          "eager_native_bytes": 12942132984,
+          "eager_native_calls": 56587,
+          "guarded_replays": 165,
+          "initialized": true,
+          "native_active": true,
+          "native_blocks": 8,
+          "native_threads": 512,
+          "rank": 0,
+          "runtime_native_blocks": 8,
+          "runtime_native_threads": 512
+        },
+        {
+          "captured_native_bytes": 5109219712,
+          "captured_native_calls": 26919,
+          "eager_native_bytes": 12942132984,
+          "eager_native_calls": 56587,
+          "guarded_replays": 165,
+          "initialized": true,
+          "native_active": true,
+          "native_blocks": 8,
+          "native_threads": 512,
+          "rank": 1,
+          "runtime_native_blocks": 8,
+          "runtime_native_threads": 512
+        },
+        {
+          "captured_native_bytes": 5109219712,
+          "captured_native_calls": 26919,
+          "eager_native_bytes": 12942132984,
+          "eager_native_calls": 56587,
+          "guarded_replays": 165,
+          "initialized": true,
+          "native_active": true,
+          "native_blocks": 8,
+          "native_threads": 512,
+          "rank": 2,
+          "runtime_native_blocks": 8,
+          "runtime_native_threads": 512
+        },
+        {
+          "captured_native_bytes": 5109219712,
+          "captured_native_calls": 26919,
+          "eager_native_bytes": 12942132984,
+          "eager_native_calls": 56587,
+          "guarded_replays": 165,
+          "initialized": true,
+          "native_active": true,
+          "native_blocks": 8,
+          "native_threads": 512,
+          "rank": 3,
+          "runtime_native_blocks": 8,
+          "runtime_native_threads": 512
+        }
+      ],
+      "engine_source_sha256": {
+        "cuda/comm.py": "92f1be63fc4bf1ba77675eb74a13716d07e39bc74839579a82ee47b34bf2f986",
+        "families/glm5_next/cuda/dflash2.py": "497d9dc2d9994686111e8a3ffff838a64d05e0069d681cd05c71465f07af00f9",
+        "families/glm5_next/cuda/dflash2_multi.py": "a06c6862870f8fafa2cdfc028e62ffdd803c00e821552488638675a960a2396f",
+        "families/glm5_next/cuda/engine.py": "475132412952660b73982e27c3a1dbb3cf64f57dc584b876b4edabf3325593c6",
+        "families/glm5_next/cuda/forward.py": "f54b7f768477da64460814902cb324361f17b80c9c1897271a264fa9f824245e",
+        "families/glm5_next/cuda/graphs.py": "43e31efc653c61d3e0c0a6fef4bc78afaa057582d16c7a8613986d3a73a4465d",
+        "families/glm5_next/cuda/hcsplit.py": "fb5c8e31820859b621e7da8d9aa7edc296b87c56d1a4f09adf43bc8647c52232",
+        "families/glm5_next/cuda/multi.py": "a7c4cd5ddda71d53b28d3132ee11d8f59c030e96742d6c60d28a78394097b290",
+        "families/glm5_next/cuda/verify.py": "e0d450b84fe6b4e285ae0bb5942e92aa86762a554e29aae8e38d53c447b1e13f"
+      },
+      "evidence_sha256": {
+        "config-executed.json": "667d14701075bb4a11fd8a05187712ca5c730a4e1cdd9d283bf6c09d6322363a",
+        "rigmark-after.json": "eae5394f15b386142cdeedac05488e74a93d643000a80a1c57369cddc2bbd208",
+        "rigmark-before.json": "d6b34b96ac6ca56642c29a2b9900e6f08799d605119fadb47b75cb5e2301e889",
+        "rigmark-input-metadata.json": "325be13cecd5658769550f15833a7dbab0f8a48c537c01b97398c8146ab01844",
+        "rigmark-traffic.json": "c6b643b10e0de22340d49795b6f5033f6cb59f143371d9e1a4e4d728ca1df28b",
+        "rigmark/metadata.json": "325be13cecd5658769550f15833a7dbab0f8a48c537c01b97398c8146ab01844",
+        "rigmark/result.json": "317e83bf49719168a029a858497b893821398a263977a77f0520a30c7dd6ffe4",
+        "rigmark/run-audit.json": "ce2c821e5bc7e679f143ab3fe40ca5f7ce19cd2c37f60aba0c6146b0cf6c502f",
+        "runner-executed.py": "6c303141e5f0757b6c89eed9d5c247a6953a96abf366a1b1f16c37f6038b9cdb",
+        "sparkdash-after.json": "13fecde6ed1b51dc333e5fd6e657fe0b4a2c439010df604e44468c730b015572",
+        "sparkdash-before.json": "33e8ea1b3da6d9dc0e18a4791aaa32f8590e5cc9c6a5b871e3ffed6f9c4c6c67",
+        "sparkdash-traffic.json": "6424200c79f6b8bc58a0cfca6753c29493f88a4215d6cc4a21c347d7f300dfe9",
+        "sparkdash/result.json": "b9da65ffe0c96aec7d16e973785d442a17923030574d43d9afd637af0848c715",
+        "validation/model-qualification.json": "d2943ad36f42cfada409f83347ad1a8c22143c0e7bc4f669117ac207eca74717"
+      },
+      "input_sha256": {
+        "scripts/capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+        "scripts/cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+        "scripts/collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+        "scripts/common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+        "scripts/experiment.py": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
+        "scripts/network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+        "scripts/qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
+        "scripts/rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+        "scripts/rocenante_adapter.py": "ebbd0c83359448c617dbcc9e1b34d8d2e8529504165fbf8d95de631f647927b0",
+        "scripts/run-rigmark.py": "326efc308b075926fcc9dbd89ba12d6d6b3f34a83a51a27a31c792936d629eb1",
+        "scripts/run-sparkdash.py": "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+        "scripts/runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f",
+        "scripts/validate-model.py": "659e82d7e297f046182d74d81ea500979a7425ba412d76db7c194c434f9857a5",
+        "state/assess-benchmark-network.py": "076645337f4e3069d1e289b35ee47ee6b98ec5076c5322b631498ef9a5ff6bfe",
+        "state/capture-benchmark-context.py": "f820f1b62b6db95100cec12b5f44fcb2303da41282e6c149ce5af1ded933ddf5",
+        "state/run-owned-action.py": "654110f41065832eb60dd43a967309b6843f76f9ff823968788b45dc3d26c615"
+      },
+      "mode": "rocenante",
+      "passed": true,
+      "rigmark": {
+        "completed_decode_tokens_per_second": {
+          "code": {
+            "maximum": 125.133,
+            "median": 122.197,
+            "minimum": 117.443,
+            "samples": [
+              125.133,
+              122.197,
+              118.389,
+              122.378,
+              117.443
+            ]
+          },
+          "prose": {
+            "maximum": 71.523,
+            "median": 71.227,
+            "minimum": 67.976,
+            "samples": [
+              70.049,
+              67.976,
+              71.523,
+              71.324,
+              71.227
+            ]
+          },
+          "structured": {
+            "maximum": 172.407,
+            "median": 172.136,
+            "minimum": 171.621,
+            "samples": [
+              172.136,
+              171.945,
+              172.225,
+              171.621,
+              172.407
+            ]
+          }
+        },
+        "concurrent_end_to_end_tokens_per_second": {
+          "1": {
+            "maximum": 95.666,
+            "median": 92.685,
+            "minimum": 86.496,
+            "samples": [
+              92.685,
+              95.666,
+              86.496
+            ]
+          },
+          "2": {
+            "maximum": 127.173,
+            "median": 123.638,
+            "minimum": 121.446,
+            "samples": [
+              123.638,
+              127.173,
+              121.446
+            ]
+          },
+          "4": {
+            "maximum": 169.521,
+            "median": 161.068,
+            "minimum": 160.224,
+            "samples": [
+              160.224,
+              161.068,
+              169.521
+            ]
+          }
+        },
+        "official_completion_gates": 15,
+        "prefill_tokens_per_second": {
+          "32768": {
+            "cold": {
+              "maximum": 1846.114,
+              "median": 1844.851,
+              "minimum": 1844.771,
+              "samples": [
+                1846.114,
+                1844.771,
+                1844.851
+              ]
+            },
+            "warm_replay": {
+              "maximum": 782089.837,
+              "median": 641089.351,
+              "minimum": 632452.568,
+              "samples": [
+                641089.351,
+                782089.837,
+                632452.568
+              ]
+            }
+          },
+          "65536": {
+            "cold": {
+              "maximum": 1824.806,
+              "median": 1823.908,
+              "minimum": 1822.498,
+              "samples": [
+                1823.908,
+                1824.806,
+                1822.498
+              ]
+            },
+            "warm_replay": {
+              "maximum": 1035700.175,
+              "median": 1003537.248,
+              "minimum": 988745.059,
+              "samples": [
+                1035700.175,
+                988745.059,
+                1003537.248
+              ]
+            }
+          },
+          "8192": {
+            "cold": {
+              "maximum": 1824.989,
+              "median": 1824.95,
+              "minimum": 1817.008,
+              "samples": [
+                1817.008,
+                1824.989,
+                1824.95
+              ]
+            },
+            "warm_replay": {
+              "maximum": 250665.524,
+              "median": 241602.029,
+              "minimum": 239721.417,
+              "samples": [
+                250665.524,
+                241602.029,
+                239721.417
+              ]
+            }
+          }
+        },
+        "prompts_sha256": "0c3ac4015813af6a1b967659bd2289990fde895a5e43ae065b894d1e1f909ecb",
+        "requests": 54,
+        "revision": "d8353e93b274e8d880ab14a5df2a55c87d7bee16",
+        "settings": {
+          "concurrency": [
+            1,
+            2,
+            4
+          ],
+          "concurrency_runs": 3,
+          "concurrency_tokens": 256,
+          "concurrency_workload": "code",
+          "decode_tokens": 4096,
+          "extra_body": {
+            "chat_template_kwargs": {
+              "reasoning_effort": "low"
+            }
+          },
+          "prefill_depths": [
+            8192,
+            32768,
+            65536
+          ],
+          "prefill_runs": 3,
+          "runs": 5,
+          "seed": 20260912,
+          "temperature": 0.0,
+          "top_p": 1.0
+        }
+      },
+      "rigmark_supplied_metadata_sha256": "325be13cecd5658769550f15833a7dbab0f8a48c537c01b97398c8146ab01844",
+      "runner_sha256": "6c303141e5f0757b6c89eed9d5c247a6953a96abf366a1b1f16c37f6038b9cdb",
+      "semantic_validation": {
+        "answer_sha256": {
+          "arithmetic": "62515c9e12079ed84fbbb71fb98f063d9d740c656939d79809d7aa288f635e9b",
+          "code": "af8b23065d71b84f6c7be767e45d0b0efbe98a52a968ee50f476ce7f02db5741",
+          "fact": "b8c580431d63129009bb431abf8039bf8c7d202adb3695f5cccf1bebfbac6fc9"
+        },
+        "passed": true,
+        "requests": 30
+      },
+      "sparkdash": {
+        "clients": [
+          1,
+          4,
+          8
+        ],
+        "measured_requests": 117,
+        "repeats": 3,
+        "requests": 120,
+        "rows": [
+          {
+            "clients": 1,
+            "decode_tokens_per_second": {
+              "maximum": 146.38661287285115,
+              "median": 145.84188790224997,
+              "minimum": 145.7546442613164,
+              "samples": [
+                145.84188790224997,
+                146.38661287285115,
+                145.7546442613164
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 139.33175336042396,
+              "median": 138.74868762609597,
+              "minimum": 138.52346623382977,
+              "samples": [
+                138.74868762609597,
+                139.33175336042396,
+                138.52346623382977
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.1482304036617279,
+              "median": 0.14586257189512253,
+              "minimum": 0.1437181755900383,
+              "samples": [
+                0.14586257189512253,
+                0.1437181755900383,
+                0.1482304036617279
+              ]
+            },
+            "workload": "code"
+          },
+          {
+            "clients": 4,
+            "decode_tokens_per_second": {
+              "maximum": 229.6594263423501,
+              "median": 227.5890693447706,
+              "minimum": 223.61058654427623,
+              "samples": [
+                227.5890693447706,
+                229.6594263423501,
+                223.61058654427623
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 221.600074567574,
+              "median": 219.51960531106863,
+              "minimum": 218.2649450456671,
+              "samples": [
+                218.2649450456671,
+                221.600074567574,
+                219.51960531106863
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.357689306139946,
+              "median": 0.31601979210972786,
+              "minimum": 0.14930279552936554,
+              "samples": [
+                0.31600604951381683,
+                0.31631533429026604,
+                0.3549666106700897,
+                0.3160335347056389,
+                0.26988228410482407,
+                0.2689272314310074,
+                0.26925715431571007,
+                0.26919617131352425,
+                0.14930279552936554,
+                0.3574557192623615,
+                0.35734429582953453,
+                0.357689306139946
+              ]
+            },
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "decode_tokens_per_second": {
+              "maximum": 300.854888368996,
+              "median": 292.26211504007426,
+              "minimum": 290.1105800147141,
+              "samples": [
+                300.854888368996,
+                290.1105800147141,
+                292.26211504007426
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 290.7640967386597,
+              "median": 286.8121076207076,
+              "minimum": 286.0455105941969,
+              "samples": [
+                290.7640967386597,
+                286.8121076207076,
+                286.0455105941969
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.6343972720205784,
+              "median": 0.46993546932935715,
+              "minimum": 0.15191975608468056,
+              "samples": [
+                0.39521122723817825,
+                0.3944693058729172,
+                0.395653810352087,
+                0.39544039219617844,
+                0.39366601407527924,
+                0.3948296718299389,
+                0.3939584754407406,
+                0.394654955714941,
+                0.5459058806300163,
+                0.54522754997015,
+                0.5442171283066273,
+                0.5467555560171604,
+                0.15191975608468056,
+                0.5458645895123482,
+                0.5446376577019691,
+                0.5448592938482761,
+                0.2634994462132454,
+                0.633704449981451,
+                0.6337683014571667,
+                0.26269932091236115,
+                0.6329595893621445,
+                0.6343972720205784,
+                0.6335770078003407,
+                0.26311396807432175
+              ]
+            },
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "decode_tokens_per_second": {
+              "maximum": 98.13893126806859,
+              "median": 98.13623752436261,
+              "minimum": 97.86331114527759,
+              "samples": [
+                98.13623752436261,
+                98.13893126806859,
+                97.86331114527759
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 95.84148233136524,
+              "median": 95.83689686413841,
+              "minimum": 95.53064624625034,
+              "samples": [
+                95.83689686413841,
+                95.84148233136524,
+                95.53064624625034
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.10832551121711731,
+              "median": 0.10648352280259132,
+              "minimum": 0.10589629784226418,
+              "samples": [
+                0.10589629784226418,
+                0.10648352280259132,
+                0.10832551121711731
+              ]
+            },
+            "workload": "prose"
+          },
+          {
+            "clients": 4,
+            "decode_tokens_per_second": {
+              "maximum": 169.7560542536439,
+              "median": 166.82472731789568,
+              "minimum": 165.94567068353692,
+              "samples": [
+                169.7560542536439,
+                166.82472731789568,
+                165.94567068353692
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 166.40649395039966,
+              "median": 164.40502298154357,
+              "minimum": 164.1687549081743,
+              "samples": [
+                166.40649395039966,
+                164.40502298154357,
+                164.1687549081743
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.31740666180849075,
+              "median": 0.2125244177877903,
+              "minimum": 0.12559844925999641,
+              "samples": [
+                0.21238208189606667,
+                0.21178459376096725,
+                0.21255472674965858,
+                0.212494108825922,
+                0.31723780930042267,
+                0.16361913457512856,
+                0.16460635140538216,
+                0.31740666180849075,
+                0.3035491295158863,
+                0.3036988787353039,
+                0.12559844925999641,
+                0.30376240611076355
+              ]
+            },
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "decode_tokens_per_second": {
+              "maximum": 223.98365569171426,
+              "median": 223.0445945828983,
+              "minimum": 219.55008388186275,
+              "samples": [
+                223.98365569171426,
+                219.55008388186275,
+                223.0445945828983
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 222.51073720009296,
+              "median": 219.49196747467525,
+              "minimum": 217.53091756856122,
+              "samples": [
+                222.51073720009296,
+                217.53091756856122,
+                219.49196747467525
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.45359786227345467,
+              "median": 0.41263225115835667,
+              "minimum": 0.12801054492592812,
+              "samples": [
+                0.41311512514948845,
+                0.12801054492592812,
+                0.41191498935222626,
+                0.4132812172174454,
+                0.4122282527387142,
+                0.41237885504961014,
+                0.4132964760065079,
+                0.4128856472671032,
+                0.45322657003998756,
+                0.45254993811249733,
+                0.45359786227345467,
+                0.45241472870111465,
+                0.16903623193502426,
+                0.453052569180727,
+                0.45270419493317604,
+                0.17035286873579025,
+                0.42222290113568306,
+                0.2656318284571171,
+                0.26575396955013275,
+                0.42193492129445076,
+                0.2657802179455757,
+                0.26551956683397293,
+                0.2663125768303871,
+                0.26579059660434723
+              ]
+            },
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "decode_tokens_per_second": {
+              "maximum": 182.73156984252847,
+              "median": 182.4632260909517,
+              "minimum": 182.01489758392827,
+              "samples": [
+                182.01489758392827,
+                182.73156984252847,
+                182.4632260909517
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 175.07977477944567,
+              "median": 174.92730303974486,
+              "minimum": 174.6976398490474,
+              "samples": [
+                174.6976398490474,
+                174.92730303974486,
+                175.07977477944567
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.10144595056772232,
+              "median": 0.09645744040608406,
+              "minimum": 0.0956810936331749,
+              "samples": [
+                0.0956810936331749,
+                0.10144595056772232,
+                0.09645744040608406
+              ]
+            },
+            "workload": "structured"
+          },
+          {
+            "clients": 4,
+            "decode_tokens_per_second": {
+              "maximum": 397.08901853899414,
+              "median": 386.159095082014,
+              "minimum": 384.0323896836557,
+              "samples": [
+                386.159095082014,
+                397.08901853899414,
+                384.0323896836557
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 379.0172600982741,
+              "median": 374.5885247599057,
+              "minimum": 373.5498012033271,
+              "samples": [
+                373.5498012033271,
+                379.0172600982741,
+                374.5885247599057
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.28995101526379585,
+              "median": 0.2013537473976612,
+              "minimum": 0.11444027349352837,
+              "samples": [
+                0.28991687297821045,
+                0.14787593483924866,
+                0.148045863956213,
+                0.28995101526379585,
+                0.20143896713852882,
+                0.20005100220441818,
+                0.2012685276567936,
+                0.20035765692591667,
+                0.27790165320038795,
+                0.2774306535720825,
+                0.27748750522732735,
+                0.11444027349352837
+              ]
+            },
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "decode_tokens_per_second": {
+              "maximum": 497.29865737925127,
+              "median": 495.09672903779926,
+              "minimum": 493.4017412682701,
+              "samples": [
+                497.29865737925127,
+                493.4017412682701,
+                495.09672903779926
+              ]
+            },
+            "end_to_end_tokens_per_second": {
+              "maximum": 489.58098567417846,
+              "median": 487.34530300523545,
+              "minimum": 485.53257309092874,
+              "samples": [
+                489.58098567417846,
+                485.53257309092874,
+                487.34530300523545
+              ]
+            },
+            "ttft_seconds": {
+              "maximum": 0.4209084175527096,
+              "median": 0.41844293288886547,
+              "minimum": 0.11572129651904106,
+              "samples": [
+                0.41774799674749374,
+                0.4157952480018139,
+                0.4160638712346554,
+                0.4151146337389946,
+                0.41551728174090385,
+                0.4157724380493164,
+                0.41545477136969566,
+                0.11572129651904106,
+                0.4195585250854492,
+                0.4186389110982418,
+                0.41843532770872116,
+                0.418423056602478,
+                0.1187496930360794,
+                0.4205099977552891,
+                0.4193316847085953,
+                0.4209084175527096,
+                0.4208478815853596,
+                0.4187093786895275,
+                0.41995637118816376,
+                0.4184505380690098,
+                0.4193607345223427,
+                0.4204009622335434,
+                0.4188734069466591,
+                0.11754640564322472
+              ]
+            },
+            "workload": "structured"
+          }
+        ],
+        "tokens": 400,
+        "warmup_requests": 3
+      },
+      "transport_receipt_sha256": {
+        "nccl": "a57534e648dc09c1cdab467aa928995eb7059ba9ece4ea2fad24269f0949c40e",
+        "rocenante": "7ea1f896fae91fc40b4e26e48d14e8372fb4cba6a77f20bf9257fc0103234e95"
+      }
+    }
+  },
+  "exporter_sha256": "81bc0d51faa99d188f6ee0bb0c8aae826ac1d0e984c1a5a90757f00ea187b645",
+  "identity": {
+    "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+    "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+    "native_geometry": {
+      "blocks": 8,
+      "threads": 512
+    },
+    "nccl_build_receipt_sha256": "cb6228db18a0792242c85a0993a2fa47c1c43f298beceae83883b2f2f98e97a7",
+    "network_plan_id": "4e46a559df6dc830e3bbd395dc93a391c435d98a9e50d5b33a10934059d8f9d1",
+    "network_planner_sha256": "b201ede9554bd6a02cc09a07a6accf242a63b2d46744bab9132ee4a7e318dbda",
+    "profile": {
+      "cache_entries": 32,
+      "cache_gib": 24.0,
+      "context": 1048576,
+      "max_tokens": 32768,
+      "multi_window": 64,
+      "nccl_channels": 4,
+      "parallel": 8,
+      "protocol": "auto",
+      "reserve_gib": 20.0,
+      "thread_thresholds": null
+    },
+    "settings": {
+      "compile_workers": 0,
+      "forward_chunk_bytes": 16384,
+      "forward_window_bytes": 65536,
+      "max_gather_bytes": 4194304,
+      "min_gather_bytes": 1,
+      "native_blocks": 8,
+      "paths_per_peer": 2,
+      "scope": "all-gather",
+      "sircl_enabled": false,
+      "timeout_seconds": 600,
+      "transport": "prepared-rocenante-tp4",
+      "vendor_manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89"
+    },
+    "source_sha256": {
+      "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+      "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+      "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+      "common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+      "experiment.py": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
+      "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+      "qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
+      "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+      "rocenante_adapter.py": "ebbd0c83359448c617dbcc9e1b34d8d2e8529504165fbf8d95de631f647927b0",
+      "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f"
+    },
+    "topology_sha256": "093af403ee4fec18addc997b9de9752e6ca35b4d5657bd2834ac027d174ac3ec",
+    "world_size": 4
+  },
+  "limits": [
+    "Boundary telemetry only",
+    "Full 1M inputs, 8x1M capacity, vision and reboot recovery untested",
+    "Mia published values and Alex full-stack reference are not controlled local transport arms"
+  ],
+  "model_pins": {
+    "drafter": {
+      "repository": "incoai/GLM-5.3-Flash-DFlash2",
+      "revision": "bf582e4eacc1810f76656d1811693ff6c6737d2a"
+    },
+    "model": {
+      "repository": "Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold",
+      "revision": "078455ffe6472f9a52fbc1139f58b9db2881b25c"
+    }
+  },
+  "passed": true,
+  "protocols": {
+    "final_rigmark": "54 requests; 15 decode + 18 prefill + 21 concurrent",
+    "final_sparkdash": "400 tokens, 3 waves, C1/C4/C8, 117 measured + 3 warmups",
+    "screen": "256 tokens, 2 waves, C1/C8, one 8K/64K cold/replay pair"
+  },
+  "references": {
+    "alex": {
+      "arm": "switchless-nccl-v0.0.1",
+      "cold_prefill": {
+        "32768": 1971.556,
+        "65536": 1964.652,
+        "8192": 1978.119
+      },
+      "concurrent_e2e": {
+        "1": 43.023,
+        "2": 72.456,
+        "4": 110.814
+      },
+      "decode": {
+        "code": 71.326,
+        "prose": 31.236,
+        "structured": 109.2
+      },
+      "receipt_sha256": "7f9c9cc1f617f5e183950127f1e3b716edec4dc23c731876366fde64dea89b46",
+      "source": "https://github.com/alexellis/glm-5.3-flash-4x-dgx-spark-switchless/blob/e2d0839a92f118a0a874abcfc1fe8012ee69978e/data/rigmark/glm53-nccl-v0.0.1-tp4-20260912.json",
+      "warm_prefill_65536": 36074.876
+    },
+    "mia": {
+      "scope": "Published point values; TP2/P8 C1 and P8 counting unpublished; original raw settings unavailable.",
+      "source": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/7d42f905388a8d7fa91e2dc9458e0a4a68001540/README.md",
+      "tp2_p8": {
+        "code": {
+          "4": 126.7,
+          "8": 167.0
+        },
+        "prose": {
+          "4": 103.2,
+          "8": 130.8
+        }
+      },
+      "tp3_p8": {
+        "code": {
+          "1": 100.4,
+          "4": 165.3,
+          "8": 211.5
+        },
+        "prose": {
+          "1": 65.7,
+          "4": 121.8,
+          "8": 166.0
+        }
+      }
+    },
+    "phase_one_historical": {
+      "mia_comparison_receipt_sha256": "acc8f0225ae83ab87e0e1c2e3c6e94cf4a8b31f6e270a7a9e7a9ca9af1d04e32",
+      "p8_c8_decode": {
+        "code": 290.7455224654342,
+        "prose": 215.7148264223055,
+        "structured": 537.4867239431126
+      },
+      "p8_c8_e2e": {
+        "code": 287.4932643772911,
+        "prose": 214.28424692458347,
+        "structured": 514.1537933717151
+      },
+      "rigmark_comparison_receipt_sha256": "5f4ce1c7216eee0f62351a1cabf903d179838970bac61a4396ecf582690b31b4",
+      "source": "https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring/blob/v0.1.0/docs/benchmark-comparison.md",
+      "transport": "NCCL 2.30.7"
+    }
+  },
+  "schema": "tensorfold-rocenante-public-final-benchmarks/v1",
+  "tuning_screen": {
+    "omitted_trial_count": 0,
+    "protocol": "256 output tokens, two C1/C8 waves; one cold/replay pair at 8K/64K; screening only",
+    "summary_sha256": "205a7b8620fb7417393565244367353d21545abc432873563a3c21517e1b47a5",
+    "trials": [
+      {
+        "capacity_bytes": 16777216,
+        "comparison_group": "cacd6b5a0cd6199a673919f76314a2f08ebf542eae392624047060bb6ce544c8",
+        "decode": [
+          {
+            "clients": 1,
+            "maximum": 97.36437242205164,
+            "median": 97.35893589101252,
+            "minimum": 97.35349935997341,
+            "samples": [
+              97.36437242205164,
+              97.35349935997341
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "maximum": 223.8285665111679,
+            "median": 222.72493098167013,
+            "minimum": 221.62129545217238,
+            "samples": [
+              223.8285665111679,
+              221.62129545217238
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "maximum": 144.44041359010717,
+            "median": 143.85974406363982,
+            "minimum": 143.27907453717245,
+            "samples": [
+              143.27907453717245,
+              144.44041359010717
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "maximum": 284.5754774181327,
+            "median": 283.64016516275467,
+            "minimum": 282.70485290737656,
+            "samples": [
+              282.70485290737656,
+              284.5754774181327
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "maximum": 186.24213436540614,
+            "median": 185.4625182102249,
+            "minimum": 184.6829020550437,
+            "samples": [
+              184.6829020550437,
+              186.24213436540614
+            ],
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "maximum": 506.73234410172415,
+            "median": 506.09418953994344,
+            "minimum": 505.45603497816273,
+            "samples": [
+              505.45603497816273,
+              506.73234410172415
+            ],
+            "workload": "structured"
+          }
+        ],
+        "evidence_sha256": [
+          "822de70aac5959a03bd25aec664efe1469c4432ce0e3589ab17636f09233f462",
+          "52b6288c1be69a4dd274cb805c786d9d8b5603d1be1ca56c41c89d84c7dcfd8e",
+          "58a2d82e285044f6d68f50041641e7ed98785cc24a66b4e53cb3a90b34dfcbc7",
+          "4ae12ab3de247a84fde3e1df49e41fe59ae66fa753c8c5c8f7c72fd68477060d",
+          "746fb729ca2e4419b085a413f5613a7a294cc1e94e697e3670ce0d06a760517c",
+          "c0237ff7722a18fd8434c9ae8dbf9b25322231667bf0fabd98dce1843f16fecf",
+          "bbb3f187a3f55c016201884980291b3a2be122038764c241919680de0bdbf09e",
+          "671690aaabaa4fd464ebccf87127d8667e04b40f8ee8f65762b378fd15e0e55e",
+          "c982ce192f389b68c34610cdb1aeed92b06e001f26479bd3ce2cb0e93dfd2397",
+          "9a2240ed98a084b477e08f784bf1cf9380f88496bbaf35847c4daafd0bf907bf",
+          "1d09f53654e0a38a0f07d3beaa5e06ab427d3bf5bbf2a409fcef3ea930b6ebf5",
+          "f788df9f75c6cf69294cbd8c1cea2ca8d464dcf7f0b46c843bf219d20cd4ea7b",
+          "d2429b19887577f39a1cb1d39fc7c8633d714eccfa85c379ec47849b69eb1f25",
+          "006149c6fbf22917f131379c18d02e44c7d06cb46e80f66ff0a8ce4e44234418",
+          "18f2e04c678e6ae6917a3c86e87f78e4f288c8a7066e920f788053d8f742c9ba",
+          "0cf237f5a777d7a679a32949338ece450b15bd1c6c22d2a41e186ba65da225a9",
+          "15080c8dcc46255c84e4ec10a7086715eb6854ba241e4f7c66fb537511f2e198",
+          "707cf0ac84f74be25e6d0b7cbf6fae83791c168323a14fabc358b3e49fec6f32",
+          "52b6288c1be69a4dd274cb805c786d9d8b5603d1be1ca56c41c89d84c7dcfd8e",
+          "f3bd5cb5409293dd84bf3e85afa4250e6afc7e1bd5524d1557b9114ae18d13e2",
+          "69053d3a3e4d4b3758f1d61b5be06c8432622bc7c1c1910dcd1d3efec7e75927",
+          "35d874476fd3a753590bc83dce226a808128790910c8177b21b1328f26e1161a",
+          "0003fb3486856a896138392c41a1e3a6715103f2cee99326131aee3f2cb9e722",
+          "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+          "7aae55ea94009f699ff722f676a2dcb6b5308ef34be9ded5e8247d5e1db1ae01",
+          "b5b5bf5f92d980d1ea24820a47904c8bc6ee2a962faf9122b05567766f2170cd",
+          "b7b1bcd6914653423fe8250b775d2e9301376dd54f9f2665b9f0bbb2097fcaaa",
+          "f2b77d2359d11095347b8179f500d93ab7f0544c9955684ca8dbfaeb868069cc",
+          "58c9578058239ec8e5c0b5fdec3f98a6953696030def0d62da593c93e16f4359",
+          "f2afd46515f02312d628c73eecefa91065920623214f07db5450b0a409b61969",
+          "877b0c05a7bf38cafde791b6e0c8f632884fed5d703f27f0c47c198b64bd0f82",
+          "24f396d0343e5b972f9b597ef0f651bfce4bc9052a3aeae2e8be20ba4790b02d",
+          "e73ba11ec73c7ee544f56c4265d2efb1e5f1819757fb9e0be50f60f00343a2a1",
+          "bd636ff27a1173876f26fad2acfeab30a127a600a2b03e4d78e56b3e943ddf06",
+          "bffda6a6e6798fa60ddc4fad1670c277d8a52063eb88e02df87120a509fae2ba",
+          "b24b39e529c7a5547461ec473ded836bb882118b4e43dcf3f3e5c79a0d18df75",
+          "94c4ee596841b6a8d48bf72c3ec1acea3f556f6384afaf184ff1af8e4ebe68d7",
+          "c24f73c6f28cb82e47da0cec5f3d877ffb6211a0c0fcd5be3c2ea7bc0bebfdf5",
+          "2e0c3fb946d0b25d0983d2b3e33171cdf6d06948df35d87189f849124c6b2146",
+          "a951c0de508ddf006f01e39819a403cda940d3e7af47aa77eb2d9497ec179d6f",
+          "6733693a8f15b1f850640df1299b64c4849febf48da786ac772c6c4944c02201",
+          "9a21203b5fc1cd178dead91860ffe7a99ffd8773c9eaaa1560d1e252b5a68897",
+          "def61b96efd114b34d9e8cec1c19cc4353048509939431c435ead918b812b2e6",
+          "1c3b7e0fdf0c299ef810863c38d5a204475cc3ebfe3031c4f07cc0f34341548a",
+          "117c6de15075779ffa603193cffca193044da1a1256b28a3a9170ad50b2b8b51"
+        ],
+        "forward_chunk_bytes": 32768,
+        "forward_window_bytes": 131072,
+        "geometry": {
+          "blocks": 8,
+          "threads": 512
+        },
+        "historical_anchor": false,
+        "identity_sha256": "ef3d5fedec8d80c8fca5e6f233911e8b4d0a4f376c378bb963b97815cdf72f94",
+        "nccl_channels": 4,
+        "passed": true,
+        "prefill_single_pair": [
+          {
+            "arm": "cold",
+            "depth": 8192,
+            "tokens_per_second": 1820.9733360333767,
+            "ttft_seconds": 4.498693
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 8192,
+            "tokens_per_second": 195321.99995231396,
+            "ttft_seconds": 0.041941
+          },
+          {
+            "arm": "cold",
+            "depth": 65536,
+            "tokens_per_second": 1835.2833218628125,
+            "ttft_seconds": 35.708928
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 65536,
+            "tokens_per_second": 1059064.979557538,
+            "ttft_seconds": 0.061881
+          }
+        ],
+        "source_group": "529567cccb7a88adf31e2f889c8c5b9440a63e0ab4fc3d5884bb93f29618f045"
+      },
+      {
+        "capacity_bytes": 16777216,
+        "comparison_group": "71936a4ec0312aea7852c58c1e26298c5c237cb803869c3b7405c98a80ff7a29",
+        "decode": [
+          {
+            "clients": 1,
+            "maximum": 98.7826023610126,
+            "median": 98.68194406771039,
+            "minimum": 98.58128577440817,
+            "samples": [
+              98.7826023610126,
+              98.58128577440817
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "maximum": 234.0956771113922,
+            "median": 229.41317724331532,
+            "minimum": 224.73067737523846,
+            "samples": [
+              224.73067737523846,
+              234.0956771113922
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "maximum": 145.4513520215723,
+            "median": 145.34221579595663,
+            "minimum": 145.233079570341,
+            "samples": [
+              145.4513520215723,
+              145.233079570341
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "maximum": 287.4462491249715,
+            "median": 286.3027763350951,
+            "minimum": 285.1593035452187,
+            "samples": [
+              287.4462491249715,
+              285.1593035452187
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "maximum": 187.9416332071126,
+            "median": 187.5071647524146,
+            "minimum": 187.0726962977166,
+            "samples": [
+              187.0726962977166,
+              187.9416332071126
+            ],
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "maximum": 508.26054379763406,
+            "median": 507.7896905036165,
+            "minimum": 507.318837209599,
+            "samples": [
+              507.318837209599,
+              508.26054379763406
+            ],
+            "workload": "structured"
+          }
+        ],
+        "evidence_sha256": [
+          "e99b861702228edc3d2708f9adebc0d9c27d67bcdf5b6ac9d331a5f6f87836b1",
+          "e532c6fe27f48e60c42b283f812471432824a7f903c8a9fc78492ece4bdbabb7",
+          "84fcb2b32a7a62e796b0781cebaa85729c9c409a0c2d83f7ea48af56b696592f",
+          "42832986da8957c02e1ec0e4d818dbbd3a8cd86203ef3bdfd25d2d9e96ad9086",
+          "ef00635a72fe7ac059ba295fb932e2e3b496daa3740bb72ea8cfe05220394ad4",
+          "038a5e766a2ebe957a95abd817ea60d9f5ac6e3ff68b346e782aa9312d54cee5",
+          "040887cfe689770c293c9921bb2509b08fcac019487566938f7721aff3fdd743",
+          "b1841e398f1c23ec192f62acb9acedda3b79f532f01864fbc72b05df1d563993",
+          "c21cc84833b9baf55ec63db4092421328332442fadff65d77fea4f3b4783b863",
+          "ca0ee545687aa34f87d6aadb7022f0c1e02b991ce69fb54a9f279e370b4df0a6",
+          "11b328dc349a7fa689158d854487ac412aff011e8d253f603d916cf44d01a065",
+          "b313d3a99b1bc4cd6a33874c3925ca30d86df1cfc26afbb4bc8c3f966b42782b",
+          "a7a5f9561963095f9ee5a60115cb247bd61680d108f31c0246f67f0494d5884d",
+          "a0b2b0ae7203bbcc098c9e3f4a7efd71d78a66997ff07d1508458005f128adac",
+          "aebf389989707635bccef97da3b1752c704c69e9815b9468ab770ec64e12f99e",
+          "66e54e4cacf849f3507b236d2185b5283f62a1758710d1e91c6917b6dd779020",
+          "3c22b1f34acdc7771e1a33a88f034dec8af7dc6b718cd951449faf8fffb44b33",
+          "707cf0ac84f74be25e6d0b7cbf6fae83791c168323a14fabc358b3e49fec6f32",
+          "e532c6fe27f48e60c42b283f812471432824a7f903c8a9fc78492ece4bdbabb7",
+          "55176ebf30f92176a49db37b8d1cded79b6120269914d6d154ea171d16666697",
+          "f098a7b61f2afe4bc8ea4567458ef33971f205af51fa7cb177bbd576af13ffe4",
+          "f27c6152e54dfb84fce1c85b06b407cbb9a3fef04dc5ed0da55ff8678407de29",
+          "7b9eae9d14e7791b647c3bff6bb046ce0321d553e616decb654bff31f940c565",
+          "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+          "4537ec3ed49e7afef28fa97b7b2adc634b932ea926652a9dbb97c1daaba95b43",
+          "1362e0cfb78820582d86a63e7282dfcbb2d7755d11d5b30b74e947f0e4fef873",
+          "d6f489faae2c063e3295c35722b83d91fe623fec84885d4a626b992932468f1b",
+          "c39dfc8aa604f3a8a45c1c25f515874925a52a2115f525094fcb2036a549ec99",
+          "142666f3c16cf5215acbbaf2fdf4d34b2c8772b82ac3d4c1e9e34548c3326491",
+          "ce08d9998f411b45bc953086e04b38db489a150402f73f65e04f15f563a41017",
+          "674d8f4cecf912e8762905ccf4121ad38188d05a2eb996e040a71e1fee5944cc",
+          "f3a70bb773ea057e818d1ce8ed8f75057c694bc9e9563344c6a19db0fdec94d8",
+          "c0b1fad1e5af37846e33af0f36dfc49d95212aabf0a20ec2ad02fbe2402d7737",
+          "40037aa4c6a58bfa332a09e1a98615c7d725fc3e353f934514275a2dd36b591d",
+          "195206814b7a80310db5995ae87a1231c6a8142a6da9e1b61adbbea777e7d0fd",
+          "5af4120192cdb1755dd1456e50dc18b4a0fd4cdd446b4a82ec751ceaaf53ca5e",
+          "70091c80f87ddd5106c8aac1b2c1f73d36bea613c12c933783c6fc8812a795ea",
+          "76906779591fa54af7d508810af42cb6c5451de21909178ec7bd682f3bd904e9",
+          "6cc00d816710ca11b32487bc25db2a20ab3811114a07c34495e6c9ea85d88fc8",
+          "1fc4dc134599745ad1ead2cc2ae0ed5bd9fdfe3998d8e88d2deeeb67105a2e19",
+          "8cb2e6ee6dc9850fd5f1cd1644411e1d423418095b402e7d7f1d31308fcc3cf9",
+          "c863e47eb9c5710bf6514b3f8818e699a9f307423a9fcbcbdb92465d0382923a",
+          "4a00f64b66da931b32946d68a2e9dbb177e6ee09a8ac9f21cf603737b2ce3efc",
+          "d46863d66e4f85448850f8d2d770f2015dbaba1ea67c87859ac03673a54b862c",
+          "cc19ec37807ca4df8f41ab4d4c63fa1ca23ab58d9566f0e066e9448d15b4bfd6"
+        ],
+        "forward_chunk_bytes": 32768,
+        "forward_window_bytes": 131072,
+        "geometry": {
+          "blocks": 8,
+          "threads": 512
+        },
+        "historical_anchor": true,
+        "identity_sha256": "3cac81a63c346b3baae5af020cc82d3ff9a532b32773f05dc498f718738a9120",
+        "nccl_channels": 4,
+        "passed": true,
+        "prefill_single_pair": [
+          {
+            "arm": "cold",
+            "depth": 8192,
+            "tokens_per_second": 1424.2993254051048,
+            "ttft_seconds": 5.7516
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 8192,
+            "tokens_per_second": 229089.18034620656,
+            "ttft_seconds": 0.035759
+          },
+          {
+            "arm": "cold",
+            "depth": 65536,
+            "tokens_per_second": 1843.7619383065035,
+            "ttft_seconds": 35.544719
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 65536,
+            "tokens_per_second": 837114.2448395668,
+            "ttft_seconds": 0.078288
+          }
+        ],
+        "source_group": "d354d721ed222a8beba89a6d164c6440bb294dbb866b1296e2c3fc79b264ddb7"
+      },
+      {
+        "capacity_bytes": 1048576,
+        "comparison_group": "cacd6b5a0cd6199a673919f76314a2f08ebf542eae392624047060bb6ce544c8",
+        "decode": [
+          {
+            "clients": 1,
+            "maximum": 98.68166968136865,
+            "median": 98.65245529270385,
+            "minimum": 98.62324090403906,
+            "samples": [
+              98.62324090403906,
+              98.68166968136865
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "maximum": 228.44646263376075,
+            "median": 225.3414095700964,
+            "minimum": 222.23635650643203,
+            "samples": [
+              222.23635650643203,
+              228.44646263376075
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "maximum": 144.5722667296329,
+            "median": 144.54518352168978,
+            "minimum": 144.51810031374666,
+            "samples": [
+              144.51810031374666,
+              144.5722667296329
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "maximum": 298.98945827090677,
+            "median": 294.95723360841714,
+            "minimum": 290.92500894592746,
+            "samples": [
+              298.98945827090677,
+              290.92500894592746
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "maximum": 186.70758318156584,
+            "median": 186.40491812358354,
+            "minimum": 186.10225306560125,
+            "samples": [
+              186.70758318156584,
+              186.10225306560125
+            ],
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "maximum": 511.64733923951127,
+            "median": 511.48709978385375,
+            "minimum": 511.3268603281963,
+            "samples": [
+              511.64733923951127,
+              511.3268603281963
+            ],
+            "workload": "structured"
+          }
+        ],
+        "evidence_sha256": [
+          "ad491657dc7dfa7efef53cf31f6406f0881580b655cc78af15e1a8a9deec1327",
+          "a0dcb57188942795654aefbb0cc2814047b5c20f77069ae01a46b39b720ba892",
+          "a43e5464ffd618d6d740847b8bea3905bba809e87d8b43d647d75b181019143a",
+          "a7a956ceaeeecfeb03d39b4877a6c87df43e70212aeafd4b03a00cae17e30291",
+          "75aae185bae9750785572a3a6c0862efaa82875e9722c775b34540d568f81b9e",
+          "22e69e77a881a6c8b7e7cabf2c68dabbff806c8abbdb68f61ef5b5b14cbdd094",
+          "9adcdb24db649a575f5f1299a8efaee8c7db6b4420401edfc2628b2ee27a8799",
+          "03966355aa2689415bd235487f775e8a126fc5adc89e672e8e4fa3dea16ef4d4",
+          "ce13978850318754c21e8f5a861f831002d4c5178844698af88f4b8346d052ab",
+          "f609fea518e469f29161fc02941ace92ac016774161f730d20423957a271acfd",
+          "67d327bd590d3bd438be6b2f18dbfa54b8825d27c802627043102b7f592c009b",
+          "f0c670fa487e5924cf7efa7386ebba35b347cc89ba9167c43ccdf54dc9fdcc69",
+          "7f4620aa7e6dc0273bd7eaa02b00418a618c32241a31218edf324062b91b2b29",
+          "53a05e3c60221425c5b465a57621e0370227898f76b144e29d22aee1702acc64",
+          "232ecbbc41a8122ca75d41836692c579d14f3dc292a807f06d27197731510a08",
+          "96bf124dfccc5379a0743915e616c3f765f88afb740cdfa0e3e7f22bc003ef7f",
+          "ea61552523b4bceaa4ed1c3c5689c13b6cc09dc75e7602d9e2f237b35b17b3cd",
+          "707cf0ac84f74be25e6d0b7cbf6fae83791c168323a14fabc358b3e49fec6f32",
+          "a0dcb57188942795654aefbb0cc2814047b5c20f77069ae01a46b39b720ba892",
+          "25f9579dd6d9f1a28a883ff1565d44979b24781400627db5c1447e8798b64057",
+          "7ccf642a009e91d00025f32a7ecbd4d1b28acd0dafa04de71719a921ab717df4",
+          "a246fe9d0bf3bee889c3b212066fa912a90c217270ec74a14074b4124aec7063",
+          "5816c48a89b7f31a15bae38dfafa93f4c8c5ea854f37a3ccd432a20eb5d2bf64",
+          "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+          "df9bf7094fea4c03a3f7b4d05de347ffae3ffb946641376d0e64fa685e691d85",
+          "5d780b52634848ba4466fb9c28b287ed4c5279bbed2792d0288093aa67f274aa",
+          "d0ab2574c14bc8280dd26bc76ec3eeca6c9875f1694d20acfad81d8b6b3c6703",
+          "8f657709baedd37b59cd5dfef7962e2f94ef5c0e6d0651cbeeea3ccc9a50b8d2",
+          "a569523009060266aee72d95c5b5a77c082ad959ef6a2eb644e7c84ca6470b26",
+          "c93ced183e474c398fbcf3cd530facbe14fe3d532a7a3a9c9317f1440d688bce",
+          "cc94e3ce08bedf2bf68680eeba1597c864d689d1fcf4b858e82cfa3ebeff1179",
+          "1fd47cfb2d328d7f16d99e6de6c3bf56e02391ff80c65c57aab0bfce2f6518c1",
+          "53ca414a010bffae83fd0247b8940149811193ce2a0adcfacb2f8a4e68793a04",
+          "52240c6867d61cbcb7dc91a772ec755bb4f4c1eeacab249b6cff71aa602fbdc5",
+          "98a204164eb620d8b53ede6d2582bf115aafc24a65a5521d87ab23a474f61d2b",
+          "95aaa9e9a1a1caec2f481a1eadad948e66e843a9173829dc931311de91c67ef2",
+          "b4fe73e728dcf28fc7a53a12ac3c98208ec7422750bb9b7701b1c52f90ee8162",
+          "41dabf411767b84f293b55070e50b39a4a9647bb38d16d1761f16b9e0f4452d1",
+          "df496fb16764d7dc45c0c3cc42ab38574fe25cb4e3468853e15366308f4ed34a",
+          "5ec85a890499bccb03c5ab91924a243ea4c416799b369a03404e20314460e7a4",
+          "555744b06301fe93f9740f5fc24a8c62552d7fa92b77b6e09b7dacf0ca2ff494",
+          "81a2400207977fff3e3d25a1615cb2fa801edc64083c3e2096c3e4dcf61a58e8",
+          "4fbef198cbf1bec204ff2f69423c67841be13ec4cb0571a7c370d41dabe6e7e5",
+          "45bde1ab2ec0b6ba902dd5e9a6c654d445451837965048216902000e5adf4a96",
+          "33852df946efe2fd7e6ca83c4a7c975aee701eb6927eff29012d2d1ce2b8a4c0"
+        ],
+        "forward_chunk_bytes": 32768,
+        "forward_window_bytes": 131072,
+        "geometry": {
+          "blocks": 8,
+          "threads": 512
+        },
+        "historical_anchor": false,
+        "identity_sha256": "b8b47970544cfb0758553aa54e2ac91c94064843f50ed7b289f027fea97d2e32",
+        "nccl_channels": 4,
+        "passed": true,
+        "prefill_single_pair": [
+          {
+            "arm": "cold",
+            "depth": 8192,
+            "tokens_per_second": 1862.3358265263278,
+            "ttft_seconds": 4.398777
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 8192,
+            "tokens_per_second": 211008.93800066967,
+            "ttft_seconds": 0.038823
+          },
+          {
+            "arm": "cold",
+            "depth": 65536,
+            "tokens_per_second": 1871.4018326294113,
+            "ttft_seconds": 35.019737
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 65536,
+            "tokens_per_second": 1094528.6926314384,
+            "ttft_seconds": 0.059876
+          }
+        ],
+        "source_group": "529567cccb7a88adf31e2f889c8c5b9440a63e0ab4fc3d5884bb93f29618f045"
+      },
+      {
+        "capacity_bytes": 1048576,
+        "comparison_group": "cacd6b5a0cd6199a673919f76314a2f08ebf542eae392624047060bb6ce544c8",
+        "decode": [
+          {
+            "clients": 1,
+            "maximum": 98.61411272024677,
+            "median": 98.42285130701887,
+            "minimum": 98.231589893791,
+            "samples": [
+              98.61411272024677,
+              98.231589893791
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "maximum": 230.61867313075078,
+            "median": 225.84843346671434,
+            "minimum": 221.0781938026779,
+            "samples": [
+              230.61867313075078,
+              221.0781938026779
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "maximum": 145.26740608328112,
+            "median": 144.7009919479233,
+            "minimum": 144.1345778125655,
+            "samples": [
+              145.26740608328112,
+              144.1345778125655
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "maximum": 298.94341783544724,
+            "median": 289.3265714552981,
+            "minimum": 279.7097250751489,
+            "samples": [
+              279.7097250751489,
+              298.94341783544724
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "maximum": 186.58644656397428,
+            "median": 186.52192363461862,
+            "minimum": 186.45740070526296,
+            "samples": [
+              186.45740070526296,
+              186.58644656397428
+            ],
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "maximum": 566.1578285206623,
+            "median": 536.4909359445031,
+            "minimum": 506.824043368344,
+            "samples": [
+              566.1578285206623,
+              506.824043368344
+            ],
+            "workload": "structured"
+          }
+        ],
+        "evidence_sha256": [
+          "784ed15d03cfdcd7467d2c811e7a7c6bc25a432173cdcb58d9bf65eadec36079",
+          "2ca8f4dd22ef50c27ce8068fc4e253242ea46e5ec7049d98c93236954f103156",
+          "8633c176091ada5aa16eef201f9db6b349e6d89f39c729c33b43e5c34f5eebf7",
+          "1738d7547113a101214d9624e673c2a529118360e83729e02a6a8558f9b27a09",
+          "7c17b1d67b3550439bf3bc2539dcca531a4728818adbf0a030b0e4a9596a8a56",
+          "1f34fe6d3150ca410c15007eb0a109645bcebf4afa0bf97e53784ccdd7627b72",
+          "9a85841195c671226c0c3f81d50dc67bdbea3cdbe52124f6a0a1551e952eec2f",
+          "4d21d7274a8cbae01b56207b2ea8fa54c48385b52d55e99db7b039b94e82f976",
+          "470014b8250888d1ee725d7ea92ba8f65c22c5c1367cd6a80358d17c40ef7e71",
+          "c7829e0d37b48f5a32f707199446673505691aeff735404ceaab9acf6ad9356e",
+          "5520846c3b6ef641f38f5947f4786017dcab5512505af29c92301a8b2947592c",
+          "7304269bb693080dfcb13d48649c47342b52a9c86013c32976a8449d35051a62",
+          "90e7d3c1c8404aa82476fb5fb7612c632ed7b24ce33f355e4590189e7aedffb2",
+          "f38a3a2afd0d90ee008cfa660227faa0b17d3cbe2ab1208f0ea381406025fe3b",
+          "c611cd67407deb02c4a626a636adb72f8d84c17371fc2beb8da13dfa9b04b75d",
+          "8b8e5012be4f73d2838e9bd9f49d513ade94a4777ebcd43eefb030280cc3b01e",
+          "b8b0a37bbbc42ecae43199451d2eb21e22610ecb5273b9ae23f56c66b6600bf6",
+          "707cf0ac84f74be25e6d0b7cbf6fae83791c168323a14fabc358b3e49fec6f32",
+          "2ca8f4dd22ef50c27ce8068fc4e253242ea46e5ec7049d98c93236954f103156",
+          "93682f7f5c7cf7a4013088aa53df126241233a5d13574f4a53260a0acfb7aeae",
+          "f4e01a5de49a91bc13614eea9c2a945d01e2f28889174bf9874caf79df12d345",
+          "69a5e8582c88c67adf342007e109c4f8b795b0fa75b84726c103e74ba1767e24",
+          "627c1d8363ec80fe93b2ccffa0399e67c24053ab19ea10cc24986852af2d91be",
+          "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+          "5d00334088becb6437ab14bab6ed1e02976c504e62d1b33d587c5a3208d65d04",
+          "809fff28b5314347f51cde10674d7f0959fe571a45e933212556b8d628a471ce",
+          "8bfbaca4ef759bcd2d41fee888fa8427e19ac823d8288bfe2173add119c35bea",
+          "ee2181b9d6cf6cc328be203a22ec976e635b6e4947e608ac903fdc6cc3643a46",
+          "309518a68d265a0ccd0759a60740d7d0fb20876ad8c7460c3f38816ff9aabd51",
+          "c9b171ac67fd4fdc701adac6955180de3d76b0faad11aa84665cfa68c7d42b24",
+          "99c01d3c6200efad2fa934b6fb7e5987ca73a1ad921f042f5fd45ede2cc2060f",
+          "bd678d3e14f2a05e1a7faa73aef9890c1733aa65715cf6c79e1df2d6a884e13e",
+          "ba5695aa4eb289fdedc3924f55b9ad2604af5acc61474033ea84c8a7f90eb95f",
+          "46d3a0c44e4b425e66ae50ff6bfdd9b395d7c1a4449103a4b57e8bb5d6de2836",
+          "f8be84a7120d649ee1325dda0abbe089b0a48d6d5e95c216c40122efa3c32818",
+          "061eea4af3c53368bdab001fa4cd313f871a3737b55a96a3df6dd5d22fc7e741",
+          "4a5ee7381b8c56a349f30b032df0a0a8b4f2aac57e4976721a08674bc54e9918",
+          "6b4049da427cc0a074f8832e9abd124c63b43988b6e9808b02e7615117701cad",
+          "f55a57641e64b08be2f48ad5367f5f57c4f5ff2da726f1489a4d2ca2f75564ed",
+          "87e377a211c0af48086f00bca28d56d790648dcf167bad90d33fd607c1c8126b",
+          "ff2a85438969c45542f0843e1572da7004b643099238ccaa123e2bbe9eae0afb",
+          "631d3e1c84207fceff644b5c2fc01e4875d6c0d7e7d330c398434205d6d9aed7",
+          "1acf2b25d25e36b17ed9b518dc1df09efc4383cbc6068c8a8e45dbd95161667d",
+          "45f3ab3979531a244cf8676072379ed095526a404652f56c4911d71ccbd2ccd4",
+          "5ca6e35afd40297a351518b9763c590efbc38f08ced9caf77929367058f7859b"
+        ],
+        "forward_chunk_bytes": 16384,
+        "forward_window_bytes": 65536,
+        "geometry": {
+          "blocks": 8,
+          "threads": 512
+        },
+        "historical_anchor": false,
+        "identity_sha256": "8c5a405489d254fcff0c4cde6a73de81d463f1fa5e7b4f44cd4dddd37111d37a",
+        "nccl_channels": 4,
+        "passed": true,
+        "prefill_single_pair": [
+          {
+            "arm": "cold",
+            "depth": 8192,
+            "tokens_per_second": 1867.0229325661037,
+            "ttft_seconds": 4.387734
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 8192,
+            "tokens_per_second": 239105.68868392633,
+            "ttft_seconds": 0.034261
+          },
+          {
+            "arm": "cold",
+            "depth": 65536,
+            "tokens_per_second": 1875.0771077393397,
+            "ttft_seconds": 34.951096
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 65536,
+            "tokens_per_second": 1192712.97796058,
+            "ttft_seconds": 0.054947
+          }
+        ],
+        "source_group": "529567cccb7a88adf31e2f889c8c5b9440a63e0ab4fc3d5884bb93f29618f045"
+      },
+      {
+        "capacity_bytes": 4194304,
+        "comparison_group": "cacd6b5a0cd6199a673919f76314a2f08ebf542eae392624047060bb6ce544c8",
+        "decode": [
+          {
+            "clients": 1,
+            "maximum": 98.83809590653576,
+            "median": 98.66393282172308,
+            "minimum": 98.4897697369104,
+            "samples": [
+              98.83809590653576,
+              98.4897697369104
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "maximum": 223.40985556067574,
+            "median": 222.88592660842312,
+            "minimum": 222.36199765617047,
+            "samples": [
+              223.40985556067574,
+              222.36199765617047
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "maximum": 144.71267786688125,
+            "median": 144.67268958992798,
+            "minimum": 144.63270131297472,
+            "samples": [
+              144.63270131297472,
+              144.71267786688125
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "maximum": 286.11097791571694,
+            "median": 283.86411999203983,
+            "minimum": 281.6172620683627,
+            "samples": [
+              281.6172620683627,
+              286.11097791571694
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "maximum": 187.63799517468755,
+            "median": 187.44048460219318,
+            "minimum": 187.24297402969881,
+            "samples": [
+              187.63799517468755,
+              187.24297402969881
+            ],
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "maximum": 574.8353219112024,
+            "median": 541.5439757246381,
+            "minimum": 508.2526295380738,
+            "samples": [
+              574.8353219112024,
+              508.2526295380738
+            ],
+            "workload": "structured"
+          }
+        ],
+        "evidence_sha256": [
+          "6653f917b3911b25d1e7032d59f0b72e3315df0cdbb592181176a86f725a1084",
+          "f6909da6d2a3796c5661658027be33ec10f8bb548110c9bfa82840be2ea7c621",
+          "074851151cbbfb3c53fcc0ee553e8f33e1cd40630f29595e929f3891620fe117",
+          "9c0e48d44e7029a133d6ca6d6144ef921afd7ddb5b8acc2e3db91d2f74e706fb",
+          "8d144a87f035daadef0dac9c411d611a49bf6f5ff4a2a20c4f86299f7ea672aa",
+          "88961b22c24601bcee8cba5de6b314ae2c6f716d311c031a053fdbc32be8b10d",
+          "0df0b20e6e20cb9948ec7842dad224ee585fa2d787d0f334287cd0085e4615c6",
+          "93c4e0805d3b3d0aafe27d7b27a393628dcd711642394cc566ad31b6bb88dc1d",
+          "3afe2f1bf126e56fe3bc3b3fbad43f663c47e2285cfad5c6243d744042cd7909",
+          "d5b4e3faea21195e781cedf51b43db711cfdd5ab6e040997e771b6a8d82e67ed",
+          "9f92c81404977e942021ad26cb1c1561b1c497af01d28aee4d02c576440130b0",
+          "1fb7fd78105d82204e8f7cccc3eb599a62ac6168353d3202fbf65cf894ceeee2",
+          "1ab918d6e9e78c8b2c2d6bb6ba74ef839921a73447cd8baf9196be767ab3b731",
+          "634ce56bed24000b0adbadba217786a1dd9986e74f8cba6ed24b49a1c0ab3e5b",
+          "7f0ad05ba78bc383fa95ddfcff6ce7413db14893a5481822e28c4de255c036ed",
+          "f966d55cbacabd19eba4e030cacb487a12573764b397c0b508ccc38bd9e98c6f",
+          "6481270ca60965123ffebd7515b76aa981263f53132168706f0e413170923893",
+          "707cf0ac84f74be25e6d0b7cbf6fae83791c168323a14fabc358b3e49fec6f32",
+          "f6909da6d2a3796c5661658027be33ec10f8bb548110c9bfa82840be2ea7c621",
+          "e618405c05b4c5746d17f305e12461eebb0a923cc3598050d477e1b07d66b333",
+          "e102986447d3d5b194af19a43d5ab434de3dc38016d7def57ed470487c56ccdf",
+          "83be8fd53db549ba0f7d6700664bf7ff7e732ce661c85aadcf815453a3dd3b3a",
+          "7a34c8f3a1e4810340696277fd0e791da79d79b8d72d3a5c07db59c2745e48c0",
+          "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+          "2436ff37f2a1e85ee2b0142158938bc9881db46b1026dc649fb989b24c13a9a0",
+          "b9f7f807b4be4a2c81321bf1286a58a1d10a1cc3fb1a89d95f229b5682271b7b",
+          "79d06b764ad46dfa2f87fe1327f618444d5a68b9b42a3f9743d1820587f5205b",
+          "cd16a2d50500a23fa32f6cb50500fe33ed1b93d1855df2ee8ec38fe5ad02b8a7",
+          "a92b88aafb87c8506b25476c99c3bc6a94aee870376aac1d7416fea54bf0b9e1",
+          "5b88029a674f0cdc2ba508b7db84988cf02ebd8bbc4517118d638826d0cf21e6",
+          "8ae1f69860652d57d26f0aa1b7176e5bfc79df5f562b22da3a81ddf88deb498a",
+          "4a6aaf3b8da29bd657025f7ab25e900d4e1023c2b86e5ee97c853bd89d937a8f",
+          "c943c378136dba18a29eedb89840d1aec61b8f6835a86faa2bce2d334944b702",
+          "00d0cfe19edd1833e6b29e38d127e1c7729c2eb462a9208862d251f1eb72ac66",
+          "7af009b16cbd53604834546167b50b731bf74f04abb020f19aa29b80a228b52f",
+          "4b86d0b6021049fc3081db7217da404b3175fed0f27048f70f3d144019b53dd2",
+          "8990723e12cbd90fcaca752d6b3b7c236719302e2b41fb1bbeee0d06e97c3581",
+          "d501084c55feed11681e6e4d0d13c62a3cef562a80019dbeaec719ca811bcc8c",
+          "bf23a7b0fd8117678c074baeebbb7b7c9b926a0157b4c8b9ba6b3f95e9d5c887",
+          "f6dbaae5c8eb196d5e0e785781504cc6b74ffcb6c555e18fd4acbf538897e1f4",
+          "176cd3c30d60737402a188c81a1cc2c762bdef7bb32a200a8d1b05e73b692784",
+          "a8ccb88b7df8c3c6491165d0c9ef621b98ec6e9e478b7ff8d8a8f22e01fa2bbf",
+          "3185acbce8fb58ebc38e59ff3a0d1100a3ef6e49d6e399db24723ff460215246",
+          "ec67099f26515d3d503256c03b49abcd19625e690290b00e35a60d798d7bb0de",
+          "ddcfdba1e8244170eeeb385310d80ec67f926e2d3fb0e95037837666a932e0a2"
+        ],
+        "forward_chunk_bytes": 32768,
+        "forward_window_bytes": 131072,
+        "geometry": {
+          "blocks": 8,
+          "threads": 512
+        },
+        "historical_anchor": false,
+        "identity_sha256": "53903efe552feb052820210ad6899ba62f2dffb2629719ac25ca422cb437baa6",
+        "nccl_channels": 4,
+        "passed": true,
+        "prefill_single_pair": [
+          {
+            "arm": "cold",
+            "depth": 8192,
+            "tokens_per_second": 1826.3541205219822,
+            "ttft_seconds": 4.485439
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 8192,
+            "tokens_per_second": 194100.22509181377,
+            "ttft_seconds": 0.042205
+          },
+          {
+            "arm": "cold",
+            "depth": 65536,
+            "tokens_per_second": 1833.9641222933035,
+            "ttft_seconds": 35.734614
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 65536,
+            "tokens_per_second": 1137146.0299833426,
+            "ttft_seconds": 0.057632
+          }
+        ],
+        "source_group": "529567cccb7a88adf31e2f889c8c5b9440a63e0ab4fc3d5884bb93f29618f045"
+      },
+      {
+        "capacity_bytes": 4194304,
+        "comparison_group": "cacd6b5a0cd6199a673919f76314a2f08ebf542eae392624047060bb6ce544c8",
+        "decode": [
+          {
+            "clients": 1,
+            "maximum": 97.87392763621008,
+            "median": 97.63626634229271,
+            "minimum": 97.39860504837534,
+            "samples": [
+              97.87392763621008,
+              97.39860504837534
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "maximum": 231.62608075916367,
+            "median": 226.58085560285366,
+            "minimum": 221.53563044654368,
+            "samples": [
+              221.53563044654368,
+              231.62608075916367
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "maximum": 144.10450042561231,
+            "median": 143.9672698514854,
+            "minimum": 143.83003927735854,
+            "samples": [
+              143.83003927735854,
+              144.10450042561231
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "maximum": 299.7625745406588,
+            "median": 290.352956018412,
+            "minimum": 280.94333749616516,
+            "samples": [
+              280.94333749616516,
+              299.7625745406588
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "maximum": 186.93403483643672,
+            "median": 186.15085766306356,
+            "minimum": 185.36768048969037,
+            "samples": [
+              186.93403483643672,
+              185.36768048969037
+            ],
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "maximum": 572.6070765715101,
+            "median": 540.9541140065135,
+            "minimum": 509.30115144151677,
+            "samples": [
+              572.6070765715101,
+              509.30115144151677
+            ],
+            "workload": "structured"
+          }
+        ],
+        "evidence_sha256": [
+          "7284abacfec422a97d4036e9dafc8afa1515a3b7c264f9732ab74fc4c2910d66",
+          "a07d341d366c2ed6c4dcb7ad7361bb1131949a005400810782bb77e433443c08",
+          "e8ef1283814549a4cb1b06198cae496b57db8d76210f771d283ab13cba627dd0",
+          "5e6d07ae036349aef0416908946c47894decc69843b19bb14bf2305991187724",
+          "9cb7943fb13ea4af1ffb215edfbcc01d06f3bf4db088822084f76c32940e6975",
+          "9507650374ee49341d5db96d79df94fb70ac651efc87ca314e414ddb0c0322d2",
+          "51ac2acd5ccc725a4dcaccba33c1b77aed99af4bf61a615a5b49f4f9ea8c681c",
+          "04389e64bbd6e0dbaa82f62e7ee9b2e21f51f43d86c432f66ba2d2f552997bd1",
+          "c79bcc445816e2ce4034863817bef6fae5a93cd38e1b67dcca7e933b2adb94dc",
+          "9e03eb4374152e2530aeca8e35d2e43ab3b87ff963418cb1b09723205ab0acc7",
+          "e5905890f5ee168a430fc98538ba98316617d91020b0483f412a5bccc68dedec",
+          "c030cea336d3719fd47c88119079b74748746d3c63b5a7f5c193af5aaa76be94",
+          "22a121337e71b4e95eff42e858a0ea0a4ae31bc742f3fb70a015b01f8d2dc087",
+          "5a0cd4ef8140cad0af92bdb4d4368d18ce6927aff516e00287e564483c0107bb",
+          "a9d001cf61fc5ab1ddf6fd2a8991e03d6fcf908e0ae55c1e93815b6bf234dc5a",
+          "b49ea6b1fa78a403b44c688dabf51398e30723f8fdfbc1bf3d5290dd0f10e9d3",
+          "1df9a0f79114a920a5770aab9891855c60211a624b8ec730a568d129c44b864e",
+          "707cf0ac84f74be25e6d0b7cbf6fae83791c168323a14fabc358b3e49fec6f32",
+          "a07d341d366c2ed6c4dcb7ad7361bb1131949a005400810782bb77e433443c08",
+          "5eb5f4f85a1a9dac284210e9429ae930bacb67ed8c1ad4bad47e450d0c314419",
+          "d8fc07ec467224a0cb7143d0e410aa8618652be7607ff24d57e46f9131bcfced",
+          "443bed5fa500b277205eda9a74a573b157c2080f5d9598f24ae30933844a22d5",
+          "1ab23ff8dea094649342181614c0663cc3647b0886229f0a239c1c8164740e33",
+          "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+          "004110986fe943531a96b36479493f448281cfdb6807d1ed46aaf65be04ec36e",
+          "2a52e7cc3ec6593e746dd5117e1d30172ec742be6f02e194860a46431a3f999b",
+          "3a700aa069f125036db44c73f7f89b047bc4e604965aa67a8720cc00c4cbed89",
+          "65936c6c7458b3fa8d271f0c907c50a6277d2cbbcf1c9bfe229feaa1476a5222",
+          "9c4595f59586ae862eff41bc7c174f91429d1454ba30cf258445f454fddd0424",
+          "14c82f8d2b742f8fdd2c2352c71ffb6e691e73d9697341e17af28db3b9d3f497",
+          "b22c10d5e9ce5de22f95e91b78397c9b14c1ed3ef0f8af27063b3350026b7678",
+          "3c996a915e3d51af8f19434662a724fc063b6e4eeb8289a5deee193ba848678f",
+          "6edb49b4de959479adf4f391771bf9c579f20cff9f2c7b18573f19a8fd44a161",
+          "60eae84ec6cb20e14f962663fd58e03c56b82ef06b6152c45d8147fd9628625c",
+          "e348f71a509d64b94f1bac04fcfc38ed48d40437398899b7a8595bb7022a7ff8",
+          "9e9b7d8d2bc7e7f03b5774d53a2dbc8a069c6d75aa44c7537b810fe7db57f85d",
+          "f90ecd56a5deb0021d6a7bf6576942c6424ef49cc3b23bbbb0653243c15d8d92",
+          "47fbb79cbf793d36a1fc026280661eaf52e4cffd68ce0c62fbaffb3fe3ef993a",
+          "ec3c9bf63b1ad0ad35eada6f2b7eb5bdedeaa0447311559b675df9afc7ae7532",
+          "2e5abdc8869e2ab3e58a8c125f5bf3ecef047cbef12d59ad16a81f1d555a1e38",
+          "50704c1289d2ac3e1f19565bb302060c5737bb7dac72dbaa9b33d802a219dbf5",
+          "6cefed8f6e5ebc1c6d25ec11eb33096b85b146ce4d4a7ba01f8e98844e89f446",
+          "2fcff10853f9bd6a3733cf2593a55906a79d3027b49cbae48274ed912c1dfa8d",
+          "6cc024d17638f5b100e68822e7f8d1e95c34896bafae6b83b33f98c6d692a1a1",
+          "fb1171371a9adf362211f6571730eb58dc09c4043dd31b8de4e5c70c32e60b9c"
+        ],
+        "forward_chunk_bytes": 32768,
+        "forward_window_bytes": 131072,
+        "geometry": {
+          "blocks": 16,
+          "threads": 512
+        },
+        "historical_anchor": false,
+        "identity_sha256": "79ef3e2b4f967a9c2eb7be1c9aeb2874ff7eb9de453232d4b5751a1f225d5615",
+        "nccl_channels": 4,
+        "passed": true,
+        "prefill_single_pair": [
+          {
+            "arm": "cold",
+            "depth": 8192,
+            "tokens_per_second": 1827.349796285742,
+            "ttft_seconds": 4.482995
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 8192,
+            "tokens_per_second": 193417.38678755253,
+            "ttft_seconds": 0.042354
+          },
+          {
+            "arm": "cold",
+            "depth": 65536,
+            "tokens_per_second": 1837.7280727769032,
+            "ttft_seconds": 35.661424
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 65536,
+            "tokens_per_second": 1066250.1626968633,
+            "ttft_seconds": 0.061464
+          }
+        ],
+        "source_group": "529567cccb7a88adf31e2f889c8c5b9440a63e0ab4fc3d5884bb93f29618f045"
+      },
+      {
+        "capacity_bytes": 4194304,
+        "comparison_group": "cacd6b5a0cd6199a673919f76314a2f08ebf542eae392624047060bb6ce544c8",
+        "decode": [
+          {
+            "clients": 1,
+            "maximum": 98.28750742626565,
+            "median": 97.91165591683594,
+            "minimum": 97.53580440740625,
+            "samples": [
+              98.28750742626565,
+              97.53580440740625
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "maximum": 229.19694267263648,
+            "median": 226.0706767414191,
+            "minimum": 222.94441081020173,
+            "samples": [
+              229.19694267263648,
+              222.94441081020173
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "maximum": 144.3799053750393,
+            "median": 144.00201567501279,
+            "minimum": 143.6241259749863,
+            "samples": [
+              144.3799053750393,
+              143.6241259749863
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "maximum": 298.03723518578755,
+            "median": 290.78069001359876,
+            "minimum": 283.52414484140996,
+            "samples": [
+              298.03723518578755,
+              283.52414484140996
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "maximum": 186.3188457123996,
+            "median": 185.2197530255446,
+            "minimum": 184.12066033868962,
+            "samples": [
+              184.12066033868962,
+              186.3188457123996
+            ],
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "maximum": 540.6619300919652,
+            "median": 524.1317175174302,
+            "minimum": 507.60150494289513,
+            "samples": [
+              540.6619300919652,
+              507.60150494289513
+            ],
+            "workload": "structured"
+          }
+        ],
+        "evidence_sha256": [
+          "37887fcc122bcfa012937671d437e2fb671a04f34bf1a0794a254ce28ff01a95",
+          "035fd8acd0890447fda1e6dd2fcc78dc66439a50c96a8f5540c63ee433dd319c",
+          "f59e8290fb3cba5eb7ce18fd6d493c4ed9c22b0116a816aab3aadc1853d971cd",
+          "6f9c7fc13d5800f70767e0c5116b75a808451885fc9994959577fbec679418ee",
+          "abf366d3feb547cb78026af7bf24865d2caa71059e3205652f63e21901e6b6cc",
+          "d04329b8418ae44666e6cb27934cf8b1fcbc6ab3d94c82649019c925597df385",
+          "6f5dbf0ba5d9ca51f2063a7af0007c3a28e76484b5d14dbfe523c33d7518f4f6",
+          "5275c2defcfc887001fd0a35105d2e7e87d9a751ebe78e92d727e1cb5bc768d5",
+          "fdaca6cc3650421c25163df7b4e639addd8a163aac38f09b53b8b3da23337b46",
+          "f8c324f6b305408bcb8e680a96856fc5f5f1b9e4578f27697245088546e396b6",
+          "da5604a5f4d02d3a39260565a737ecd8b791d53af56d440afd3af71487596084",
+          "f10e6023dbe19bc08f7f5ef1f71cabc8b6cc91c8f092f879323571483aa14232",
+          "2419bfb5ac773c1cb9358928452e9ccf89a1381ab203662fff8a97f9c991eaef",
+          "bf2f1dd254813ec24c4a47a077dde89e9b8143b2576a67b704bfa422931f2a4a",
+          "580334ad39b002c137b0df7dc9d32b5414f381e9a7ace7736b64bda01891831f",
+          "2e55c56645e5b225cab864e6fa5fca9e61377b2c3a4f873983b94d9cc6fefdb6",
+          "ca5cf16bb99a2c4b20bd2b15f112c101495071a60a14a2526800b9f6b0e26cf3",
+          "707cf0ac84f74be25e6d0b7cbf6fae83791c168323a14fabc358b3e49fec6f32",
+          "035fd8acd0890447fda1e6dd2fcc78dc66439a50c96a8f5540c63ee433dd319c",
+          "46f56c4ce5f57e613b30382911a7cf0c7a6e41d8b829bfdd05d400d6370c2d58",
+          "4ad97654828190843bddb7ba24aa3ee6b9bfe203af0924b574be4b4a8c5f69c4",
+          "05a5ced8493dd5089208899527522c46e0b8bd8fc4c708c96aa00978f1297787",
+          "90aab5f3f1265b38121daf2724777644669925925eb60049c847f3bb682cb2a1",
+          "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+          "ae2e659a3ef1db494f139070eb942c0b9cd6fd58b71e9119d94c4c4a54512590",
+          "6ee711a02de3b471b047534620644cd42c22a1ba9dd26810cc2fc9d701195bda",
+          "a54a7755f840b8793cc1d2efc40f449e843ac209fabb9167097961bd89331aec",
+          "8c37c43d549ff3671f88a63a57f2e4b10d2faeb5c9227aed61e12616e23e1d0b",
+          "a0ab7c6defa018d1701bbc58f4641c8a0cb7a0d28c77b601b9303241b1bb091a",
+          "7de7c4a121be037a70806b5200f164724e190755292e2295fa3624a5fa3da57d",
+          "8773a1b1874c34665d47a15eda30b7c0ce6976e8d719e73c742f856bbc484a43",
+          "ca9b70bc657a387b3a750cfbac6e1c6de777b3b4ff09acc476a8aac56280c1fc",
+          "4a3d0507390cdbdd5216d52d8e4274ddb7ac114f2dc8b7b1eeb4cb2cdce88e26",
+          "a1af228d05d599edec45ad14fb792fb66f0da61e2a927beec62ee15db292c4a9",
+          "42e0753ba51b8502fcc2bd1958d5ff9d6aab96629f1d6c78874fff0ebf2b79d3",
+          "eb72addd8dd91b1f78cf3a2c736d8f5338840dc7a86711460ef26c55553880d7",
+          "120b9a1361af4a08436900173db9c57f944f91244afc1275137544c413930071",
+          "9e4a40f31317a07a6f7921d5c9d5db335b1bd87015a92d0d8f6eca2256e2b914",
+          "952f66ac2e006dd51ad58891bde46aa5ab5260ee4e78cd6529e85b8a8fd3bac3",
+          "aefac2b1e2e9264e29438d8ec652c5fb392c7b186d2f3b8c48fbadee0100e950",
+          "0a8438ca69a78f38edbdccd8c294b5026f324e5491ee778fc875d43cc2b9dc26",
+          "2ff46d662944e8b792bf576639e0e935d26c2c2c3c31a569cc85da14102af498",
+          "fd5dc2e8f902078a77892a7a1b6c440c9f7b2a94a21432565728544daafd4fea",
+          "fe3f4b8773a85596bf64c3bdfb70b0c5985940dfab309d9d31dc58bbe4dc7266",
+          "1ca0179a168426c96bace8c93fdb783ff279d0f70d29714bc764587442bcd21e"
+        ],
+        "forward_chunk_bytes": 32768,
+        "forward_window_bytes": 131072,
+        "geometry": {
+          "blocks": 8,
+          "threads": 512
+        },
+        "historical_anchor": false,
+        "identity_sha256": "253218e600d1b9abc6b4d86beea00820c70f8db21cb240c2604e2219bfd95d63",
+        "nccl_channels": 8,
+        "passed": true,
+        "prefill_single_pair": [
+          {
+            "arm": "cold",
+            "depth": 8192,
+            "tokens_per_second": 1814.0609654692876,
+            "ttft_seconds": 4.515835
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 8192,
+            "tokens_per_second": 197217.00611488277,
+            "ttft_seconds": 0.041538
+          },
+          {
+            "arm": "cold",
+            "depth": 65536,
+            "tokens_per_second": 1821.658478617194,
+            "ttft_seconds": 35.976008
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 65536,
+            "tokens_per_second": 1201899.9761586003,
+            "ttft_seconds": 0.054527
+          }
+        ],
+        "source_group": "529567cccb7a88adf31e2f889c8c5b9440a63e0ab4fc3d5884bb93f29618f045"
+      },
+      {
+        "capacity_bytes": 4194304,
+        "comparison_group": "cacd6b5a0cd6199a673919f76314a2f08ebf542eae392624047060bb6ce544c8",
+        "decode": [
+          {
+            "clients": 1,
+            "maximum": 98.41943562912549,
+            "median": 98.20787484617772,
+            "minimum": 97.99631406322995,
+            "samples": [
+              98.41943562912549,
+              97.99631406322995
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "maximum": 223.0813855430139,
+            "median": 222.8286473392036,
+            "minimum": 222.5759091353933,
+            "samples": [
+              222.5759091353933,
+              223.0813855430139
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "maximum": 144.56573173941882,
+            "median": 144.43015885096557,
+            "minimum": 144.29458596251231,
+            "samples": [
+              144.56573173941882,
+              144.29458596251231
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "maximum": 299.61020115240586,
+            "median": 290.9494838582614,
+            "minimum": 282.2887665641169,
+            "samples": [
+              299.61020115240586,
+              282.2887665641169
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "maximum": 186.46194805511746,
+            "median": 185.97232509530855,
+            "minimum": 185.48270213549964,
+            "samples": [
+              186.46194805511746,
+              185.48270213549964
+            ],
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "maximum": 569.5930943234259,
+            "median": 558.7393333582697,
+            "minimum": 547.8855723931135,
+            "samples": [
+              569.5930943234259,
+              547.8855723931135
+            ],
+            "workload": "structured"
+          }
+        ],
+        "evidence_sha256": [
+          "e697b94bd087a1b7bcac419e6f1b66fa85e72af65a4dfbdc7c232ff9b00859e8",
+          "916093de743157216f2b02dbea8b0286fdbe7b8afb4732a290c0c27f142ccb27",
+          "f6133f44a1bfec1e3cfcfc56a7ddcf61d2fded08bcd2c885202ecb73d1ec7e58",
+          "fffb88fb9c74d52a6202dbe5d32cab30cd5267211579f767244229a5ffa77662",
+          "8bb3d126c68a5571e6850b7104c39878678e6d5fe052fb25db25a022d64f1e9b",
+          "dd535405bf0c0b1959bffd23146ff71afca418d319ea77a5bd55c4cb08a35fbf",
+          "364ea169fcae190e6d8e9ea0c641cc8f9f1d43017b6d6725ab25a16ec1947cf6",
+          "6b31e2f9f67ba092f9e2ee8556f962d6dcd331e62f89ccfaeb88e21ba59ff119",
+          "c3ed86d65c388042cae1e68f736bb2358abdd7e3f9e8e738f4ec8904372aa15a",
+          "c9593a4dccd788ac2df6dcfea9438df47167036bcb889abd68d40e1e7da0b059",
+          "185e70c8e7068718d7c0b8a1ee5683898642e04f065528195811371b81ca0abf",
+          "09b9f9e897bb2690ab6b8e2fd9ca844527eba8499d6c879e4eaf03c2b01a2ac2",
+          "b84cde197dd749c5f4c52f9aaaafbb5ae0919cee2d211cd86ba7e151c672fd91",
+          "177ea9435b451c29483acb625fdeed241b015a0d38a42dd9ab859b2c53b9c39d",
+          "fff3d7fe1397cea659a24e12c4224931c99239875ae948d557ffda0fec669e54",
+          "00e72a1075fb35e796c067cbd3c6739b4dbfc6dbd7b54d2ec44ec31871fe33df",
+          "7d073f1d584a6e52d7ef11cdd0136a934231d22673a985b585991842a937f5b9",
+          "707cf0ac84f74be25e6d0b7cbf6fae83791c168323a14fabc358b3e49fec6f32",
+          "916093de743157216f2b02dbea8b0286fdbe7b8afb4732a290c0c27f142ccb27",
+          "c242256f833b956d5bed4f28b4e206b97108ec68d1d03281b6e8f663b65f552a",
+          "5a11b6300f896fd2dd72e7afd30444aefeaaac3fcec934ce0fc4b10b3da3035d",
+          "64149c4239f92135d953090fe273b6310f84e5c72e3a7cc1d4ea39f7dffcf99e",
+          "0cc9ae0067cbbb124af1908e2eba7b22cb44c046f9e611b4259aff9e1b2fdff3",
+          "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+          "5be3c2dbbb98891cf6eb9d0c91f402010645cfc140387e8cdd93aa09c7032e29",
+          "081dbc93bc7dc6361de02f5222ff6f79cb6c6d4574740df8d1888d547d069280",
+          "5e58aa4dff21eddcb6bf9089cd706ab454980b73e383b67743752da940208b14",
+          "c0ff5498d288a41f012b4a895b889bdf60ce31a6695be874af697b43b0f809bf",
+          "8d761da29f91dd4f8f2c400c68db6aa85758b21a5bdda075968ac0fa6b857d93",
+          "35cab29eba4a5393ba0fa7bca17fa6268039c5b471f20d715025dce905b8af21",
+          "b40db0eb13ffe4b4fed093eed50ed207bc759643c3bd70a04c9eb3f689c5e04a",
+          "34171646e2033612b879d6a1b2285347bb1edbdf5b9bb38c4c22fa3b4d78ec53",
+          "663d1fb9b10c937be8f01bebf61d0534b5bd6eb785f88e24183e42b5c4703308",
+          "377819d5590a82cac2744eb663591cb3d8a25619f61cc9ba22ae035c48cddcf6",
+          "321e1ebd586b7dfcfd67c71b5f4441f3c13794677ef3f1ebfc02ee7cced396eb",
+          "0cab3b06352002210964e0c6403fecf649dcb13473980ecdb01998d5bd71ca02",
+          "7829c1ff2ebad1527cb43a5d05573849f3c1d0439f4eef86ed411bef523716e8",
+          "cfcdda861bd8ab093cf90f387f491aa11872f9dae61e08af2fb3720ffff96df8",
+          "bf4919d9b7d5d05ff1079c1da1afb3619e6f9b5dfd4e20b7dd4c033731e9e180",
+          "dea7b7a160a22a0d56d4b6800c9adfab83278ed247911debd09ec6709bfdabbe",
+          "31b9fb606ceed078d10c9208472ec685f622a5c62ebad39763c5a6fda0a075c0",
+          "fd109e686fc84bcf1226ac98e28bb3d440d7e4a7f541c69ee991ee7e438730ff",
+          "f9854c620e9af7f93cc0ce064e1f7f235ee570f0f08fa377aacbd9e4882b2f28",
+          "348abf8cfb70d849dd64ba3788da04679e928fabb8d1fafab6eda601a2e116e0",
+          "970d6d617856b4c6bd09bd2755357339bd3ee818a7bceb178f659f4c0dca7d9d"
+        ],
+        "forward_chunk_bytes": 65536,
+        "forward_window_bytes": 131072,
+        "geometry": {
+          "blocks": 8,
+          "threads": 512
+        },
+        "historical_anchor": false,
+        "identity_sha256": "0954e5a6b27b950616569bda3bbb4361acf7db72f2c2cf636368962bc5c22d3d",
+        "nccl_channels": 4,
+        "passed": true,
+        "prefill_single_pair": [
+          {
+            "arm": "cold",
+            "depth": 8192,
+            "tokens_per_second": 1830.4173718048692,
+            "ttft_seconds": 4.475482
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 8192,
+            "tokens_per_second": 223032.9430982848,
+            "ttft_seconds": 0.03673
+          },
+          {
+            "arm": "cold",
+            "depth": 65536,
+            "tokens_per_second": 1841.1036733299545,
+            "ttft_seconds": 35.59604
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 65536,
+            "tokens_per_second": 1147077.8709327357,
+            "ttft_seconds": 0.057133
+          }
+        ],
+        "source_group": "529567cccb7a88adf31e2f889c8c5b9440a63e0ab4fc3d5884bb93f29618f045"
+      },
+      {
+        "capacity_bytes": 4194304,
+        "comparison_group": "cacd6b5a0cd6199a673919f76314a2f08ebf542eae392624047060bb6ce544c8",
+        "decode": [
+          {
+            "clients": 1,
+            "maximum": 98.63077449832727,
+            "median": 98.37998255371473,
+            "minimum": 98.12919060910218,
+            "samples": [
+              98.63077449832727,
+              98.12919060910218
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 8,
+            "maximum": 231.21678278326203,
+            "median": 230.7491577165518,
+            "minimum": 230.28153264984152,
+            "samples": [
+              230.28153264984152,
+              231.21678278326203
+            ],
+            "workload": "prose"
+          },
+          {
+            "clients": 1,
+            "maximum": 145.47193027491298,
+            "median": 145.01196340633066,
+            "minimum": 144.55199653774832,
+            "samples": [
+              144.55199653774832,
+              145.47193027491298
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 8,
+            "maximum": 298.38185315076163,
+            "median": 298.29011734045207,
+            "minimum": 298.19838153014246,
+            "samples": [
+              298.19838153014246,
+              298.38185315076163
+            ],
+            "workload": "code"
+          },
+          {
+            "clients": 1,
+            "maximum": 187.3762966529907,
+            "median": 186.98138330638557,
+            "minimum": 186.58646995978046,
+            "samples": [
+              186.58646995978046,
+              187.3762966529907
+            ],
+            "workload": "structured"
+          },
+          {
+            "clients": 8,
+            "maximum": 564.1067769401586,
+            "median": 554.034757032428,
+            "minimum": 543.9627371246975,
+            "samples": [
+              543.9627371246975,
+              564.1067769401586
+            ],
+            "workload": "structured"
+          }
+        ],
+        "evidence_sha256": [
+          "57ddd9ff875e0b15c171324f5e49a8f4892c3f9d133efcbf1771c6922c8268eb",
+          "e7ed781ebba2e03254ef6cfd75e03f7042f1a39f8af18d3ca541683d47b5af2a",
+          "47309b196fa6a3b656f1dcdfe0000c312cd0590c66dc55e40757a906a6fd47da",
+          "7611da64ea364c31e3b0cbc0cfaa705fb62688b5974302318fd9c0c66350d6d7",
+          "2e7d42c52172febbd7e9bc1af40316073cb5fb5acb03ecfc6d65c4bc1fcfdf15",
+          "a21965c0a37de34bcfe9992109b8002f576c8b80ff6b5502d8a77978dc6012cf",
+          "30621614fff10621e96c4e6c1bdffb953de11928931ca42a9c179b91578fedaa",
+          "6aa039a9001c3fe6bf0dd4d7da811fd25294ddec756ab87132a612b5c9f8a0b2",
+          "1742bd4cb3a1daf5818a366fac4082a9b7375df8d6a69b1b59b7e7b2c36332f7",
+          "8ffbdd3ecccf3d69f420be45313ee3eaf6636b8051d97f7f504eb486cd3bd4e4",
+          "e66d227c23f9a5a206bfcfbe857911f0e6a7f27946986ef8039b3862908589ee",
+          "c4c3ac60fc0f38cc548d8298bae61c31c3c3a33d17bae1f2ea3b7ecb1318480a",
+          "22af7eb1797235889eb875f618c82b1500a9cdf7281aa595a64504329d0d28b8",
+          "5fc966d4115d87cb6e97340ca54eb3816acf71b23c06cf614f8563b3663f6c70",
+          "bfe399d653ee4deee4240ffd678640cb909bea0ee984bd68d526e63e1d8b292d",
+          "ebddd188a7ad6cab616c48bd2b390bb4d1d602ff6b1505601ef5adff9380b7b3",
+          "3706cd71e06c997475c612672e666339be3b3f0696c11560f346aabaecddee6c",
+          "707cf0ac84f74be25e6d0b7cbf6fae83791c168323a14fabc358b3e49fec6f32",
+          "e7ed781ebba2e03254ef6cfd75e03f7042f1a39f8af18d3ca541683d47b5af2a",
+          "ceb257ec4429ec8b3132bbc0c461acd29dca1871aae3f7fe620309c3e70467a5",
+          "b5c0a0cf399b42e12a3a6c9bf90af031a531872acbf6a496e7a0141e76d76e92",
+          "174e31a0b43d6efbf8b5f64242d8a35966335752c668c0e226a6b6f9eb7df109",
+          "038887c9ff0993b32ba419666a4fe8bc73989c856f4227f5b09fa548f15d07f7",
+          "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+          "0a3fd153ba7b8fe99095cbc665f8fdd2051d5e22b07c7531a314bf1b98e735c5",
+          "de93a8f21473e812d632cde7422e8c10576f0cd3801011f252d03b1216284102",
+          "c071b8cb519ff1365b7b3e35ac3460c8acdd8b405d49125eae05b9416e3139ec",
+          "e0a729b0b64e5a77467e306d51842c93cefd27767ce27347c411564715a73f6a",
+          "04cf37c4849501f6f271965e999e06996601e9f800a65c0977e7e6a116d6cc4d",
+          "e010a926bcfa2d644b32df9a156ca1953ee184399d1a652f8cddfe7eab58cd29",
+          "0f0748812e2b99ccf2ba6187872d5e27b954f9bb3bc805ad25633765e7052fdf",
+          "d14a5b72a9dec1e39704130f548d50f2d0cb35496cad9f2c8936e316ab7990f6",
+          "e9e5eed8f01387e1c4b4bee26531b53e82427b2020266fcd358c3e4408dce7b4",
+          "d5dc448bc30fc228f314d3ba5aa25a0389ccb9a466a878f5afd5926161ff72ba",
+          "72826a465f353fbc61bdc775c228905be7e938b4185fc71acb9ed82edfe4e0e6",
+          "5cbcb581a807e27dec248c31bfa64bfa7e30bdf83ad2bd4577023c676418a5bd",
+          "f4b92077fa0e5f782f0020cf711a60dbaa21dbbabd1dee53c472543270918ee3",
+          "5130881fd8c6796d2e13bc0c5b4234230999a473a450fbb281a08c0b24b2f865",
+          "3892ca54e21951c3e8c5594c172dec2833c0476071141821ef2096db6c9202de",
+          "4c0ada9585a4526d57c55b388c693f702bd8bdeb0074367a7075499d9bddbda7",
+          "68d6230f3cb0f93aeb4c2b79d732d5c8a17e387fe5cf32866b582898c727c3fd",
+          "0323ab1f6ea11e4a13b618a196502a97564d27661da1e1a36dffacce6ff288bc",
+          "eee1cc73dd7999e84dd48ca009216e0f3273a2584ce03112250c10b5a18a7442",
+          "9634e94a73696f8fe291e2937026f1bcec1cc8ca67225396c3572c538a3b2a4f",
+          "1ca1275482ea56419ddc80aff82ddd864a384e744f1a45757c06306a980ab19e"
+        ],
+        "forward_chunk_bytes": 16384,
+        "forward_window_bytes": 65536,
+        "geometry": {
+          "blocks": 8,
+          "threads": 512
+        },
+        "historical_anchor": false,
+        "identity_sha256": "67a2cd32cf87117ef2c65d781cd9c710ca94d4bfb03b2fadd3bd70ef1e54f1e4",
+        "nccl_channels": 4,
+        "passed": true,
+        "prefill_single_pair": [
+          {
+            "arm": "cold",
+            "depth": 8192,
+            "tokens_per_second": 1822.3283269726837,
+            "ttft_seconds": 4.495348
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 8192,
+            "tokens_per_second": 216393.2694085638,
+            "ttft_seconds": 0.037857
+          },
+          {
+            "arm": "cold",
+            "depth": 65536,
+            "tokens_per_second": 1825.6910748845348,
+            "ttft_seconds": 35.896544
+          },
+          {
+            "arm": "warm_replay",
+            "depth": 65536,
+            "tokens_per_second": 1002938.2957884427,
+            "ttft_seconds": 0.065344
+          }
+        ],
+        "source_group": "529567cccb7a88adf31e2f889c8c5b9440a63e0ab4fc3d5884bb93f29618f045"
+      }
+    ]
+  }
+}

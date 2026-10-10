@@ -1,0 +1,486 @@
+{
+  "schema": "tensorfold-rocenante-initial-matched-sparkdash/v1",
+  "status": "Initial measured anchor; superseded for current launch admission by reviewed operational/geometry source changes. Final tuned comparison will be separate.",
+  "metric": "Aggregate decode=sum(completion_tokens-1)/(latest last-content - earliest first-content); three-wave medians and min/max ranges. Serving capacity P8 in allarms.",
+  "arms": {
+    "phase_one": {
+      "passed": true,
+      "raw_receipt_sha256": "5d011c1245b988e459f5d5387d9d04b21dbc869f277981b8adccec83d5c2a1f5",
+      "started": "2026-10-10T01:46:14.114777+00:00",
+      "finished": "2026-10-10T01:49:31.434180+00:00",
+      "profile": {
+        "context": 1048576,
+        "serving_lanes": 8,
+        "tokens": 400,
+        "waves": 3,
+        "concurrency": [
+          1,
+          4,
+          8
+        ]
+      },
+      "request_audit": {
+        "expected_inference_requests": 120,
+        "requests_before": 280,
+        "requests_after": 400,
+        "requests_delta": 120,
+        "request_count_verified": true,
+        "external_requests_or_counter_change_detected": false,
+        "limitations": "Counters cover warmups and measured requests, not /health or /v1/models. Matching counts cannot prove absence of all other resource contention."
+      },
+      "rows": [
+        {
+          "kind": "prose",
+          "concurrency": 1,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 87.98487728398005,
+          "decode_range": [
+            87.55233362780592,
+            88.43278778663776
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 86.07773334572349,
+          "ttft_median_seconds": 0.11228185147047043
+        },
+        {
+          "kind": "prose",
+          "concurrency": 4,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 157.75830667437106,
+          "decode_range": [
+            157.01090685652161,
+            157.92975787438348
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 155.69236043543088,
+          "ttft_median_seconds": 0.303713645786047
+        },
+        {
+          "kind": "prose",
+          "concurrency": 8,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 215.84692703984888,
+          "decode_range": [
+            215.61526032850142,
+            220.46044690909156
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 214.482109283321,
+          "ttft_median_seconds": 0.43508373759686947
+        },
+        {
+          "kind": "code",
+          "concurrency": 1,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 135.45734724121255,
+          "decode_range": [
+            135.44614921234057,
+            136.05152525011306
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 129.45464109031792,
+          "ttft_median_seconds": 0.14696504175662994
+        },
+        {
+          "kind": "code",
+          "concurrency": 4,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 219.46640011570034,
+          "decode_range": [
+            218.70407817864526,
+            226.16194512089285
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 215.32866262605748,
+          "ttft_median_seconds": 0.25680726021528244
+        },
+        {
+          "kind": "code",
+          "concurrency": 8,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 291.45202930694825,
+          "decode_range": [
+            290.64186147149485,
+            292.0705527843438
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 288.16481349365796,
+          "ttft_median_seconds": 0.5577251110225916
+        },
+        {
+          "kind": "structured",
+          "concurrency": 1,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 169.09956963658408,
+          "decode_range": [
+            168.91637235908632,
+            169.8772582821723
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 162.25832694313996,
+          "ttft_median_seconds": 0.10011117532849312
+        },
+        {
+          "kind": "structured",
+          "concurrency": 4,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 374.8834283826799,
+          "decode_range": [
+            374.66219500372216,
+            374.98076217425194
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 365.8281062288347,
+          "ttft_median_seconds": 0.282178932800889
+        },
+        {
+          "kind": "structured",
+          "concurrency": 8,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 498.2960967729492,
+          "decode_range": [
+            496.2649629885665,
+            537.4946492822849
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 490.67477412427337,
+          "ttft_median_seconds": 0.40917730890214443
+        }
+      ]
+    },
+    "nccl232": {
+      "passed": true,
+      "raw_receipt_sha256": "942206a0e2625c823319cd92c77b9dcd92d2fba704572dc989845fa5f2ecc46a",
+      "started": "2026-10-10T02:33:48.301991+00:00",
+      "finished": "2026-10-10T02:37:07.568260+00:00",
+      "profile": {
+        "context": 1048576,
+        "serving_lanes": 8,
+        "tokens": 400,
+        "waves": 3,
+        "concurrency": [
+          1,
+          4,
+          8
+        ]
+      },
+      "request_audit": {
+        "expected_inference_requests": 120,
+        "requests_before": 1,
+        "requests_after": 121,
+        "requests_delta": 120,
+        "request_count_verified": true,
+        "external_requests_or_counter_change_detected": false,
+        "limitations": "Counters cover warmups and measured requests, not /health or /v1/models. Matching counts cannot prove absence of all other resource contention."
+      },
+      "rows": [
+        {
+          "kind": "prose",
+          "concurrency": 1,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 88.49555288098686,
+          "decode_range": [
+            77.96827356399815,
+            88.61386226013073
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 86.59833791381205,
+          "ttft_median_seconds": 0.11197901517152786
+        },
+        {
+          "kind": "prose",
+          "concurrency": 4,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 158.58029983251708,
+          "decode_range": [
+            147.92190251726512,
+            160.4378225955686
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 156.03014439608148,
+          "ttft_median_seconds": 0.20759561844170094
+        },
+        {
+          "kind": "prose",
+          "concurrency": 8,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 221.2346317407718,
+          "decode_range": [
+            215.70242891488286,
+            221.56865773728086
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 217.2724249704179,
+          "ttft_median_seconds": 0.2975467648357153
+        },
+        {
+          "kind": "code",
+          "concurrency": 1,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 136.07700542064347,
+          "decode_range": [
+            135.54382714765822,
+            136.43595365851303
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 129.83700646563227,
+          "ttft_median_seconds": 0.14618993178009987
+        },
+        {
+          "kind": "code",
+          "concurrency": 4,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 218.7192926031296,
+          "decode_range": [
+            212.95062272713534,
+            225.05766685631977
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 214.906935709222,
+          "ttft_median_seconds": 0.3321036659181118
+        },
+        {
+          "kind": "code",
+          "concurrency": 8,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 293.02535875867454,
+          "decode_range": [
+            289.56327684453834,
+            302.7479256628577
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 288.8563864356108,
+          "ttft_median_seconds": 0.39598447643220425
+        },
+        {
+          "kind": "structured",
+          "concurrency": 1,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 167.3811286853446,
+          "decode_range": [
+            166.32328462382742,
+            168.53063258713877
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 160.87133739676875,
+          "ttft_median_seconds": 0.10138802975416183
+        },
+        {
+          "kind": "structured",
+          "concurrency": 4,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 374.7386376745529,
+          "decode_range": [
+            373.9331483781513,
+            390.950412262876
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 365.83749023499263,
+          "ttft_median_seconds": 0.23898044414818287
+        },
+        {
+          "kind": "structured",
+          "concurrency": 8,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 499.4132564941547,
+          "decode_range": [
+            491.80707951124157,
+            503.1027183811217
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 488.64167482111446,
+          "ttft_median_seconds": 0.4390300642699003
+        }
+      ],
+      "runtime_identity": {
+        "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+        "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+        "sources": {
+          "common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+          "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+          "network.py": "f94a69440333904b7d704b4dd8e49a2d1574bbfba2c15c8376507dd925de5b30",
+          "experiment.py": "9ca05a669832d2c7cba30ccceec2289d96c435ac24b3228db9619984a3d8a7aa",
+          "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f",
+          "rocenante_adapter.py": "287599371bc246e1c188a64b4e6c25b2cdbfe8b561848c04e5e2a6020f6cbd75",
+          "qualify.py": "16339d3cd69bc4c1571a86f65213bfa569bcad1e30147eacaa3ba5c39ef6fe93",
+          "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+          "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+          "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e"
+        },
+        "profile": {
+          "context": 1048576,
+          "parallel": 8,
+          "multi_window": 64,
+          "cache_entries": 32,
+          "max_tokens": 32768,
+          "cache_gib": 24.0,
+          "reserve_gib": 20.0,
+          "protocol": "auto",
+          "thread_thresholds": null,
+          "nccl_channels": 4
+        },
+        "settings": {
+          "transport": "prepared-rocenante-tp4",
+          "max_gather_bytes": 16777216,
+          "paths_per_peer": 2,
+          "sircl_enabled": false,
+          "scope": "all-gather",
+          "min_gather_bytes": 1,
+          "vendor_root": "third_party/prepared-b12x",
+          "vendor_manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89",
+          "timeout_seconds": 600,
+          "compile_workers": 0,
+          "forward_window_bytes": 131072,
+          "forward_chunk_bytes": 32768
+        },
+        "vendor": {
+          "manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89",
+          "files": 55
+        }
+      }
+    },
+    "native_initial_16m": {
+      "passed": true,
+      "raw_receipt_sha256": "b4388d229e72c8821b1d8beb9d4e96565680195cd9569a673406e5b458f3e9ee",
+      "started": "2026-10-10T02:49:58.258282+00:00",
+      "finished": "2026-10-10T02:53:06.940082+00:00",
+      "profile": {
+        "context": 1048576,
+        "serving_lanes": 8,
+        "tokens": 400,
+        "waves": 3,
+        "concurrency": [
+          1,
+          4,
+          8
+        ]
+      },
+      "request_audit": {
+        "expected_inference_requests": 120,
+        "requests_before": 30,
+        "requests_after": 150,
+        "requests_delta": 120,
+        "request_count_verified": true,
+        "external_requests_or_counter_change_detected": false,
+        "limitations": "Counters cover warmups and measured requests, not /health or /v1/models. Matching counts cannot prove absence of all other resource contention."
+      },
+      "rows": [
+        {
+          "kind": "prose",
+          "concurrency": 1,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 99.1152495700415,
+          "decode_range": [
+            99.04698886866554,
+            99.45564914366489
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 96.71759075076588,
+          "ttft_median_seconds": 0.10856234282255173
+        },
+        {
+          "kind": "prose",
+          "concurrency": 4,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 168.05040391514686,
+          "decode_range": [
+            166.4863916475632,
+            168.7925796897702
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 166.3096317986685,
+          "ttft_median_seconds": 0.2938392125070095
+        },
+        {
+          "kind": "prose",
+          "concurrency": 8,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 224.3438893509198,
+          "decode_range": [
+            222.8469573323391,
+            228.92155790460774
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 222.91047023768357,
+          "ttft_median_seconds": 0.423087103292346
+        },
+        {
+          "kind": "code",
+          "concurrency": 1,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 148.03041443569322,
+          "decode_range": [
+            147.8095108177577,
+            148.15876464917437
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 140.84386882898318,
+          "ttft_median_seconds": 0.1445213183760643
+        },
+        {
+          "kind": "code",
+          "concurrency": 4,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 231.97161765778728,
+          "decode_range": [
+            225.04220105462534,
+            233.0563512074772
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 220.94259756955088,
+          "ttft_median_seconds": 0.3513410519808531
+        },
+        {
+          "kind": "code",
+          "concurrency": 8,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 298.2795745653379,
+          "decode_range": [
+            295.5489366565827,
+            305.88133597818864
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 291.07927734029107,
+          "ttft_median_seconds": 0.41688367538154125
+        },
+        {
+          "kind": "structured",
+          "concurrency": 1,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 185.23433158846535,
+          "decode_range": [
+            185.1534093281433,
+            185.39212171456182
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 177.52012514071274,
+          "ttft_median_seconds": 0.09693874046206474
+        },
+        {
+          "kind": "structured",
+          "concurrency": 4,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 391.56766600587684,
+          "decode_range": [
+            389.52999994216464,
+            391.6458861870932
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 380.6866281168368,
+          "ttft_median_seconds": 0.2634233795106411
+        },
+        {
+          "kind": "structured",
+          "concurrency": 8,
+          "sparkdash_aggregate_decode_tokens_per_second_median": 530.4846193956066,
+          "decode_range": [
+            503.08328919309866,
+            530.9889928857644
+          ],
+          "aggregate_end_to_end_tokens_per_second_median": 513.7794519308014,
+          "ttft_median_seconds": 0.37458267621695995
+        }
+      ],
+      "runtime_identity": {
+        "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+        "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+        "sources": {
+          "common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+          "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+          "network.py": "f94a69440333904b7d704b4dd8e49a2d1574bbfba2c15c8376507dd925de5b30",
+          "experiment.py": "9ca05a669832d2c7cba30ccceec2289d96c435ac24b3228db9619984a3d8a7aa",
+          "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f",
+          "rocenante_adapter.py": "287599371bc246e1c188a64b4e6c25b2cdbfe8b561848c04e5e2a6020f6cbd75",
+          "qualify.py": "16339d3cd69bc4c1571a86f65213bfa569bcad1e30147eacaa3ba5c39ef6fe93",
+          "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+          "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+          "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e"
+        },
+        "profile": {
+          "context": 1048576,
+          "parallel": 8,
+          "multi_window": 64,
+          "cache_entries": 32,
+          "max_tokens": 32768,
+          "cache_gib": 24.0,
+          "reserve_gib": 20.0,
+          "protocol": "auto",
+          "thread_thresholds": null,
+          "nccl_channels": 4
+        },
+        "settings": {
+          "transport": "prepared-rocenante-tp4",
+          "max_gather_bytes": 16777216,
+          "paths_per_peer": 2,
+          "sircl_enabled": false,
+          "scope": "all-gather",
+          "min_gather_bytes": 1,
+          "vendor_root": "third_party/prepared-b12x",
+          "vendor_manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89",
+          "timeout_seconds": 600,
+          "compile_workers": 0,
+          "forward_window_bytes": 131072,
+          "forward_chunk_bytes": 32768
+        },
+        "vendor": {
+          "manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89",
+          "files": 55
+        }
+      }
+    }
+  },
+  "limits": [
+    "Different rankorder phaseone1/2/3/4 vs experiment1/4/3/2; same physicalring/all16HCAs.",
+    "Fresh sequential arms, not randomized statisticaltrial; rangesretainwavevariation.",
+    "Fixed400-token requests includingignore_eos, thinkingdisabled, threeworkloads. No fullcontext/vision benchmark.",
+    "Initialsource version and exactrawreceipthashes retained; these historicalresults do notadmit currentmodified code."
+  ]
+}

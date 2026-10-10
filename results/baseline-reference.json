@@ -1,0 +1,10 @@
+{
+  "baseline_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring",
+  "baseline_release": "v0.1.0",
+  "baseline_commit": "d6f455248bfc9c83187d89e000ec8fbdf7c19546",
+  "comparison": "https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring/blob/v0.1.0/docs/benchmark-comparison.md",
+  "limits": "Historical recipe comparisons are external references. Final local matched NCCL2.32.3 and RoCEnante measurements are in final-benchmarks.json.",
+  "schema": "tensorfold-rocenante-historical-baseline-reference/v1",
+  "scope": "Historical published phase-one reference; final candidate validation and matched measurements are separate",
+  "candidate_results": "final-benchmarks.json"
+}

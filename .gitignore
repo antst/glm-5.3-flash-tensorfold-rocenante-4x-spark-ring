@@ -1,0 +1,20 @@
+# Local configuration, credentials, state, build outputs and downloaded models
+config.json
+config.local*.json
+state/
+logs/
+lib/
+models/
+cache/
+build/
+*.log
+__pycache__/
+*.py[cod]
+.env
+.env.*
+*.pem
+*.key
+known_hosts
+metadata.local.json
+third_party/rigmark-source/
+local/

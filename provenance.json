@@ -1,0 +1,153 @@
+{
+  "schema": "tensorfold-rocenante-provenance/v1",
+  "status": "four-rank hardware/model qualified; matched benchmarking complete; publication-ready source recipe",
+  "baseline_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring",
+  "baseline_commit": "d6f455248bfc9c83187d89e000ec8fbdf7c19546",
+  "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+  "tensorfold_source_sha256": {
+    "cuda/comm.py": "92f1be63fc4bf1ba77675eb74a13716d07e39bc74839579a82ee47b34bf2f986",
+    "families/glm5_next/cuda/verify.py": "e0d450b84fe6b4e285ae0bb5942e92aa86762a554e29aae8e38d53c447b1e13f",
+    "families/glm5_next/cuda/graphs.py": "43e31efc653c61d3e0c0a6fef4bc78afaa057582d16c7a8613986d3a73a4465d",
+    "families/glm5_next/cuda/multi.py": "a7c4cd5ddda71d53b28d3132ee11d8f59c030e96742d6c60d28a78394097b290"
+  },
+  "sparkring_repository": "https://github.com/FujitsuPolycom/sparkring",
+  "sparkring_commit": "6d27dd10a9f97da21278ae504ea6235f8634f303",
+  "target_profile": "profiles/glm53-flash-nvfp4-spark-tp4/config.json",
+  "prepared_transport": "integrations/vllm/rocenante_prepared/roce",
+  "sircl_enabled": false,
+  "nccl": {
+    "version": "2.32.3",
+    "source_commit": "12df1a11afad322be5a204a2db890161cbf8131d",
+    "patch_sha256": "a0deca2f21b8cad56bc68a5f5468936b7a6b894db160cfa1d62a6a3d59358836",
+    "base_tree": "de760d9f34b52dee589604eeeccef9a09df8a979",
+    "patched_tree": "e4ae48e878d15a5ba52d91a18c6b5e79b50a7db0",
+    "source_archive_sha256": "a66ba2b0ac77e7339a71397292134d7ab33c3642af495a170f0c85f27a769008",
+    "upstream_archive_reproduced": false
+  },
+  "network": {
+    "source_planner_sha256": "b201ede9554bd6a02cc09a07a6accf242a63b2d46744bab9132ee4a7e318dbda",
+    "endpoint_route_strategy": "adjacent_gateway",
+    "software_transit_required": false,
+    "manual_routes_user_authorized": true,
+    "tested_hairpin_queue_size": 8192,
+    "owned_endpoint_routes": 8,
+    "hardware_diagonal_rules": 8,
+    "source_markers": 8,
+    "health_guardians": 4,
+    "os_forwarding_policy_changed": false
+  },
+  "math": "raw rank-major gather; TensorFold FP32 summation preserved",
+  "framework": {
+    "repository": "https://github.com/local-inference-lab/b12x",
+    "commit": "a83336581a3a907076e60797df69ab66df5a2ff1",
+    "source_archive_sha256": "734836e2813c3d4aeaaabd1bc59173fd5cf9d07711f6f72487cf9c14dab3edac",
+    "vendor_manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89",
+    "source_package": "third_party/prepared-b12x",
+    "dependency_replacement": false,
+    "selection_cache": "disabled for this distributed session; compiled program cache retained"
+  },
+  "local_native_build": {
+    "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+    "library_bytes": 79789200,
+    "architecture": "ARM64/SM121",
+    "toolchain": "CUDA13.0.88/GCC13.3.0",
+    "nccl_get_version": 23203,
+    "target_image_cpu_loader_passed": true,
+    "upstream_binary_identity_claimed": false,
+    "hardware_qualified": true,
+    "build_receipt_sha256": "cb6228db18a0792242c85a0993a2fa47c1c43f298beceae83883b2f2f98e97a7"
+  },
+  "initial_model_qualification": {
+    "profile": "TP4/P8/1M-context/64-row-shared-verify",
+    "requests": 30,
+    "passed": true,
+    "all_16_hca_functions": true,
+    "all_24_native_origin_qp_paths": true,
+    "all_8_hardware_diagonal_rules": true,
+    "raw_receipt_sha256": "a0b2b0ae7203bbcc098c9e3f4a7efd71d78a66997ff07d1508458005f128adac",
+    "full_1m_prompt_tested": false,
+    "vision_tested": false,
+    "scope": "Historical initial16MiB admission configuration; selected current-source evidence is separate"
+  },
+  "selected_configuration": {
+    "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+    "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+    "native_geometry": {
+      "blocks": 8,
+      "threads": 512
+    },
+    "nccl_build_receipt_sha256": "cb6228db18a0792242c85a0993a2fa47c1c43f298beceae83883b2f2f98e97a7",
+    "network_plan_id": "4e46a559df6dc830e3bbd395dc93a391c435d98a9e50d5b33a10934059d8f9d1",
+    "network_planner_sha256": "b201ede9554bd6a02cc09a07a6accf242a63b2d46744bab9132ee4a7e318dbda",
+    "profile": {
+      "cache_entries": 32,
+      "cache_gib": 24.0,
+      "context": 1048576,
+      "max_tokens": 32768,
+      "multi_window": 64,
+      "nccl_channels": 4,
+      "parallel": 8,
+      "protocol": "auto",
+      "reserve_gib": 20.0,
+      "thread_thresholds": null
+    },
+    "settings": {
+      "compile_workers": 0,
+      "forward_chunk_bytes": 16384,
+      "forward_window_bytes": 65536,
+      "max_gather_bytes": 4194304,
+      "min_gather_bytes": 1,
+      "native_blocks": 8,
+      "paths_per_peer": 2,
+      "scope": "all-gather",
+      "sircl_enabled": false,
+      "timeout_seconds": 600,
+      "transport": "prepared-rocenante-tp4",
+      "vendor_manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89"
+    },
+    "source_sha256": {
+      "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+      "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+      "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+      "common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+      "experiment.py": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
+      "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+      "qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
+      "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+      "rocenante_adapter.py": "ebbd0c83359448c617dbcc9e1b34d8d2e8529504165fbf8d95de631f647927b0",
+      "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f"
+    },
+    "topology_sha256": "093af403ee4fec18addc997b9de9752e6ca35b4d5657bd2834ac027d174ac3ec",
+    "world_size": 4
+  },
+  "final_validation": {
+    "results": "results/final-benchmarks.json",
+    "results_sha256": "378e5f21bb90729f877baec764fd2898ba90d0297e9d7a26b8a43c21dd11fc6f",
+    "both_modes_passed": true,
+    "semantic_requests_per_mode": 30,
+    "sparkdash_requests_per_mode": 120,
+    "rigmark_requests_per_mode": 54,
+    "rigmark_completed_decode_gates_per_mode": 15,
+    "cross_mode_semantic_answer_hashes_equal": true,
+    "all_16_hca_payload_and_zero_error_gates": true,
+    "all_8_native_hardware_diagonal_rules": true,
+    "transport_receipt_sha256": {
+      "nccl": "a57534e648dc09c1cdab467aa928995eb7059ba9ece4ea2fad24269f0949c40e",
+      "rocenante": "7ea1f896fae91fc40b4e26e48d14e8372fb4cba6a77f20bf9257fc0103234e95"
+    },
+    "full_1m_prompt_tested": false,
+    "eight_simultaneous_1m_inputs_tested": false,
+    "vision_tested": false,
+    "physical_reboot_tested": false,
+    "max_tested_prefill_tokens": 65536,
+    "clock_power_changes": false
+  },
+  "cpu_suite": {
+    "tests": 89,
+    "skipped": 0,
+    "passed": true,
+    "pinned_image": true,
+    "gpu_context_created": false,
+    "receipt_sha256": "2e0c9747e92cc67514da1719a2f2ab8aef18af4c6e9ad75f5f5d2c25f5e94d75"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "repository": "https://github.com/FujitsuPolycom/sparkring.git",
+  "commit": "6d27dd10a9f97da21278ae504ea6235f8634f303",
+  "files": {
+    "fabric.py": {
+      "upstream_path": "spark_transport/fabric/cx7_hairpin_diagonal/fabric.py",
+      "sha256": "b201ede9554bd6a02cc09a07a6accf242a63b2d46744bab9132ee4a7e318dbda"
+    },
+    "LICENSE": {
+      "upstream_path": "LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "NOTICE": {
+      "upstream_path": "NOTICE",
+      "sha256": "255dd2f1a1973d1ea428d70869e3b5791cc65cbef86c232879dd67e4f9b9b54c"
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "upstream_path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "d361010133731a71b012aa823a7706b28c6258f7a1ae7d69749eb126091ec3a3"
+    }
+  }
+}

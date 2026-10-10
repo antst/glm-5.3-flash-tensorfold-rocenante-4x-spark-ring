@@ -1,0 +1,49 @@
+{
+  "schema": "tensorfold-rocenante-nccl-sources/v1",
+  "repository": "https://github.com/NVIDIA/nccl.git",
+  "version": "2.32.3",
+  "commit": "12df1a11afad322be5a204a2db890161cbf8131d",
+  "archive_sha256": "a66ba2b0ac77e7339a71397292134d7ab33c3642af495a170f0c85f27a769008",
+  "patch": {
+    "path": "third_party/nccl232/nccl-2.32.3-dual-pci-domain.patch",
+    "sha256": "a0deca2f21b8cad56bc68a5f5468936b7a6b894db160cfa1d62a6a3d59358836",
+    "source_repository": "https://github.com/FujitsuPolycom/sparkring",
+    "source_commit": "6d27dd10a9f97da21278ae504ea6235f8634f303",
+    "source_path": "spark_transport/nccl/nccl-2.32.3-dual-pci-domain.patch"
+  },
+  "cuda_architecture": "121",
+  "nccl_get_version": 23203,
+  "max_jobs": 2,
+  "marker": {
+    "source_repository": "https://github.com/FujitsuPolycom/sparkring",
+    "source_commit": "6d27dd10a9f97da21278ae504ea6235f8634f303",
+    "source_path": "spark_transport/fabric/cx7_hairpin_diagonal/native/mlx5_rdma_tx_rewrite_probe.c",
+    "source_sha256": "8684a6961b8e86aa474fa2310ff71e4cdf219a63a72ceb5593b2f95e54812792",
+    "binary_name": "mlx5-rdma-tx-marker",
+    "compile_flags": [
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-libverbs",
+      "-lmlx5"
+    ],
+    "execution_permitted_by_builder": false
+  },
+  "toolchain_scope": "Compile this pinned NCCL source for ARM64/SM121 using caller-selected existing CUDA toolkit; this is not the upstream CUDA13.4 image build or a claim of byte-identical upstream binary. Fresh image/collective/model qualification required.",
+  "upstream_recipe_archive": {
+    "sha256": "d29f65ec559cf2aaba0a39738e9949227204a73175677d1d53d31e3248503a3e",
+    "reproduced": false,
+    "scope": "Retained upstream CUDA13.4 toolchain archive metadata; local Git2.43 archives and GitHub codeload do not reproduce these container bytes. Not used as this recipe input gate."
+  },
+  "archive_format": "git2.43 archive --format=tar with core.autocrlf=false and tar.umask=0022, no prefix",
+  "base_tree": "de760d9f34b52dee589604eeeccef9a09df8a979",
+  "archive_export_subst": [
+    {
+      "path": "bindings/nccl4py/.git_archival.txt",
+      "original_utf8": "node: $Format:%H$\nnode-date: $Format:%cI$\ndescribe-name: $Format:%(describe:tags=true,match=nccl4py-v*[0-9]*.*[0-9]*)$\n",
+      "original_sha256": "d39a2ddfb75c0ab086f4d59a51be49835a36d97a1383757a0d35f1a36ebe1658",
+      "expanded_sha256": "0ada0ce3e38ec4f87ffea9fe701429cd22cd3a57e99f065223ef502726da7455",
+      "reason": "Restore archive-exported metadata to original committed source before enforcing original base Git tree. No source code edit."
+    }
+  ]
+}

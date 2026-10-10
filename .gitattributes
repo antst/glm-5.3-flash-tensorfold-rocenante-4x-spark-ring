@@ -1,0 +1,9 @@
+# Keep maintained sources on LF; preserve pinned third-party and raw evidence bytes.
+* text=auto eol=lf
+third_party/sparkring/*.patch -text
+results/rigmark-result.json -text
+results/alex-rigmark-result.json -text
+results/rigmark-result.card.txt -text
+results/rigmark-comparison.card.txt -text
+results/rigmark-run-audit.json -text
+results/rigmark-runner-executed.py -text

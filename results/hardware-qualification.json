@@ -1,0 +1,68 @@
+{
+  "schema": "tensorfold-rocenante-hardware-qualification/v1",
+  "run_id": "20261010T042138Z-7d7d0f8a",
+  "finished_utc": "2026-10-10T04:24:32.915055+00:00",
+  "flags": {
+    "qualified": true,
+    "byte_exact_passed": true,
+    "cuda_graph_passed": true,
+    "mixed_size_passed": true,
+    "inplace_passed": true,
+    "payload_all_hcas_passed": true,
+    "native_health_passed": true,
+    "host_configuration_unchanged": true,
+    "qp_diagnostics_all_hcas_passed": true,
+    "hardware_mesh_payload_passed": true,
+    "hardware_mesh_passed": true,
+    "asymmetric_cache_passed": true
+  },
+  "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+  "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+  "qualification_sha256": "7ea1f896fae91fc40b4e26e48d14e8372fb4cba6a77f20bf9257fc0103234e95",
+  "oracle_qualification_sha256": "a57534e648dc09c1cdab467aa928995eb7059ba9ece4ea2fad24269f0949c40e",
+  "cases_per_rank_per_layout": 120,
+  "extra_alias_types_per_layout": 4,
+  "mixed_order_sequences_per_layout": 9,
+  "cache_layouts": [
+    "symmetric fresh processes",
+    "asymmetric fresh processes: rank-zero retained filesystem compiler/proxy cache; other ranks empty"
+  ],
+  "hosts": 4,
+  "hca_functions": 16,
+  "origin_qp_paths_per_rank": 6,
+  "hardware_diagonal_rules": 8,
+  "math": "byte-exact raw rank-major FP32/BF16/int32/int64 gather; no SIRCL or quantized communication",
+  "limits": [
+    "Standalone collectives and graph correctness are qualified; full-model inference/performance is tested separately.",
+    "Single-collective graph timings include Python enqueue and final GPU synchronization; they do not predict complete multi-collective model graph latency."
+  ],
+  "scope": "Selected current-source generation-priority configuration; initial hardware proof retained separately",
+  "source_sha256": {
+    "common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+    "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+    "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+    "experiment.py": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
+    "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f",
+    "rocenante_adapter.py": "ebbd0c83359448c617dbcc9e1b34d8d2e8529504165fbf8d95de631f647927b0",
+    "qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
+    "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+    "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+    "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e"
+  },
+  "selected_settings": {
+    "max_gather_bytes": 4194304,
+    "forward_window_bytes": 65536,
+    "forward_chunk_bytes": 16384,
+    "paths_per_peer": 2,
+    "native_blocks": 8
+  },
+  "native_threads": 512,
+  "full_model_results": "final-benchmarks.json",
+  "pinned_image_cpu_suite": {
+    "tests_run": 89,
+    "skipped": 0,
+    "passed": true,
+    "cuda_initialized": false,
+    "receipt_sha256": "2e0c9747e92cc67514da1719a2f2ab8aef18af4c6e9ad75f5f5d2c25f5e94d75"
+  }
+}
