@@ -98,7 +98,7 @@ Neither eager nor graph failures switch transports after native work begins.
 Changing launch geometry does not change TensorFold's rank-major layout, FP32
 rank-order summation, EXL3/Q4 compute, HC split, draft policy, or graph ordering.
 
-The unchanged Mia image passes imports of all nine prepared components and the
+The historical Mia96 image passes imports of all nine prepared components and the
 native GNU11 proxy ABI check without initializing CUDA or creating RDMA
 endpoints. CPU adapter tests also pass in that image. These checks establish
 dependency compatibility at import time; GPU compilation and model operation
@@ -122,3 +122,7 @@ Source contracts:
 - [Prepared transport](https://github.com/FujitsuPolycom/sparkring/blob/6d27dd10a9f97da21278ae504ea6235f8634f303/integrations/vllm/rocenante_prepared/README.md).
 - [Prepared gather API](https://github.com/FujitsuPolycom/sparkring/blob/6d27dd10a9f97da21278ae504ea6235f8634f303/integrations/vllm/rocenante_prepared/roce/roce_oneshot.py).
 - [Raw gather kernel](https://github.com/FujitsuPolycom/sparkring/blob/6d27dd10a9f97da21278ae504ea6235f8634f303/integrations/vllm/rocenante_prepared/roce/_allgather_cute.py).
+
+## Mia107 compatibility
+
+The later [Mia107 image update](engine-upgrade.md) retains the prepared transport, math and graph hooks. Three guarded engine sources remain byte-identical; the multi-stream scheduler guard changes to the reviewed image bytes. DFlash prelaunch uses the existing current-stream/candidate event ordering. CPU checks pass 90/90, Mia’s GPU prelaunch test passes, and fresh collectives, 30 model requests and both full benchmark suites pass. CUDA indexer-score kernels may fall back to Triton after a logged build failure; active-path claims require runtime log evidence.

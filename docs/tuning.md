@@ -1,5 +1,7 @@
 # Transport tuning
 
+These transport tuning trials retain their historical Mia96 image. The later [Mia107 image update](engine-upgrade.md) preserves the selected transport settings.
+
 Selected generation profile: **4 MiB gather ceiling, 64 KiB forwarding window, 16 KiB chunks, four NCCL channels, 512 threads and an eight-block cap**. The engine remains TP4/P8 with a 1M configured context and shared verification budget 64.
 
 Eight current-source configurations passed fresh NCCL/native GPU qualification, all 30 model correctness requests and all 61 screening requests. Both native cache layouts, all 16 HCA functions, all eight ASIC diagonal rules and zero new mandatory error deltas passed. The earlier historical anchor is kept in a separate source group.

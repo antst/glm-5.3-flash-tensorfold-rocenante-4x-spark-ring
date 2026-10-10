@@ -11,12 +11,14 @@ full-model correctness checks have passed, including eight concurrent streams,
 all 16 HCA functions and hardware diagonal forwarding. Initial matched
 generation measurements are retained. The generation-priority profile uses a
 4 MiB gather ceiling, 64 KiB forwarding window, 16 KiB chunks, four NCCL channels
-and 512 threads with an eight-block cap. In the final matched SparkDash runs,
+and 512 threads with an eight-block cap. In the retained Mia96 matched SparkDash runs,
 native median generation rates improved by 10–12% at C1 and 5–6% at C4;
 C8 changes were modest, 0–3%. Cold 64K prefill was about 0.6% slower than the
 local NCCL control. These are measured point estimates, with ranges retained.
 The published [phase-one recipe](https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring/tree/v0.1.0)
 remains the independent baseline and recovery path.
+
+Release **v0.1.2** uses **TensorFold 0.6.0 with 107 Mia patches**. Fresh image-upgrade inference and benchmark checks passed; see [Mia107 results and component updates](docs/engine-upgrade.md). The published v0.1.1 release retains its Mia96 image and historical measurements.
 
 See [transport design](docs/design.md), [network changes](docs/network.md),
 [native builds and SSH configuration](docs/build.md),
@@ -68,12 +70,12 @@ host-local work on the four Sparks. Build compilation runs on an ARM64 Spark.
 
 ## Release checkout
 
-The current source release is [v0.1.1](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.1). The initial v0.1.0 release remains historical. On the management host,
+The current source release is [v0.1.2](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.2). The v0.1.0 and Mia96 v0.1.1 releases remain historical. On the management host,
 clone it into a shared path mounted at the same absolute location on all four
 Sparks:
 
 ```sh
-git clone --branch v0.1.1 https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring.git /shared/spark-ring-tensorfold-rocenante
+git clone --branch v0.1.2 https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring.git /shared/spark-ring-tensorfold-rocenante
 cd /shared/spark-ring-tensorfold-rocenante
 ```
 
@@ -87,7 +89,7 @@ Copy `config.example.json` to ignored `local/config.json`. Set the actual shared
 path, explicit `admin@IP` destinations, management interfaces and trusted host
 key aliases. List the nodes in physical f0-next/f1-previous ring order. Keep both
 Socket Direct functions on each cable in the fabric inventory. Existing model
-snapshots and Mia's digest-pinned image can be reused from phase one. Set
+snapshots can be reused from phase one. Use this checkout's exact Mia image pin; the Mia107 release has a different digest from the published Mia96 recipe. Set
 `api_port` to `8888`; retain this recipe's own container, bootstrap port and local
 compiler/HF caches.
 

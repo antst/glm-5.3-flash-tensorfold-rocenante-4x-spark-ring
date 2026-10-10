@@ -1,14 +1,14 @@
 {
   "schema": "tensorfold-rocenante-provenance/v1",
-  "status": "four-rank hardware/model qualified at API8888; v0.1.1 source recipe; retained v0.1.0 matched benchmarks",
+  "status": "v0.1.2 Mia107 source release; four-rank hardware/model and fresh matched image benchmarks qualified at API8888; historical v0.1.1 remains Mia96",
   "baseline_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring",
   "baseline_commit": "d6f455248bfc9c83187d89e000ec8fbdf7c19546",
-  "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+  "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf",
   "tensorfold_source_sha256": {
     "cuda/comm.py": "92f1be63fc4bf1ba77675eb74a13716d07e39bc74839579a82ee47b34bf2f986",
     "families/glm5_next/cuda/verify.py": "e0d450b84fe6b4e285ae0bb5942e92aa86762a554e29aae8e38d53c447b1e13f",
     "families/glm5_next/cuda/graphs.py": "43e31efc653c61d3e0c0a6fef4bc78afaa057582d16c7a8613986d3a73a4465d",
-    "families/glm5_next/cuda/multi.py": "a7c4cd5ddda71d53b28d3132ee11d8f59c030e96742d6c60d28a78394097b290"
+    "families/glm5_next/cuda/multi.py": "3f90da926a0bcb4de124dcd4416b2251c2f96723c05abb17568368314a2b9981"
   },
   "sparkring_repository": "https://github.com/FujitsuPolycom/sparkring",
   "sparkring_commit": "6d27dd10a9f97da21278ae504ea6235f8634f303",
@@ -55,7 +55,10 @@
     "target_image_cpu_loader_passed": true,
     "upstream_binary_identity_claimed": false,
     "hardware_qualified": true,
-    "build_receipt_sha256": "cb6228db18a0792242c85a0993a2fa47c1c43f298beceae83883b2f2f98e97a7"
+    "build_receipt_sha256": "18457fda7edb080b813274673d8052e449a0c20b880c8e2de6a3b1da9c59be89",
+    "original_build_receipt_sha256": "cb6228db18a0792242c85a0993a2fa47c1c43f298beceae83883b2f2f98e97a7",
+    "binary_rebuilt": false,
+    "target_image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf"
   },
   "initial_model_qualification": {
     "profile": "TP4/P8/1M-context/64-row-shared-verify",
@@ -149,15 +152,16 @@
     "skipped": 0,
     "pinned_image": true,
     "gpu_context_created": false,
-    "receipt_sha256": "0e0e9e74b8d6fb630be840f487f7ea4c6cc85f2cfff050aceef71d7fa61325e7"
+    "receipt_sha256": "4d3ba3f6bf857e71b19d4c1e97fb399eae7c8f12f1d7506ab05fd9fdfde337ff",
+    "scope": "Released scripts/tests including native-build image-pin regression; serving runtime matches retained hardware evidence."
   },
   "recipe_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring",
   "source_release": {
-    "version": "v0.1.1",
-    "url": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.1",
-    "scope": "Portable recipe sources and sanitized results; native binaries and model weights are external build/input artifacts"
+    "version": "v0.1.2",
+    "url": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.2",
+    "scope": "Portable recipe sources and sanitized qualified results; external image, native binary and model inputs. Publication attested separately by operator receipts."
   },
-  "selected_configuration_scope": "Exact configuration and runtime source identity of the retained v0.1.0 benchmark runs; current API8888 source/qualification is separately bound in api_port_migration.",
+  "selected_configuration_scope": "Exact configuration and runtime source identity of retained v0.1.0 benchmarks; API8888 migration and current Mia107 evidence are separately bound in api_port_migration and engine_upgrade.",
   "historical_v0_1_0_cpu_suite": {
     "tests": 89,
     "skipped": 0,
@@ -183,5 +187,73 @@
     "network_setup_unchanged": true,
     "compute_transport_settings_unchanged": true,
     "performance_suites_rerun": false
+  },
+  "historical_v0_1_1_image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+  "historical_v0_1_1_cpu_suite": {
+    "passed": true,
+    "tests": 90,
+    "skipped": 0,
+    "pinned_image": true,
+    "gpu_context_created": false,
+    "receipt_sha256": "0e0e9e74b8d6fb630be840f487f7ea4c6cc85f2cfff050aceef71d7fa61325e7"
+  },
+  "engine_upgrade": {
+    "mia_commit": "b5808ac620c795ec9c0640f3ca2a2f7be21aaa63",
+    "tensorfold_version": "0.6.0",
+    "mia_patches_before": 96,
+    "mia_patches_after": 107,
+    "results": "results/mia107-upgrade.json",
+    "results_sha256": "34410e15c20b38e73057fd12f77af20e6ab672cf2787ee26c3e272599e730327",
+    "passed": true,
+    "model_requests": 30,
+    "sparkdash_requests": 120,
+    "rigmark_requests": 54,
+    "transport_receipt_sha256": {
+      "nccl": "35e5435ca36c30ac6a53e5f276533659e5607fd36eadd9a8231d7412f897fb73",
+      "rocenante": "2d9cfd0e410269460a99cf19c42aea01f4e8be8aa49a6bbc18cf2259bb4f6a04"
+    },
+    "model_receipt_sha256": "d7aef7cb067f3e106c39c77b7b7d89d62e06faecae2f50d53b76ac79f4bee683",
+    "runtime_source_sha256": {
+      "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+      "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+      "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+      "common.py": "bb1e91cca3bea143e749e32711bd90f65483120f63b399a35aa9dc5d11209284",
+      "experiment.py": "dac941cfef7cf899c4f939142be5142c086dd85adc3f9e3038973b485ac7de1a",
+      "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+      "qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
+      "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+      "rocenante_adapter.py": "c12e813f3c01655c7f61577b618cb1644de7dff4c585bea6ed82ff76a9f22e4e",
+      "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f"
+    },
+    "network_changes": false,
+    "same_transport_binary": true,
+    "same_model_draft_weights": true,
+    "new_image_loader_proof": true,
+    "baseline_git_commit": "b77c608c582d30d360771862090a1277a91dbfb4",
+    "final_live_observation": {
+      "receipt_sha256": "33729f041dbc94fa8c50a581d465d3239bc45c02a3bddcec5713ca9e537f7fe9",
+      "all_four_hosts_actual_image_verified": true,
+      "api_idle": true,
+      "requests_total": 204,
+      "configured_context": 1048576,
+      "serving_lanes": 8,
+      "prompt_and_decode_cuda_score_libraries_mapped_all_hosts": true,
+      "logged_cuda_score_fallbacks": 0,
+      "temporary_upgrade_containers_remaining": 0,
+      "serving_context_sha256": "8ce4d55c313b3b83a9fde220e73e1f4b39a64615a01f7a654fe0efbe7b42780a"
+    },
+    "source_release": "v0.1.2",
+    "publication_builder_fix": {
+      "file": "scripts/build-nccl.sh",
+      "change": "Native loader image pin updated to Mia107; tested plan consumes config.example image. Serving runtime and benchmark measurements unchanged."
+    }
+  },
+  "initial_mia107_cpu_suite": {
+    "passed": true,
+    "tests": 90,
+    "skipped": 0,
+    "gpu_context_created": false,
+    "receipt_sha256": "26a87caedc8f341e780775106e0df80cf0069bbad7e09a86ec01a98f2b503eed",
+    "pinned_image": true
   }
 }

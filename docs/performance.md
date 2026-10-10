@@ -1,5 +1,7 @@
 # Performance
 
+The tables below retain the historical Mia96 transport/recipe comparison. Fresh Mia96 versus Mia107 image-upgrade results are documented separately in [the upgrade report](engine-upgrade.md).
+
 RoCEnante improves lower-concurrency generation in this tested profile: aggregate
 decode medians are **9.7–12.1% higher at C1** and **4.6–6.3% higher at C4** than
 the matched NCCL 2.32.3 control. At C8, gains are modest—about 0–3%

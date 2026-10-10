@@ -3,7 +3,7 @@
   "model_root": "/var/tmp/spark-ring-models",
   "cache_root": "/var/tmp/spark-ring-tensorfold-rocenante-cache",
   "library": "/shared/spark-ring-tensorfold-rocenante/lib/nccl/libnccl.so.2",
-  "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+  "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf",
   "container_name": "spark-ring-glm53-rocenante-experiment",
   "recipe_id": "tensorfold-rocenante-experiment-v1",
   "bootstrap_port": 29561,

@@ -29,7 +29,7 @@ curl --fail --location \
 printf '%s  %s\n' \
   '8684a6961b8e86aa474fa2310ff71e4cdf219a63a72ceb5593b2f95e54812792' \
   'local/mlx5_rdma_tx_rewrite_probe.c' | sha256sum --check
-SPARK_RING_IMAGE=ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f
+SPARK_RING_IMAGE=ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf
 docker pull "$SPARK_RING_IMAGE"
 docker image inspect "$SPARK_RING_IMAGE"
 SPARK_RING_BUILD_DIR=/var/tmp/spark-ring-rocenante-nccl-$(date -u +%Y%m%dT%H%M%SZ)
@@ -50,8 +50,7 @@ GitHub codeload archives are not interchangeable with the pinned Git tar.
 Inspect the manifest and logs if an archive check fails; do not bypass it.
 
 Compilation writes only the new host-local build directory and requested shared
-publication directories. The image pull reuses the same digest-pinned Mia image
-as the original deployment; it is not a serving-image or compute-engine upgrade.
+publication directories. Release v0.1.2 uses the new Mia107 image. The image pull changes the Docker image store; it does not update host packages, drivers or the system toolkit. The historical v0.1.1 release retains its Mia96 digest.
 The isolated prepared framework is already pinned in this checkout. The helper
 does not run a package installer, change system CUDA/GCC, tune GPU clocks/power,
 reload a NIC or apply the mesh. Network preparation, GPU qualification and model
@@ -102,6 +101,6 @@ API port to **8888** for both alternative recipes. Stop each stack with its own
 launcher before switching or doing GPU/network maintenance; start only one
 recipe. The rank-zero client URL stays stable, without a redirect. Follow
 [recovery](system-changes.md) for ownership-safe rollback and post-reboot restart.
-Existing model/image inputs can be reused, while both recipes retain separate
+Existing model snapshots can be reused. An existing image can be reused only when its digest matches this checkout’s pin. Both recipes retain separate
 libraries, local compiler/HF caches, containers, bootstrap ports and qualification
 receipts.

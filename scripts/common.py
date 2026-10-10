@@ -7,7 +7,7 @@ import math
 from pathlib import Path
 import re
 
-IMAGE_DIGEST = "sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f"
+IMAGE_DIGEST = "sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf"
 IMAGE = "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@" + IMAGE_DIGEST
 MODEL_PINS = {
     "glm53-exl3": ("Mia-AiLab/GLM-5.3-Flash-EXL3-4bpw-TensorFold", "078455ffe6472f9a52fbc1139f58b9db2881b25c"),

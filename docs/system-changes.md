@@ -38,9 +38,7 @@ guardians. Preparation journals the sixteen fabric PCI function queue values
 and any hardware TC offload changes. Inventories, operation logs, receipts and
 private root-only before-state archives are retained for every action.
 
-The recipe uses existing system packages, drivers and CUDA tools. Its serving
-image, TensorFold compute engine, weights, quantization and model arithmetic
-remain pinned to the original Mia deployment. Patched NCCL and the isolated
+The recipe uses existing system packages, drivers and CUDA tools. The published v0.1.1 deployment retained the original Mia96 image. The v0.1.2 Mia107 update changes its pinned serving image, reviewed engine source guards and bundled Transformers; weights, quantization and transport settings stay unchanged. Exact upgrade checks are in [the image-upgrade report](engine-upgrade.md). Patched NCCL and the isolated
 prepared communication framework are separate additions; they do not replace
 the original library or install globally. Build details and explicit image-store
 effects are in [the build guide](build.md).
@@ -75,6 +73,72 @@ four hosts, including owned-route removal and preservation checks. A partial
 host reboot requires recreating all four selected model ranks together.
 Physical reboot recovery is covered by CPU mocks; an actual host reboot has
 not been tested.
+
+## Mia107 image update
+
+The qualified v0.1.2 update preserves the existing owner/root and healthy installed mesh. It pulls the new image on all four hosts, stops/recreates the owned workers, creates a new compiler/cache namespace and selects a copied NCCL artifact with a fresh image-loader receipt. The old image, cache, original binary/build receipt and exact prior config/source/qualification backups remain available. It adds no routes, rules, NIC reloads or OS forwarding changes.
+
+Archive the prior coherent checkout/config/receipts before selecting a new image. Requalify both transports and validate the model; old source-bound receipts cannot authorize new workers. Restore the prior source/config/library receipt and its preserved qualification files together to return to Mia96, then start only that owner. Site-specific exact rollback commands and before/after hashes are retained in the operator audit ledgers. See [Mia107 validation and benchmarks](engine-upgrade.md).
+
+## Upgrade v0.1.1 to v0.1.2 with the current mesh retained
+
+Run these steps from the management host, using your configured shared root. Stop the old workers **before switching source or private config**, with the v0.1.1 checkout and its existing config. Confirm any other recipe is stopped through its own launcher. Keep the owner, root, inventory, model snapshots, bootstrap/guardian ports and transport/profile settings unchanged. Preserve local edits rather than forcing a checkout.
+
+```sh
+cd /shared/spark-ring-tensorfold-rocenante
+python3 -B scripts/experiment.py stop --config local/config.json
+git status --short --untracked-files=no
+SPARK_RING_UPGRADE_BACKUP="state/before-v0.1.2-$(date -u +%Y%m%dT%H%M%SZ)"
+mkdir -m 700 "$SPARK_RING_UPGRADE_BACKUP"
+cp -a local/config.json state/collective-qualification.json state/rocenante-qualification.json "$SPARK_RING_UPGRADE_BACKUP/"
+git rev-parse HEAD > "$SPARK_RING_UPGRADE_BACKUP/source-commit.txt"
+git fetch origin tag v0.1.2
+git checkout --detach v0.1.2
+```
+
+Select this checkout’s image and a **new** NCCL artifact directory. The short script below changes only the ignored config’s image/library fields and pulls the exact image through the configured admin SSH identities on all four hosts:
+
+```sh
+python3 -B - <<'PY'
+import json, pathlib, shlex, sys
+sys.path.insert(0, 'scripts')
+from common import IMAGE, load_config
+from cluster import Operator
+p = pathlib.Path('local/config.json')
+cfg = json.loads(p.read_text())
+cfg['image'] = IMAGE
+cfg['library'] = 'lib/nccl-mia107/libnccl.so.2'
+p.write_text(json.dumps(cfg, indent=2) + '\n')
+op = Operator(load_config(p))
+print(json.dumps(op.parallel(lambda rank: op.remote(rank, shlex.join(['docker', 'pull', IMAGE]), timeout=1800))))
+PY
+```
+
+On one ARM64 Spark, compile the pinned NCCL source into a new host-local directory and publish into that new shared library directory. For this existing healthy mesh, retain the existing marker artifact and omit marker build/publication:
+
+```sh
+sudo -s
+cd /shared/spark-ring-tensorfold-rocenante
+SPARK_RING_IMAGE=$(python3 -B -c 'import json; print(json.load(open("config.example.json"))["image"])')
+SPARK_RING_BUILD_DIR="/var/tmp/spark-ring-rocenante-mia107-nccl-$(date -u +%Y%m%dT%H%M%SZ)"
+bash scripts/build-nccl.sh --fetch --build-dir "$SPARK_RING_BUILD_DIR" \
+  --jobs 2 --cuda-root /usr/local/cuda-13.0 \
+  --loader-image "$SPARK_RING_IMAGE" --publish "$PWD/lib/nccl-mia107"
+```
+
+Use your existing toolkit path if it differs; the helper installs no packages and does not initialize CUDA. Existing publish paths are refused. A rebuilt library must receive its own exact loader/build receipt and fresh collective qualification; its binary identity need not equal the historical local binary. The tested deployment instead reused an identical binary with a separately recorded derived image-loader receipt. Do not substitute the old-image loader proof or hand-edit qualification to authorize a new image.
+
+Return to the management host. Check the retained healthy mesh; this image upgrade requires no network apply, rollback, new routes or NIC reload. Run fresh qualifications and start/validate the selected workers:
+
+```sh
+python3 -B scripts/network.py check --config local/config.json --inventory state/network-inventory.json
+python3 -B scripts/qualify.py run --config local/config.json --transport nccl
+python3 -B scripts/qualify.py run --config local/config.json --transport rocenante
+python3 -B scripts/experiment.py start --config local/config.json --mode rocenante
+python3 -B scripts/validate-model.py --config local/config.json --mode rocenante --output state/model-validation-mia107-NEW
+```
+
+The first start builds image-specific kernels; retain the old image, caches and library. Each command must pass before the next dependent step. To return to Mia96 on the same boot, stop the new workers, select the preserved prior source revision, restore the archived config and both qualification receipts together, then check the retained mesh and start that prior recipe. A changed boot invalidates old qualification; follow the reboot procedure below instead. Preserve new logs and receipts for the audit.
 
 ## Upgrade v0.1.0 to v0.1.1 without changing the mesh
 

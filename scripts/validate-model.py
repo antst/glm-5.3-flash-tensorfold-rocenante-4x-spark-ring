@@ -39,10 +39,10 @@ CASES = (
 # Exact pinned, unmodified engine and drafter sources, in addition to the
 # adapter's comm/verify/graphs/multi source contract. No engine patch is applied.
 ENGINE_HASHES = {
-    'families/glm5_next/cuda/engine.py': '475132412952660b73982e27c3a1dbb3cf64f57dc584b876b4edabf3325593c6',
-    'families/glm5_next/cuda/dflash2.py': '497d9dc2d9994686111e8a3ffff838a64d05e0069d681cd05c71465f07af00f9',
-    'families/glm5_next/cuda/dflash2_multi.py': 'a06c6862870f8fafa2cdfc028e62ffdd803c00e821552488638675a960a2396f',
-    'families/glm5_next/cuda/forward.py': 'f54b7f768477da64460814902cb324361f17b80c9c1897271a264fa9f824245e',
+    'families/glm5_next/cuda/engine.py': 'f986b4c005aa99652b125f88e13f7ce33af30c55a7a1fdfe1f97f3aadc4d9361',
+    'families/glm5_next/cuda/dflash2.py': '0dcea19b7b9cc4c4b51436b2efcfcce134f90729a911ac1db2f15cea7a257475',
+    'families/glm5_next/cuda/dflash2_multi.py': 'ccfbcf59c3f2fb3b8f8d5e2ebe46b332578ca51f2680ef46b41d7ef7eedfff99',
+    'families/glm5_next/cuda/forward.py': 'efb7a4d425f9e6dc0ac19c7ab007feb0113cdd800cfb8198902f8a46789772a9',
     'families/glm5_next/cuda/hcsplit.py': 'fb5c8e31820859b621e7da8d9aa7edc296b87c56d1a4f09adf43bc8647c52232',
 }
 ERROR_FIELDS = {'out_of_buffer', 'req_cqe_error', 'resp_cqe_error',

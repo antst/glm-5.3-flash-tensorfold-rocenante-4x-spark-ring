@@ -1,5 +1,7 @@
 # Correctness before performance tuning
 
+Historical native-versus-NCCL arms used Mia96. The later [Mia107 qualification](engine-upgrade.md) uses the same full protocol to compare images with RoCEnante held constant; it does not replace or reinterpret those transport arms.
+
 No candidate speedup is established by source inspection, compilation or CPU
 tests. Keep native/model performance receipts separate and report the exact
 image, libraries, transport sources, network plan and serving settings.
@@ -142,9 +144,10 @@ stack. The client URL stays stable; owner/container, bootstrap and local cache
 separation remains. Qualify both transports after any bound configuration change.
 Run the model validator before timing each newly started arm.
 
-Retained final benchmark receipts were measured on the initial 18888 test
-endpoint. The current reproduction commands below use 8888; historical metrics
-and endpoint records are not rewritten.
+Retained historical Mia96 transport-arm receipts were measured on the initial
+18888 test endpoint. The later Mia96-versus-Mia107 image-upgrade arms were
+measured on 8888. Current reproduction commands below use 8888; historical
+metrics and endpoint records are not rewritten.
 
 The maintained clients use Python's standard library. Fetch a clean copy of
 the pinned RigMark source into ignored state, and prepare its required appliance

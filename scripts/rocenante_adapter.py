@@ -37,7 +37,7 @@ SOURCE_HASHES = {
     "cuda/comm.py": "92f1be63fc4bf1ba77675eb74a13716d07e39bc74839579a82ee47b34bf2f986",
     "families/glm5_next/cuda/verify.py": "e0d450b84fe6b4e285ae0bb5942e92aa86762a554e29aae8e38d53c447b1e13f",
     "families/glm5_next/cuda/graphs.py": "43e31efc653c61d3e0c0a6fef4bc78afaa057582d16c7a8613986d3a73a4465d",
-    "families/glm5_next/cuda/multi.py": "a7c4cd5ddda71d53b28d3132ee11d8f59c030e96742d6c60d28a78394097b290",
+    "families/glm5_next/cuda/multi.py": "3f90da926a0bcb4de124dcd4416b2251c2f96723c05abb17568368314a2b9981",
 }
 _DTYPES = {"torch.float32", "torch.bfloat16", "torch.int32", "torch.int64"}
 _INSTALLED = None

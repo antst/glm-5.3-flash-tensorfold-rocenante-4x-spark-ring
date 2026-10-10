@@ -32,8 +32,9 @@ class BuildTests(unittest.TestCase):
         with patch.object(builder,'run',side_effect=AssertionError('unexpected process')), \
              patch.object(Path,'mkdir',side_effect=AssertionError('unexpected write')), \
              contextlib.redirect_stdout(io.StringIO()) as output:
-            self.assertEqual(builder.main(['--plan','--fetch','--build-dir','/tmp/new-native','--publish','/tmp/new-lib']),0)
+            self.assertEqual(builder.main(['--plan','--fetch','--build-dir','/tmp/new-native','--publish','/tmp/new-lib','--loader-image',json.loads((ROOT/'config.example.json').read_text())['image']]),0)
         plan=json.loads(output.getvalue())
+        self.assertEqual(plan['loader_image'],json.loads((ROOT/'config.example.json').read_text())['image'])
         for field in ('writes','network','ssh','gpu'): self.assertFalse(plan[field])
 
     def test_more_than_two_jobs_refused(self):

@@ -33,7 +33,7 @@ COMMIT = '12df1a11afad322be5a204a2db890161cbf8131d'
 ARCHIVE_SHA = 'a66ba2b0ac77e7339a71397292134d7ab33c3642af495a170f0c85f27a769008'
 BASE_TREE = 'de760d9f34b52dee589604eeeccef9a09df8a979'
 PATCH_SHA = 'a0deca2f21b8cad56bc68a5f5468936b7a6b894db160cfa1d62a6a3d59358836'
-IMAGE = 'ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f'
+IMAGE = 'ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf'
 SHARED_FS = {'nfs','nfs4','cifs','smb3','9p','ceph','glusterfs','lustre'}
 
 def canonical(value):
