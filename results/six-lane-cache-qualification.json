@@ -1,0 +1,591 @@
+{
+  "all_rank_startup_capacity_passed": true,
+  "completion_tokens_per_request": 32,
+  "engine": "Pinned Mia107 TensorFold 0.6.0, GLM-5.3-Flash EXL3 with DFlash2",
+  "evidence_sha256": {
+    "maintenance_result": "f386ef9cb0b39869b075b1aba77c9b512468338ea9f539ec8772f66c0bc9c643",
+    "portable_offline_suite": "0901d37feb14978ee0ddcf2bce18e622652d735aa44cd6f5c25ec6831e1a6f23",
+    "private_cache_result": "047ba6bdf08366b4c7177172af6fed0899fba4ebc34f13412dba500a9da3ce13",
+    "production_monitor_snapshot": "b5cd4949817465623e14dc3f7d557595d39597b45f182c83ac94f51695215240",
+    "source_of_private_test": "a69218b643caf502e2beb885d4493f2b9cbe49f4d40132825664ef5142600546"
+  },
+  "final_growth_six_admitted_full_size_allocations_observed": true,
+  "final_growth_six_full_size_allocation_sample_count": 164,
+  "fresh_nccl_and_rocenante_hardware_qualification_passed": true,
+  "full_cache_replays_and_matching_completions_passed": true,
+  "image_services_remain_removed": true,
+  "independent_histories": 6,
+  "minimum_sampled_mem_available_gib": {
+    "spark1": 19.3018,
+    "spark2": 21.5589,
+    "spark3": 21.5542,
+    "spark4": 21.6648
+  },
+  "monitoring": {
+    "aggregate_cache_and_stream_counters": true,
+    "eight_lane_estimate_qualified": false,
+    "host_memory_and_paging": true,
+    "installed_running_with_successful_production_sample": true,
+    "interval_seconds": 30,
+    "maximum_log_bytes": 67108864,
+    "no_inference_submitted": true,
+    "offline_tests": 29,
+    "retention_days": 7
+  },
+  "not_a_throughput_benchmark": true,
+  "p6_short_semantic_validation": {
+    "all_16_hca_payload_passed": true,
+    "cases": [
+      {
+        "case": "code",
+        "passed": true,
+        "semantic_passed": true
+      },
+      {
+        "case": "fact",
+        "passed": true,
+        "semantic_passed": true
+      },
+      {
+        "case": "arithmetic",
+        "passed": true,
+        "semantic_passed": true
+      }
+    ],
+    "exclusive_request_delta": 24,
+    "native_payload_passed": true,
+    "passed": true,
+    "raw_receipt_sha256": "b969dbded46ae662ea2b377d3f3c915da8387f8d065302ea1fb0b436be288f2f",
+    "requests": 24,
+    "serial_draft_and_six_concurrent_outputs_equal": true,
+    "source_validator_sha256": "f40fb76c1a69a3a081b6458c36aee58e33a124155f2e0bdd78260efbd8d80230"
+  },
+  "passed": true,
+  "production_api_port": 8888,
+  "production_context": 1048576,
+  "production_final_observation_kept_prompts": 0,
+  "production_max_active_lanes": 6,
+  "production_restarted_with_empty_cache": true,
+  "profile": {
+    "cache_entries": 64,
+    "cache_gib": 40.0,
+    "context": 1048576,
+    "keep_reasoning_entries": 8192,
+    "keep_reasoning_mb": 128,
+    "kept_bytes_gib": 4.0,
+    "max_tokens": 32768,
+    "multi_window": 64,
+    "nccl_channels": 4,
+    "parallel": 6,
+    "protocol": "auto",
+    "reserve_gib": 16.0,
+    "thread_thresholds": null
+  },
+  "qualified_utc": "2026-10-13T19:58:15.370151+00:00",
+  "rank_startup_capacity": [
+    {
+      "allocated_window": 1048576,
+      "cache_slots": 1048592,
+      "rank": 0
+    },
+    {
+      "allocated_window": 1048576,
+      "cache_slots": 1048592,
+      "rank": 1
+    },
+    {
+      "allocated_window": 1048576,
+      "cache_slots": 1048592,
+      "rank": 2
+    },
+    {
+      "allocated_window": 1048576,
+      "cache_slots": 1048592,
+      "rank": 3
+    }
+  ],
+  "requests": 48,
+  "runtime_sources_sha256": {
+    "scripts/common.py": "3f5d8cee1861e5bb36b7a5db7b967b8c969174f238ea975f06118a270a051a82"
+  },
+  "schema": "tensorfold-six-lane-cache-qualification/v1",
+  "scope": "Six synthetic independent raw-token linear histories; exact target-verified deterministic cached replay consistency.",
+  "six_1m_allocations_rows": 6291456,
+  "spare_rows_during_six_full_size_allocations": 530432,
+  "system_changes": {
+    "both_transport_qualification_receipts_refreshed": true,
+    "extra_cache_gib_per_rank": {
+      "from": 24.0,
+      "to": 40.0
+    },
+    "kept_state_entries": 64,
+    "kept_state_tensor_cap_gib_per_rank": 4.0,
+    "maximum_active_lanes": {
+      "from": 8,
+      "to": 6
+    },
+    "model_workers_replaced_twice": true,
+    "os_network_or_forwarding_changed": false,
+    "packages_or_boot_units_changed": false,
+    "reasoning_mi_characters": {
+      "from": 32,
+      "to": 128
+    },
+    "reasoning_reply_entries": {
+      "from": 1024,
+      "to": 8192
+    },
+    "startup_reserve_gib": {
+      "from": 20.0,
+      "to": 16.0
+    }
+  },
+  "token_pool_rows_per_rank": 6821888,
+  "untested": [
+    "real agent prompt rendering and reasoning reconstruction",
+    "fork/branch cache pressure",
+    "interrupted-prefill recovery",
+    "persistent cache across restart",
+    "64-entry or 4-GiB side-state eviction limit",
+    "independent cold-reference model-quality comparison",
+    "six simultaneous decoding lanes"
+  ],
+  "waves": [
+    {
+      "32_generated_token_ids_match_original_and_replay": true,
+      "exact_replay": {
+        "cached_tokens": {
+          "maximum": 1024,
+          "minimum": 1024
+        },
+        "first_visible_text_seconds": {
+          "maximum": 0.1988,
+          "minimum": 0.1931
+        },
+        "requests": [
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 0.1958,
+            "history": 0,
+            "wall_seconds": 0.5373
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 0.1988,
+            "history": 1,
+            "wall_seconds": 0.6481
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 0.1931,
+            "history": 2,
+            "wall_seconds": 0.5369
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 0.1978,
+            "history": 3,
+            "wall_seconds": 0.6481
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 0.1982,
+            "history": 4,
+            "wall_seconds": 0.537
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 0.1945,
+            "history": 5,
+            "wall_seconds": 0.6481
+          }
+        ],
+        "wall_seconds": {
+          "maximum": 0.6481,
+          "minimum": 0.5369
+        }
+      },
+      "growth": {
+        "cached_tokens": {
+          "maximum": 0,
+          "minimum": 0
+        },
+        "first_visible_text_seconds": {
+          "maximum": 4.3881,
+          "minimum": 1.3381
+        },
+        "requests": [
+          {
+            "cached_tokens": 0,
+            "first_visible_text_seconds": 3.6831,
+            "history": 0,
+            "wall_seconds": 3.9413
+          },
+          {
+            "cached_tokens": 0,
+            "first_visible_text_seconds": 2.0713,
+            "history": 1,
+            "wall_seconds": 2.9341
+          },
+          {
+            "cached_tokens": 0,
+            "first_visible_text_seconds": 1.3381,
+            "history": 2,
+            "wall_seconds": 1.7684
+          },
+          {
+            "cached_tokens": 0,
+            "first_visible_text_seconds": 2.8669,
+            "history": 3,
+            "wall_seconds": 3.7498
+          },
+          {
+            "cached_tokens": 0,
+            "first_visible_text_seconds": 1.3382,
+            "history": 4,
+            "wall_seconds": 1.7693
+          },
+          {
+            "cached_tokens": 0,
+            "first_visible_text_seconds": 4.3881,
+            "history": 5,
+            "wall_seconds": 4.6244
+          }
+        ],
+        "wall_seconds": {
+          "maximum": 4.6244,
+          "minimum": 1.7684
+        }
+      },
+      "histories": 6,
+      "prompt_tokens": 1024
+    },
+    {
+      "32_generated_token_ids_match_original_and_replay": true,
+      "exact_replay": {
+        "cached_tokens": {
+          "maximum": 262144,
+          "minimum": 262144
+        },
+        "first_visible_text_seconds": {
+          "maximum": 0.8968,
+          "minimum": 0.8489
+        },
+        "requests": [
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 0.875,
+            "history": 0,
+            "wall_seconds": 1.2284
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 0.8906,
+            "history": 1,
+            "wall_seconds": 1.2328
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 0.865,
+            "history": 2,
+            "wall_seconds": 1.228
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 0.8489,
+            "history": 3,
+            "wall_seconds": 1.227
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 0.8854,
+            "history": 4,
+            "wall_seconds": 1.2301
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 0.8968,
+            "history": 5,
+            "wall_seconds": 1.2316
+          }
+        ],
+        "wall_seconds": {
+          "maximum": 1.2328,
+          "minimum": 1.227
+        }
+      },
+      "growth": {
+        "cached_tokens": {
+          "maximum": 1024,
+          "minimum": 1024
+        },
+        "first_visible_text_seconds": {
+          "maximum": 891.1557,
+          "minimum": 149.239
+        },
+        "requests": [
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 297.7296,
+            "history": 0,
+            "wall_seconds": 297.9799
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 446.2055,
+            "history": 1,
+            "wall_seconds": 446.4481
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 743.2648,
+            "history": 2,
+            "wall_seconds": 743.508
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 594.6869,
+            "history": 3,
+            "wall_seconds": 594.9347
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 891.1557,
+            "history": 4,
+            "wall_seconds": 891.2605
+          },
+          {
+            "cached_tokens": 1024,
+            "first_visible_text_seconds": 149.239,
+            "history": 5,
+            "wall_seconds": 149.6328
+          }
+        ],
+        "wall_seconds": {
+          "maximum": 891.2605,
+          "minimum": 149.6328
+        }
+      },
+      "histories": 6,
+      "prompt_tokens": 262144
+    },
+    {
+      "32_generated_token_ids_match_original_and_replay": true,
+      "exact_replay": {
+        "cached_tokens": {
+          "maximum": 524288,
+          "minimum": 524288
+        },
+        "first_visible_text_seconds": {
+          "maximum": 1.713,
+          "minimum": 1.6405
+        },
+        "requests": [
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 1.6405,
+            "history": 0,
+            "wall_seconds": 2.0757
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 1.689,
+            "history": 1,
+            "wall_seconds": 2.0787
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 1.713,
+            "history": 2,
+            "wall_seconds": 2.094
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 1.7027,
+            "history": 3,
+            "wall_seconds": 2.0929
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 1.6601,
+            "history": 4,
+            "wall_seconds": 2.0773
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 1.6784,
+            "history": 5,
+            "wall_seconds": 2.0814
+          }
+        ],
+        "wall_seconds": {
+          "maximum": 2.094,
+          "minimum": 2.0757
+        }
+      },
+      "growth": {
+        "cached_tokens": {
+          "maximum": 262144,
+          "minimum": 262144
+        },
+        "first_visible_text_seconds": {
+          "maximum": 1023.0844,
+          "minimum": 171.6431
+        },
+        "requests": [
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 852.8393,
+            "history": 0,
+            "wall_seconds": 853.1214
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 512.2651,
+            "history": 1,
+            "wall_seconds": 512.5432
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 1023.0844,
+            "history": 2,
+            "wall_seconds": 1023.2026
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 342.5641,
+            "history": 3,
+            "wall_seconds": 342.837
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 683.224,
+            "history": 4,
+            "wall_seconds": 683.4974
+          },
+          {
+            "cached_tokens": 262144,
+            "first_visible_text_seconds": 171.6431,
+            "history": 5,
+            "wall_seconds": 172.1936
+          }
+        ],
+        "wall_seconds": {
+          "maximum": 1023.2026,
+          "minimum": 172.1936
+        }
+      },
+      "histories": 6,
+      "prompt_tokens": 524288
+    },
+    {
+      "32_generated_token_ids_match_original_and_replay": true,
+      "exact_replay": {
+        "cached_tokens": {
+          "maximum": 1046528,
+          "minimum": 1046528
+        },
+        "first_visible_text_seconds": {
+          "maximum": 3.2465,
+          "minimum": 3.0878
+        },
+        "requests": [
+          {
+            "cached_tokens": 1046528,
+            "first_visible_text_seconds": 3.2465,
+            "history": 0,
+            "wall_seconds": 3.6792
+          },
+          {
+            "cached_tokens": 1046528,
+            "first_visible_text_seconds": 3.2265,
+            "history": 1,
+            "wall_seconds": 3.725
+          },
+          {
+            "cached_tokens": 1046528,
+            "first_visible_text_seconds": 3.0878,
+            "history": 2,
+            "wall_seconds": 3.6698
+          },
+          {
+            "cached_tokens": 1046528,
+            "first_visible_text_seconds": 3.1969,
+            "history": 3,
+            "wall_seconds": 3.725
+          },
+          {
+            "cached_tokens": 1046528,
+            "first_visible_text_seconds": 3.1417,
+            "history": 4,
+            "wall_seconds": 3.7143
+          },
+          {
+            "cached_tokens": 1046528,
+            "first_visible_text_seconds": 3.1757,
+            "history": 5,
+            "wall_seconds": 3.6999
+          }
+        ],
+        "wall_seconds": {
+          "maximum": 3.725,
+          "minimum": 3.6698
+        }
+      },
+      "growth": {
+        "cached_tokens": {
+          "maximum": 524288,
+          "minimum": 524288
+        },
+        "first_visible_text_seconds": {
+          "maximum": 2442.1718,
+          "minimum": 407.9284
+        },
+        "requests": [
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 1629.6994,
+            "history": 0,
+            "wall_seconds": 1630.0175
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 2035.6443,
+            "history": 1,
+            "wall_seconds": 2035.961
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 815.2542,
+            "history": 2,
+            "wall_seconds": 815.5647
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 1222.4644,
+            "history": 3,
+            "wall_seconds": 1222.7765
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 2442.1718,
+            "history": 4,
+            "wall_seconds": 2442.3015
+          },
+          {
+            "cached_tokens": 524288,
+            "first_visible_text_seconds": 407.9284,
+            "history": 5,
+            "wall_seconds": 408.4422
+          }
+        ],
+        "wall_seconds": {
+          "maximum": 2442.3015,
+          "minimum": 408.4422
+        }
+      },
+      "histories": 6,
+      "prompt_tokens": 1046528
+    }
+  ]
+}

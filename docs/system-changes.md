@@ -74,6 +74,79 @@ host reboot requires recreating all four selected model ranks together.
 Physical reboot recovery is covered by CPU mocks; an actual host reboot has
 not been tested.
 
+## Upgrade v0.1.2 to v0.1.3 with the healthy mesh retained
+
+The new example selects P6, 1M total context, 40 GiB extra cache, a 16 GiB
+reserve, 64 snapshots, a 4 GiB retained-state budget and reasoning retention of
+8,192 replies / 128 Mi characters. See [cache limits](cache-retention.md).
+The six-lane qualification and 72 private cache/semantic requests passed;
+review the published report and qualify the same profile on your own hosts.
+
+Run on the management host at your existing shared checkout. Arrange a
+maintenance window and stop GLM using **old source and old configuration before
+switching**. Stop substantial competing workloads with their own controls.
+Archive local edits; do not force a checkout.
+
+~~~sh
+cd /shared/spark-ring-tensorfold-rocenante
+python3 -B scripts/experiment.py stop --config local/config.json
+git status --short --untracked-files=no
+SPARK_RING_CACHE_BACKUP="state/before-v0.1.3-$(date -u +%Y%m%dT%H%M%SZ)"
+mkdir -m 700 "$SPARK_RING_CACHE_BACKUP"
+cp -a local/config.json state/collective-qualification.json state/rocenante-qualification.json "$SPARK_RING_CACHE_BACKUP/"
+git rev-parse HEAD > "$SPARK_RING_CACHE_BACKUP/source-commit.txt"
+git fetch origin tag v0.1.3
+git checkout --detach v0.1.3
+~~~
+
+Ensure tracked files are clean or edits archived before fetching/checking out.
+Retain the backup path. Copy only the new profile into your ignored config.
+Preserve addresses, shared/model/cache roots, owner, image/library, ports,
+model pins, fabric inventory and experiment transport settings:
+
+~~~sh
+python3 -B - <<'PY'
+import json, pathlib
+p = pathlib.Path('local/config.json')
+cfg = json.loads(p.read_text())
+cfg['profile'] = json.loads(pathlib.Path('config.example.json').read_text())['profile']
+p.write_text(json.dumps(cfg, indent=2) + '\n')
+PY
+python3 -B scripts/check-public.py
+python3 -B scripts/experiment.py plan --config local/config.json
+python3 -B scripts/network.py check --config local/config.json --inventory state/network-inventory.json
+python3 -B scripts/qualify.py run --config local/config.json --transport nccl
+python3 -B scripts/qualify.py run --config local/config.json --transport rocenante
+~~~
+
+Changed launcher source/profile require **fresh source-bound qualifications for
+both transports**. Back up historical receipts; never relabel them. Retaining a
+healthy mesh needs no network apply, rollback, NIC reload, route additions or
+forwarding change. Image pulls, native builds and downloads are unnecessary
+when exact v0.1.2 pins and loader/build proofs remain valid. Changed image,
+library, network plan or host boots require the corresponding qualification.
+
+Start, verify actual allocations/memory, and run a new short semantic check:
+
+~~~sh
+python3 -B scripts/experiment.py start --config local/config.json --mode rocenante
+python3 -B scripts/experiment.py status --config local/config.json
+python3 -B scripts/validate-model.py --config local/config.json --mode rocenante --output state/model-validation-p6-NEW
+~~~
+
+Use an ignored maintenance config with a private API port for the long-context
+independent-history, memory-floor, replay and final-wave admission checks
+[described here](cache-retention.md). Return to 8888 after checks pass.
+Budgets do not guarantee six context slots on hosts with other free memory or
+workloads. Keep all test logs and receipts private.
+
+For same-boot recovery, stop new owned workers with new source/config, preserve
+logs/receipts, select the saved source-commit revision and restore the saved
+config plus both qualification files together. Check the retained mesh and
+start the prior recipe. Never mix old receipts and new source/profile. Changed
+boots require fresh qualification. Restarting clears in-memory KV; restoring
+configuration does not restore cached conversations.
+
 ## Mia107 image update
 
 The qualified v0.1.2 update preserves the existing owner/root and healthy installed mesh. It pulls the new image on all four hosts, stops/recreates the owned workers, creates a new compiler/cache namespace and selects a copied NCCL artifact with a fresh image-loader receipt. The old image, cache, original binary/build receipt and exact prior config/source/qualification backups remain available. It adds no routes, rules, NIC reloads or OS forwarding changes.

@@ -56,6 +56,49 @@ class ExperimentTests(unittest.TestCase):
             self.assertEqual(e['NCCL_MIN_NCHANNELS'],str(channels));self.assertEqual(e['NCCL_MAX_NCHANNELS'],str(channels))
         for channels in (0,3,32,True):
             with self.subTest(channels=channels),self.assertRaises(ValueError):validate_profile({'nccl_channels':channels})
+    def test_retained_state_budget_is_optional_and_does_not_change_transport(self):
+        from common import transport_environment
+        cfg=self.config();cfg["profile"].pop("kept_bytes_gib",None);original=environment(cfg,0,"digest")
+        self.assertNotIn("TF_GLM_KEPT_BYTES_GIB",original)
+        cfg["profile"]=validate_profile({**cfg["profile"],"cache_entries":64,"kept_bytes_gib":4.0})
+        changed=environment(cfg,0,"digest")
+        self.assertEqual(changed["TF_GLM_CACHE_ENTRIES"],"64")
+        self.assertEqual(changed["TF_GLM_KEPT_BYTES_GIB"],"4.0")
+        self.assertEqual(transport_environment(original),transport_environment(changed))
+
+    def test_retained_state_budget_rejects_invalid_values(self):
+        for value in (-1,True,False,"4",float("inf"),float("-inf"),float("nan"),None):
+            with self.subTest(value=value),self.assertRaises(ValueError):
+                validate_profile({"kept_bytes_gib":value})
+        for value in (0,4.0,8):
+            self.assertEqual(validate_profile({"kept_bytes_gib":value})["kept_bytes_gib"],value)
+
+    def test_reasoning_retention_is_optional_and_preserves_transport_on_all_ranks(self):
+        from common import transport_environment
+        cfg=self.config()
+        for field in ("keep_reasoning_entries","keep_reasoning_mb"):
+            cfg["profile"].pop(field,None)
+        original=[environment(cfg,rank,"digest") for rank in range(4)]
+        for env in original:
+            self.assertNotIn("TF_GLM_KEEP_REASONING",env)
+            self.assertNotIn("TF_GLM_KEEP_REASONING_MB",env)
+        cfg["profile"]=validate_profile({**cfg["profile"],"keep_reasoning_entries":8192,"keep_reasoning_mb":128})
+        for rank,before in enumerate(original):
+            after=environment(cfg,rank,"digest")
+            self.assertEqual(after["TF_GLM_KEEP_REASONING"],"8192")
+            self.assertEqual(after["TF_GLM_KEEP_REASONING_MB"],"128")
+            self.assertEqual(transport_environment(before),transport_environment(after))
+            self.assertEqual({k:v for k,v in after.items() if k not in
+                ("TF_GLM_KEEP_REASONING","TF_GLM_KEEP_REASONING_MB")},before)
+
+    def test_reasoning_retention_rejects_ambiguous_or_negative_budgets(self):
+        for field in ("keep_reasoning_entries","keep_reasoning_mb"):
+            for value in (-1,True,False,"128",128.0,float("inf"),float("nan"),None):
+                with self.subTest(field=field,value=value),self.assertRaises(ValueError):
+                    validate_profile({field:value})
+            for value in (0,128,8192):
+                self.assertEqual(validate_profile({field:value})[field],value)
+
     def test_native_geometry_defaults_and_choices_are_exact_and_bound_to_rank_settings(self):
         cfg=self.config();cfg['experiment'].pop('native_blocks')
         with patch('experiment.load_config',return_value=cfg):normalized=prepare_config('/unused')

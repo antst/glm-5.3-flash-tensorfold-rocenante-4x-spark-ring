@@ -1,6 +1,6 @@
 {
   "schema": "tensorfold-rocenante-provenance/v1",
-  "status": "v0.1.2 Mia107 source release; four-rank hardware/model and fresh matched image benchmarks qualified at API8888; historical v0.1.1 remains Mia96",
+  "status": "v0.1.3 Mia107 P6 source release; six large linear histories/cache replay and 24 short semantic requests hardware-qualified; P8 benchmark results remain historical",
   "baseline_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring",
   "baseline_commit": "d6f455248bfc9c83187d89e000ec8fbdf7c19546",
   "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf",
@@ -146,22 +146,13 @@
     "clock_power_changes": false,
     "source_release": "v0.1.0"
   },
-  "cpu_suite": {
-    "passed": true,
-    "tests": 90,
-    "skipped": 0,
-    "pinned_image": true,
-    "gpu_context_created": false,
-    "receipt_sha256": "4d3ba3f6bf857e71b19d4c1e97fb399eae7c8f12f1d7506ab05fd9fdfde337ff",
-    "scope": "Released scripts/tests including native-build image-pin regression; serving runtime matches retained hardware evidence."
-  },
   "recipe_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring",
   "source_release": {
-    "version": "v0.1.2",
-    "url": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.2",
-    "scope": "Portable recipe sources and sanitized qualified results; external image, native binary and model inputs. Publication attested separately by operator receipts."
+    "version": "v0.1.3",
+    "url": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.3",
+    "scope": "Portable recipe sources and sanitized six-lane capacity/correctness evidence; external pinned image, native binary and model inputs. Publication attested separately."
   },
-  "selected_configuration_scope": "Exact configuration and runtime source identity of retained v0.1.0 benchmarks; API8888 migration and current Mia107 evidence are separately bound in api_port_migration and engine_upgrade.",
+  "selected_configuration_scope": "Exact configuration and runtime source identity of retained v0.1.0 benchmarks; API8888 migration and current Mia107 evidence are separately bound in api_port_migration and engine_upgrade. The qualified v0.1.3 selected cache profile and measured cache evidence are separate in long_context_cache_profile.",
   "historical_v0_1_0_cpu_suite": {
     "tests": 89,
     "skipped": 0,
@@ -255,5 +246,170 @@
     "gpu_context_created": false,
     "receipt_sha256": "26a87caedc8f341e780775106e0df80cf0069bbad7e09a86ec01a98f2b503eed",
     "pinned_image": true
+  },
+  "historical_v0_1_2_cpu_suite": {
+    "passed": true,
+    "tests": 90,
+    "skipped": 0,
+    "pinned_image": true,
+    "gpu_context_created": false,
+    "receipt_sha256": "4d3ba3f6bf857e71b19d4c1e97fb399eae7c8f12f1d7506ab05fd9fdfde337ff",
+    "scope": "Released scripts/tests including native-build image-pin regression; serving runtime matches retained hardware evidence."
+  },
+  "long_context_cache_profile": {
+    "source_release": "v0.1.3",
+    "status": "qualified",
+    "profile": {
+      "cache_entries": 64,
+      "cache_gib": 40.0,
+      "context": 1048576,
+      "keep_reasoning_entries": 8192,
+      "keep_reasoning_mb": 128,
+      "kept_bytes_gib": 4.0,
+      "max_tokens": 32768,
+      "multi_window": 64,
+      "nccl_channels": 4,
+      "parallel": 6,
+      "protocol": "auto",
+      "reserve_gib": 16.0,
+      "thread_thresholds": null
+    },
+    "report": "docs/cache-retention.md",
+    "expected_prompt_lengths": [
+      1024,
+      262144,
+      524288,
+      1046528
+    ],
+    "completion_tokens": 32,
+    "expected_cache_validation_requests": 48,
+    "minimum_pool_rows": 6750208,
+    "startup_memavailable_gib_minimum": 16,
+    "runtime_memavailable_gib_minimum": 12,
+    "model_draft_image_pins_changed": false,
+    "compute_transport_settings_changed": false,
+    "network_changes_required": false,
+    "throughput_rerun": false,
+    "limitations": [
+      "synthetic raw-token linear histories",
+      "no allocator extent IDs exposed",
+      "real agent prompt rendering and reasoning reconstruction",
+      "fork/branch cache pressure",
+      "interrupted-prefill recovery",
+      "persistent cache across restart",
+      "64-entry or 4-GiB side-state eviction limit",
+      "independent cold-reference model-quality comparison",
+      "six simultaneous decoding lanes"
+    ],
+    "runtime_source_sha256": {
+      "common.py": "3f5d8cee1861e5bb36b7a5db7b967b8c969174f238ea975f06118a270a051a82"
+    },
+    "passed": true,
+    "qualified_utc": "2026-10-13T19:58:15.370151+00:00",
+    "result": "results/six-lane-cache-qualification.json",
+    "result_sha256": "caabb6f1827ffdefceb45d0c1938b6b9b27e6b667ce1e28dad30128660d8a724",
+    "token_pool_rows_per_rank": 6821888,
+    "six_1m_allocations_rows": 6291456,
+    "spare_rows_during_six_full_size_allocations": 530432,
+    "cache_requests": 48,
+    "short_semantic_requests": 24,
+    "private_requests_total": 72,
+    "final_growth_six_admitted_full_size_allocations_observed": true,
+    "final_growth_six_full_size_allocation_sample_count": 164,
+    "all_rank_startup_capacity_passed": true,
+    "rank_startup_capacity": [
+      {
+        "allocated_window": 1048576,
+        "cache_slots": 1048592,
+        "rank": 0
+      },
+      {
+        "allocated_window": 1048576,
+        "cache_slots": 1048592,
+        "rank": 1
+      },
+      {
+        "allocated_window": 1048576,
+        "cache_slots": 1048592,
+        "rank": 2
+      },
+      {
+        "allocated_window": 1048576,
+        "cache_slots": 1048592,
+        "rank": 3
+      }
+    ],
+    "minimum_sampled_mem_available_gib": {
+      "spark1": 19.3018,
+      "spark2": 21.5589,
+      "spark3": 21.5542,
+      "spark4": 21.6648
+    },
+    "short_semantic_validation": {
+      "all_16_hca_payload_passed": true,
+      "cases": [
+        {
+          "case": "code",
+          "passed": true,
+          "semantic_passed": true
+        },
+        {
+          "case": "fact",
+          "passed": true,
+          "semantic_passed": true
+        },
+        {
+          "case": "arithmetic",
+          "passed": true,
+          "semantic_passed": true
+        }
+      ],
+      "exclusive_request_delta": 24,
+      "native_payload_passed": true,
+      "passed": true,
+      "raw_receipt_sha256": "b969dbded46ae662ea2b377d3f3c915da8387f8d065302ea1fb0b436be288f2f",
+      "requests": 24,
+      "serial_draft_and_six_concurrent_outputs_equal": true,
+      "source_validator_sha256": "f40fb76c1a69a3a081b6458c36aee58e33a124155f2e0bdd78260efbd8d80230"
+    },
+    "production_restored_to_api8888_p6": true,
+    "production_cache_persisted": false,
+    "image_services_remain_removed": true,
+    "fresh_both_transport_qualification_passed": true,
+    "independent_cold_reference_model_quality_compared": false,
+    "six_simultaneous_decoding_lanes_proved": false,
+    "monitoring": {
+      "aggregate_cache_and_stream_counters": true,
+      "eight_lane_estimate_qualified": false,
+      "host_memory_and_paging": true,
+      "installed_running_with_successful_production_sample": true,
+      "interval_seconds": 30,
+      "maximum_log_bytes": 67108864,
+      "no_inference_submitted": true,
+      "offline_tests": 29,
+      "retention_days": 7,
+      "source": "scripts/cache-monitor.py",
+      "source_sha256": "5405425e9d76103f7003eb24c2a354d2f310141c7805b9bd96cc09507bfe59dd",
+      "documentation": "docs/monitoring.md"
+    },
+    "scope": "Six synthetic independent raw-token linear histories; exact target-verified deterministic cached replay consistency.",
+    "untested": [
+      "real agent prompt rendering and reasoning reconstruction",
+      "fork/branch cache pressure",
+      "interrupted-prefill recovery",
+      "persistent cache across restart",
+      "64-entry or 4-GiB side-state eviction limit",
+      "independent cold-reference model-quality comparison",
+      "six simultaneous decoding lanes"
+    ]
+  },
+  "cpu_suite": {
+    "passed": true,
+    "tests": 126,
+    "passed_tests": 124,
+    "skipped": 2,
+    "gpu_context_created": false,
+    "pinned_image": false,
+    "scope": "Management-host offline release checks; image/Torch-dependent cases skipped."
   }
 }

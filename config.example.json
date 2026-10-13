@@ -16,15 +16,18 @@
   },
   "profile": {
     "context": 1048576,
-    "parallel": 8,
+    "parallel": 6,
     "multi_window": 64,
-    "cache_entries": 32,
+    "cache_entries": 64,
     "max_tokens": 32768,
-    "cache_gib": 24.0,
-    "reserve_gib": 20.0,
+    "cache_gib": 40.0,
+    "reserve_gib": 16.0,
     "protocol": "auto",
     "thread_thresholds": null,
-    "nccl_channels": 4
+    "nccl_channels": 4,
+    "kept_bytes_gib": 4.0,
+    "keep_reasoning_entries": 8192,
+    "keep_reasoning_mb": 128
   },
   "nodes": [
     {

@@ -117,6 +117,13 @@ def semantic(label, result):
                and [a.arg for a in node.args.args] == ['n'] for node in tree.body)
 
 
+def qualification_lanes(profile):
+    parallel = profile['parallel']
+    require(type(parallel) is int and parallel in (6, 8),
+            'This model qualification explicitly exercises a six- or eight-lane profile')
+    return parallel
+
+
 def check_idle(health, parallel):
     require(health.get('ok') is True and health.get('busy') is False and health.get('requests_running') == 0,
             'Dedicated API must be healthy and idle')
@@ -372,8 +379,7 @@ def main():
     require(output.is_relative_to(state_dir(cfg).resolve()) and output != state_dir(cfg).resolve() and not output.exists(),
             'Output must be a NEW private directory beneath configured state/')
     require(args.timeout > 0 and args.report_timeout >= 65 and args.minimum_bytes > 0, 'Invalid timeouts/payload threshold')
-    parallel = cfg['profile']['parallel']
-    require(parallel == 8, 'This candidate qualification explicitly exercises the eight-lane profile')
+    parallel = qualification_lanes(cfg['profile'])
     endpoint = 'http://' + cfg['nodes'][0]['management_address'] + ':' + str(cfg['api_port'])
     expected_count = len(CASES) * (parallel + 2)
     if args.plan:
@@ -390,7 +396,7 @@ def main():
               'mode': args.mode, 'endpoint': endpoint, 'qualified': False, 'passed': False,
               'validator_sha256': sha(__file__), 'profile': cfg['profile'], 'cases': [],
               'expected_requests': expected_count, 'completed_requests': 0,
-              'scope': 'Pinned TP4/P8 text model: greedy draft/serial/concurrent equality, two factual answers and Python AST shape, current identity and traffic. No generated code execution, vision, or full 1M input test.',
+              'scope': f'Pinned TP4/P{parallel} text model: greedy draft/serial/concurrent equality, two factual answers and Python AST shape, current identity and traffic. No generated code execution, vision, or full 1M input test.',
               'host_configuration_changes': False}
     destination = output / 'model-qualification.json'
     try:

@@ -53,6 +53,13 @@ def validate_profile(profile):
         raise ValueError("cache_gib/reserve_gib must be finite numbers")
     if p["cache_gib"] <= 0 or p["reserve_gib"] < 0:
         raise ValueError("cache_gib must be positive; reserve_gib must be nonnegative")
+    if "kept_bytes_gib" in p:
+        value = p["kept_bytes_gib"]
+        if type(value) not in (int, float) or not math.isfinite(value) or value < 0:
+            raise ValueError("profile.kept_bytes_gib must be a finite nonnegative number")
+    for field in ("keep_reasoning_entries", "keep_reasoning_mb"):
+        if field in p and (type(p[field]) is not int or p[field] < 0):
+            raise ValueError(f"profile.{field} must be a nonnegative integer")
     if p["protocol"] not in ("auto", "Simple", "LL", "LL128"):
         raise ValueError("protocol must be auto, Simple, LL or LL128")
     if p["thread_thresholds"] is not None and not re.fullmatch(r"[0-9]+(?: [0-9]+)*", p["thread_thresholds"]):
@@ -262,4 +269,9 @@ def environment(config, rank, digest):
         env["NCCL_PROTO"] = profile["protocol"]
     if profile["thread_thresholds"]:
         env["NCCL_THREAD_THRESHOLDS"] = profile["thread_thresholds"]
+    if "kept_bytes_gib" in profile:
+        env["TF_GLM_KEPT_BYTES_GIB"] = str(profile["kept_bytes_gib"])
+    for field, name in (("keep_reasoning_entries", "TF_GLM_KEEP_REASONING"), ("keep_reasoning_mb", "TF_GLM_KEEP_REASONING_MB")):
+        if field in profile:
+            env[name] = str(profile[field])
     return env
