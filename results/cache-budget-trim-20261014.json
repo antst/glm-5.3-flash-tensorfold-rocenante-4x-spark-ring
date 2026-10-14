@@ -1,0 +1,90 @@
+{
+  "schema": "glm-cache-budget-trim/v1",
+  "passed": true,
+  "verified_utc": "2026-10-14T15:23:00.162178+00:00",
+  "old_cache_gib": 40.0,
+  "new_cache_gib": 39.5625,
+  "old_rank0_pool_rows": 6821888,
+  "new_rank0_pool_rows": 6752256,
+  "pool_measurement": "Actual rank-zero health and startup log; other ranks use source-bound symmetric sizing and verified equal profile.",
+  "row_bytes": 6780,
+  "pool_payload_reduction_bytes_per_rank": 472104960,
+  "six_full_context_windows_rows": 6291456,
+  "spare_rows": 460800,
+  "minimum_qualified_pool_rows": 6750208,
+  "context": 1048576,
+  "parallel": 6,
+  "retained_side_state_cap_gib": 4.0,
+  "cache_replay_requests": 12,
+  "cache_replay_histories": 6,
+  "cache_replay_prompt_tokens": 1024,
+  "cache_replay_completion_tokens": 32,
+  "cache_replay_all_exact": true,
+  "semantic_requests": 24,
+  "semantic_cases": [
+    {
+      "case": "code",
+      "passed": true,
+      "semantic_passed": true
+    },
+    {
+      "case": "fact",
+      "passed": true,
+      "semantic_passed": true
+    },
+    {
+      "case": "arithmetic",
+      "passed": true,
+      "semantic_passed": true
+    }
+  ],
+  "semantic_draft_serial_six_concurrent_exact": true,
+  "private_validation_port": 18897,
+  "production_port": 8888,
+  "production_restored": true,
+  "production_cache_persisted": false,
+  "fresh_monitor_passed": true,
+  "current_boots_unchanged": true,
+  "current_profile_and_source_verified_all_ranks": true,
+  "network_configuration_changed": false,
+  "driver_changed": false,
+  "historical_near_1m_qualification_release": "v0.1.3",
+  "near_1m_stress_rerun": false,
+  "throughput_benchmark_rerun": false,
+  "qwen_driver_warning_fix_proved": false,
+  "kernel_diagnostics_during_maintenance": {
+    "spark1": 0,
+    "spark4": 0,
+    "spark3": 0,
+    "spark2": 0
+  },
+  "host_paging_delta_pages": {
+    "spark1": {
+      "pswpin": 0,
+      "pswpout": 0
+    },
+    "spark4": {
+      "pswpin": 0,
+      "pswpout": 0
+    },
+    "spark3": {
+      "pswpin": 6,
+      "pswpout": 0
+    },
+    "spark2": {
+      "pswpin": 0,
+      "pswpout": 0
+    }
+  },
+  "evidence_sha256": {
+    "maintenance_result": "c224da1144c3366126605a1c924543cc1f313c6fa103d046a27b77b452c85443",
+    "cache_replay": "0ae962b50bedbc6056692c7c54ee2a75847f37cf694abb4f691404e1a7c87633",
+    "semantic_validation": "e49e84fd2534d97f4e6de984980f4c99a0b28d743c32d2fc6330fafec85fca23",
+    "final_readonly_observation": "eb17619bd0fef9259b55ca9c9debacfb06b8ef3ffa997ff243ac0da1e9cf0f9e"
+  },
+  "limitations": [
+    "New validation used short prompts; historical six-near-1M stress was not repeated.",
+    "Cleared retained histories also increase free memory; host free-memory gains are not solely attributable to the trim.",
+    "No Qwen full-P2 or combined service SLA qualification."
+  ]
+}

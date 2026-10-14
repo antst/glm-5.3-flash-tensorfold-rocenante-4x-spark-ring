@@ -21,12 +21,12 @@
       "sha256": "3b42432f52e018d9947f3c7276c3a5754279b8bb9a308b7dec064c2b808d44eb"
     },
     "README.md": {
-      "bytes": 11029,
-      "sha256": "ffdaa6d6231c87c1511d59e0b688cda1a3abc7b84b9044fcef8953c6947600bc"
+      "bytes": 11822,
+      "sha256": "18153e7b318de6e4b6f444812a5132f64ddc683612e3a43a6176c229ebd72e34"
     },
     "config.example.json": {
-      "bytes": 7244,
-      "sha256": "38b8adb2fbc9708e3e99943ea94f81dbe156193788a7be42700c2f0c8162c2e9"
+      "bytes": 7247,
+      "sha256": "a3b8a3c394dbaac923d16f40e098e9be5174be8ffce2b4fdc3c9fe0cd78901a6"
     },
     "docs/benchmark-method.md": {
       "bytes": 12513,
@@ -37,8 +37,8 @@
       "sha256": "d9cd58b091f897053edc372103991c3b94a99f538a7a862bdfcc78b4d3116bc8"
     },
     "docs/cache-retention.md": {
-      "bytes": 9527,
-      "sha256": "54aeade4be595000d902b225dfe8b1befc7e9ceb1ec9a7bbb20ea8b6e284af69"
+      "bytes": 11659,
+      "sha256": "797535effa315824d8f7c0bc2fbc758b4a88eaba3fccb0798d40e8b71586ec07"
     },
     "docs/design.md": {
       "bytes": 8699,
@@ -61,8 +61,8 @@
       "sha256": "d957ebf04a470913feb1df80d5e07336bcd6b81a316638d9ee9848508366c7c6"
     },
     "docs/system-changes.md": {
-      "bytes": 24029,
-      "sha256": "b810a21105110345dba088017f23a3ca378c87039542ff5cbfa9edea7482777a"
+      "bytes": 26808,
+      "sha256": "2448d28e4675272c1c6596272f8c1ce8813c537e49381a1e80fb660ac32aff74"
     },
     "docs/tuning.md": {
       "bytes": 3578,
@@ -73,8 +73,8 @@
       "sha256": "38769d5766d182fe5c03187fbc6440b0daa9d60bfd4eac01f3a5e00cf4137584"
     },
     "provenance.json": {
-      "bytes": 18406,
-      "sha256": "a93b654f19016879909042a60d745e354ba83b6214cc671e12ef6efe6afe4e09"
+      "bytes": 19665,
+      "sha256": "6c30c8d14c17fd7872df1421b0cbaaab13e74c35395091603f6117d2bc69233f"
     },
     "results/api-port-8888-validation.json": {
       "bytes": 5197,
@@ -83,6 +83,10 @@
     "results/baseline-reference.json": {
       "bytes": 712,
       "sha256": "2798fa7c77bc960f1bd8c61531243206feb02703936e5dd54ac5c55d22177759"
+    },
+    "results/cache-budget-trim-20261014.json": {
+      "bytes": 2785,
+      "sha256": "c29096820e73f8b6dc88e57224c7829aee10c91efcdd794987011cc579222383"
     },
     "results/final-benchmarks.json": {
       "bytes": 186483,

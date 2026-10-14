@@ -1,6 +1,6 @@
 # Long-context retained cache profile
 
-Release v0.1.3 selects a six-lane Mia107 configuration for retaining six large,
+Release v0.1.3 qualified a six-lane Mia107 configuration for retaining six large,
 independent conversations. Cache qualification passed on 2026-10-13T19:58:15.370151+00:00: **48
 private growth/replay requests**, followed by **24 private P6 semantic requests**.
 The [sanitized result](../results/six-lane-cache-qualification.json) binds the
@@ -9,18 +9,18 @@ to API8888 with an empty cache. No P6 throughput improvement is claimed.
 
 ## Selected configuration
 
-| Setting | v0.1.2 published profile | v0.1.3 selected profile |
-|---|---:|---:|
-| Tensor-parallel ranks | 4 | 4 |
-| Concurrent decode lanes | 8 | 6 |
-| Context tokens, prompt plus completion | 1,048,576 | 1,048,576 |
-| Extra cache request per rank, GiB | 24 | 40 |
-| Startup reserve per rank, GiB | 20 | 16 |
-| Retained prompt snapshots | 32 | 64 |
-| Retained state budget per rank, GiB | Engine default | 4 |
-| Retained tool-call replies | Engine default: 1,024 | 8,192 |
-| Retained reasoning character budget | Engine default: 32 Mi characters | 128 Mi characters |
-| Verify window | 64 | 64 |
+| Setting | v0.1.2 published profile | v0.1.3 full qualification | Current 2026-10-14 trim |
+|---|---:|---:|---:|
+| Tensor-parallel ranks | 4 | 4 | 4 |
+| Concurrent decode lanes | 8 | 6 | 6 |
+| Context tokens, prompt plus completion | 1,048,576 | 1,048,576 | 1,048,576 |
+| Extra cache request per rank, GiB | 24 | 40 | 39.5625 |
+| Startup reserve per rank, GiB | 20 | 16 | 16 |
+| Retained prompt snapshots | 32 | 64 | 64 |
+| Retained state budget per rank, GiB | Engine default | 4 | 4 |
+| Retained tool-call replies | Engine default: 1,024 | 8,192 | 8,192 |
+| Retained reasoning character budget | Engine default: 32 Mi characters | 128 Mi characters | 128 Mi characters |
+| Verify window | 64 | 64 | 64 |
 
 The configuration keys cache_entries, kept_bytes_gib, keep_reasoning_entries
 and keep_reasoning_mb emit TF_GLM_CACHE_ENTRIES, TF_GLM_KEPT_BYTES_GIB,
@@ -32,6 +32,38 @@ fallback profile remains historical; copy the complete current example for P6.
 Image, model and draft weights, compute code, network plan, prepared
 RoCEnante/NCCL settings and API8888 retain their previous pins. This adjusts
 configuration and launcher validation; it does not rewrite the KV subsystem.
+
+## Cache budget trim: 2026-10-14
+
+The current example requests **39.5625 GiB extra cache per rank**, a reduction
+of 0.4375 GiB from the released 40 GiB profile. Six lanes, 1,048,576 total
+context tokens, the 16 GiB reserve and all snapshot/reasoning budgets are
+unchanged. This reduces the fixed pool request without changing model math.
+
+The approved maintenance and production restoration passed; see the
+[sanitized trim result](../results/cache-budget-trim-20261014.json). The private
+rank-zero API reported **6,752,256 pool rows**, down from 6,821,888. Six full
+context windows require 6,291,456 rows, leaving **460,800 spare rows**. This
+exceeds the 6,750,208-row acceptance floor by 2,048 rows. All four ranks started
+with the new cache environment and completed collective serving; peer arena
+sizes were not directly read through an allocator API.
+
+On an isolated API, six distinct **1,024-token** histories produced 32-token
+completions and were replayed exactly: **12 requests**. Every replay reported
+all 1,024 prompt tokens cached and matched its original 32 generated token IDs.
+The separate P6 semantic validator passed **24 requests**, including
+serial/draft/concurrent output equality and native/all-16-HCA payload checks.
+Fresh profile-bound RoCEnante qualification passed, production was restored to
+API8888 with empty KV, and monitoring was restarted against the new config.
+
+These are startup and short replay/correctness checks. The six near-1M
+growth/replay suite was **not rerun** at 39.5625 GiB. Its measured table and
+sanitized result below remain the 40 GiB evidence; they do not measure the
+trimmed profile. No new throughput benchmark or real-agent timeout guarantee
+follows from this change. Branches, overlapping continuations and reasoning
+restoration retain the limitations below. The spare rows do not guarantee room
+for another large branch. On another cluster, check actual startup pool and
+all-host memory rather than assuming the requested budget yields this pool.
 
 ## What expires and what occupies memory
 
@@ -104,7 +136,7 @@ identities and receipt hashes. Keep prompt contents, raw logs, management
 addresses, private host inventory, authorizations and state paths out of public
 artifacts.
 
-## Measured qualification
+## Measured qualification: v0.1.3 at 40 GiB
 
 The arena has **6,821,888 rows per rank**. Six full-size 1M allocations use
 6,291,456 rows, leaving **530,432 spare rows**. During the final growth wave,

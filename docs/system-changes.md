@@ -74,9 +74,55 @@ host reboot requires recreating all four selected model ranks together.
 Physical reboot recovery is covered by CPU mocks; an actual host reboot has
 not been tested.
 
+## Cache budget trim: 2026-10-14
+
+The [sanitized trim result](../results/cache-budget-trim-20261014.json) records
+the selected profile and the bounded validation scope.
+
+Approved maintenance reduced the extra cache request from 40 to
+**39.5625 GiB per rank**, retaining P6 and the other long-context settings.
+Startup reported 6,752,256 rank-zero pool rows with 460,800 rows beyond six
+full context windows. Six short-history fresh/replay pairs and the 24-request
+P6 semantic check passed before API8888 was restored. The original v0.1.3
+40 GiB six-near-1M qualification and performance records remain historical;
+that long-context suite and generation benchmarks were not rerun.
+
+The recorded mutations include backing up the coherent prior config,
+qualification receipts and local control guard; waiting for production to
+be idle; stopping and recreating only the four owned model containers;
+changing the cache budget and matching local control acceptance guard;
+writing fresh profile-bound RoCEnante qualification, runtime compiler/cache
+artifacts, startup/capacity/replay/semantic evidence and audit receipts;
+stopping the private test workers and recreating production on API8888; and
+restarting the existing read-only monitor with the new configuration identity.
+Both model restarts cleared in-memory KV. Clients must rebuild prefixes after
+a restart; restoring configuration cannot restore old cached conversations.
+
+The image, model and draft weights, quantization/math code, transport settings,
+healthy mesh, routes, forwarding rules, host packages and drivers were
+unchanged. Exact commands, before/after hashes, runtime identities and private
+receipts are retained in the operator audit state.
+
+For another installation, arrange an approved maintenance window, stop owned
+workers with the old coherent config, and preserve that config and its bound
+receipts before changing only profile.cache_gib to 39.5625. Keep the existing
+healthy mesh; this trim requires no network apply or rollback. Obtain fresh
+qualification wherever the profile/source binding changes, verify at least
+6,750,208 actual pool rows and the documented all-host memory floors, then run
+short replay and semantic checks before admitting ordinary clients. Do not
+relabel historical receipts or treat this startup floor as a new full
+long-context stress test.
+
+For same-boot recovery, stop the trimmed owned workers, retain their logs and
+evidence, restore the saved coherent config/control guard and qualification
+set, check the retained mesh, and recreate the prior workers together.
+Refresh qualification if source, library, profile or boot bindings differ.
+Rebind/restart the monitor to the restored config and retain the trim evidence.
+In-memory KV starts empty on recovery too.
+
 ## Upgrade v0.1.2 to v0.1.3 with the healthy mesh retained
 
-The new example selects P6, 1M total context, 40 GiB extra cache, a 16 GiB
+The published v0.1.3 example selected P6, 1M total context, 40 GiB extra cache, a 16 GiB
 reserve, 64 snapshots, a 4 GiB retained-state budget and reasoning retention of
 8,192 replies / 128 Mi characters. See [cache limits](cache-retention.md).
 The six-lane qualification and 72 private cache/semantic requests passed;

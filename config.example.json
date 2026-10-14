@@ -20,7 +20,7 @@
     "multi_window": 64,
     "cache_entries": 64,
     "max_tokens": 32768,
-    "cache_gib": 40.0,
+    "cache_gib": 39.5625,
     "reserve_gib": 16.0,
     "protocol": "auto",
     "thread_thresholds": null,

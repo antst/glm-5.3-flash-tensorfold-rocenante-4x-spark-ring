@@ -18,7 +18,17 @@ local NCCL control. These are measured point estimates, with ranges retained.
 The published [phase-one recipe](https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring/tree/v0.1.0)
 remains the independent baseline and recovery path.
 
-Release **v0.1.3** retains **TensorFold 0.6.0 with 107 Mia patches** and selects a long-context profile: six lanes, 1,048,576 total context tokens, 40 GiB extra cache, a 16 GiB reserve, 64 retained prompt snapshots and a 4 GiB retained-state budget per rank. Reasoning retention is bounded at 8,192 tool-call replies and 128 Mi characters. **Six-lane cache qualification passed:** six independent 1,046,528-token histories retained their prefixes across all four growth/replay waves, with exact 32-token replay consistency. A separate 24-request P6 semantic check passed before production returned to API8888. These are capacity and correctness results; generation benchmarks remain historical P8. See [cache capacity, validation and limits](docs/cache-retention.md). The [Mia107 image-upgrade results](docs/engine-upgrade.md) and published P8 performance tables retain their original profiles; they are not P6 measurements. Historical v0.1.1 remains Mia96 and v0.1.2 remains Mia107/P8.
+Release **v0.1.3** retains **TensorFold 0.6.0 with 107 Mia patches** and qualified a long-context profile: six lanes, 1,048,576 total context tokens, 40 GiB extra cache, a 16 GiB reserve, 64 retained prompt snapshots and a 4 GiB retained-state budget per rank. Reasoning retention is bounded at 8,192 tool-call replies and 128 Mi characters. **Six-lane cache qualification passed:** six independent 1,046,528-token histories retained their prefixes across all four growth/replay waves, with exact 32-token replay consistency. A separate 24-request P6 semantic check passed before production returned to API8888. These are capacity and correctness results; generation benchmarks remain historical P8. See [cache capacity, validation and limits](docs/cache-retention.md). The [Mia107 image-upgrade results](docs/engine-upgrade.md) and published P8 performance tables retain their original profiles; they are not P6 measurements. Historical v0.1.1 remains Mia96 and v0.1.2 remains Mia107/P8.
+
+The current example trims the extra cache request to **39.5625 GiB per rank**;
+P6, 1M total context and the other retention budgets stay the same. The
+2026-10-14 trim passed startup-capacity, six short-history replay and 24-request
+semantic checks before production returned to API8888. Rank zero reported
+**6,752,256 token-pool rows**, including **460,800 spare rows** beyond six full
+context windows. The six near-1M history test above remains the historical
+**40 GiB** qualification; it was not rerun for this trim. See the
+[trim verification and limits](docs/cache-retention.md#cache-budget-trim-2026-10-14)
+and its [sanitized result](results/cache-budget-trim-20261014.json).
 
 See [transport design](docs/design.md), [network changes](docs/network.md),
 [native builds and SSH configuration](docs/build.md),
@@ -93,7 +103,7 @@ key aliases. List the nodes in physical f0-next/f1-previous ring order. Keep bot
 Socket Direct functions on each cable in the fabric inventory. Existing model
 snapshots can be reused from phase one. Use this checkout's exact Mia image pin; the Mia107 release has a different digest from the published Mia96 recipe. Set
 `api_port` to `8888`; retain this recipe's own container, bootstrap port and local
-compiler/HF caches. The example selects the P6 long-context profile. Check actual startup pool capacity and host MemAvailable on your cluster; selected memory budgets do not guarantee capacity on every installation. Image generation and other substantial GPU workloads must be stopped for this qualification.
+compiler/HF caches. The current example selects P6 with 39.5625 GiB extra cache per rank. Check actual startup pool capacity and host MemAvailable on your cluster; selected memory budgets do not guarantee capacity on every installation. Image generation and other substantial GPU workloads must be stopped for this qualification.
 
 Check sources and perform an offline model launch plan:
 
@@ -163,7 +173,7 @@ python3 -B scripts/validate-model.py --config local/config.json --mode rocenante
 
 This checks selected answers, serial/speculative/concurrent output equality,
 live deployment bindings and payload/error counters. The configured 1,048,576
-token context is advertised by the API. The separate [long-context cache test](docs/cache-retention.md) targets six independent 1,046,528-token prompts with 32-token completions and exact replay. Context includes prompt and output together; a full 1,048,576-token prompt plus a reply is not valid. Vision, branching histories and real-agent reasoning restoration need their own tests.
+token context is advertised by the API. The historical [long-context cache test](docs/cache-retention.md) qualified six independent 1,046,528-token prompts with 32-token completions and exact replay at 40 GiB extra cache; the current trim received the shorter checks described there. Context includes prompt and output together; a full 1,048,576-token prompt plus a reply is not valid. Vision, branching histories and real-agent reasoning restoration need their own tests.
 
 ## Stop and recover
 
