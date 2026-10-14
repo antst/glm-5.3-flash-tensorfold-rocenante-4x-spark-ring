@@ -1,8 +1,83 @@
 # Performance
 
-The current [actual SparkDash prefill study](sparkdash-native.md) includes new
-Mia TP4 comparisons at C1/C2/C4/C8 and cold prefill through 256K. The tables
-below retain their historical transport/image/harness scope.
+## Current production: Mia107 TP4/P8, 4096-row prefill
+
+The current [v0.1.4 recipe](../README.md) serves GLM-5.3-Flash with DFlash2,
+prepared RoCEnante and patched NCCL 2.32.3. It selects the hash-bound Mia107
+compute overlay with 4096-row prefill, P8 admission, 1M total context and
+39.5625 GiB extra cache per rank. Production readiness and source/worker/monitor
+identity passed separately on API 8888; see the
+[deployment receipt](../results/production-prefill-p8-20261014.json).
+
+The 2026-10-14 study used the pinned **actual SparkDash collectors**. Three
+complete local arms each submitted 115 private requests: three 400-token decode
+jobs per prose/code workload at C1/C2/C4/C8, plus cold prefill through 256K.
+All 90 corresponding measured decode replies matched text and usage across
+the three arms. See the [full protocol, ranges and source switches](sparkdash-native.md).
+
+### Aggregate decode, tokens per second
+
+Our values are three-job medians; the selected profile also shows the full
+three-job range. Mia TP4 values are published references from its
+[pinned 2026-10-09 table](https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/README.md#4-sparks-experimental),
+not local reruns. Its exact historical flags, repeats and clocks are unavailable.
+
+| Workload | Clients | Mia TP4 published | Local original baseline | Optimized 2048 | Selected 4096 (range) |
+|---|---:|---:|---:|---:|---:|
+| Prose | C1 | 95.2 | 101.23 | 102.22 | 101.99 (101.64–102.80) |
+| Prose | C2 | 133.2 | 136.39 | 136.66 | 134.56 (134.55–135.07) |
+| Prose | C4 | 163.3 | 169.60 | 172.60 | 170.08 (169.22–172.73) |
+| Prose | C8 | 222.4 | 224.20 | 229.00 | 230.94 (225.54–231.56) |
+| Code | C1 | 138.6 | 149.01 | 150.01 | 150.62 (150.07–150.73) |
+| Code | C2 | 185.1 | 190.56 | 191.66 | 190.80 (190.52–196.51) |
+| Code | C4 | 224.5 | 232.90 | 229.31 | 229.53 (221.95–229.54) |
+| Code | C8 | 286.0 | 294.17 | 304.47 | 295.01 (294.77–304.60) |
+
+Decode changes between our arms are small, and several ranges overlap. Keep
+the measured decreases: selected C2 prose and C4 code medians are 1.34% and
+1.45% below the local baseline. These data do not establish a universal decode
+improvement or repeatable regression.
+
+### Cold prefill, tokens per second / TTFT seconds
+
+Each entry is throughput / time to first token. All selected cold samples
+reported **zero cached prompt tokens**. The collector uses fresh salts and its
+native sample selection and bounded TTFT-overhead correction; sample counts
+are 3/3/3/2/2/1 at 8K/16K/32K/64K/128K/256K. With two samples it chooses the
+lower middle, rather than an arithmetic median. Actual prompt counts differ
+slightly between runs and are retained in the JSON receipts.
+
+| Target | Mia TP4 published | Local original baseline | Optimized 2048 | Selected 4096 |
+|---|---:|---:|---:|---:|
+| 8K | 2568.8 / 3.33 | 1846.64 / 4.58 | 2526.07 / 3.38 | 2954.51 / 2.91 |
+| 16K | 2574.4 / 6.51 | 1795.15 / 9.27 | 2554.80 / 6.55 | 2970.20 / 5.66 |
+| 32K | 2583.3 / 12.83 | 1810.90 / 18.24 | 2559.44 / 12.94 | 2963.96 / 11.20 |
+| 64K | 2568.0 / 25.66 | 1747.72 / 37.64 | 2309.28 / 28.52 | 2649.64 / 24.88 |
+| 128K | 2530.7 / 51.94 | 1733.92 / 75.73 | 2444.67 / 53.75 | 2805.46 / 46.86 |
+| 256K | 2462.7 / 106.59 | 1711.57 / 153.30 | 2448.79 / 107.19 | 2828.06 / 92.84 |
+
+Selected cold-prefill throughput is **51.6–65.5% above our original local
+baseline** and **14.7–17.0% above optimized 2048 rows**. At 256K it reaches
+**2828.06 tokens/s**, versus 1711.57 on the original baseline; TTFT falls from
+**153.30 to 92.84 seconds**. These are results for the pinned filler workload,
+rather than warm cache replay or every real-agent prompt.
+
+The lowest sampled MemAvailable was 17.20 GiB across the **complete selected
+arm**, including startup/qualification and benchmark phases. These watermarks
+are not isolated resident-byte deltas or guaranteed reserves. P8 admits eight
+requests into a shared **6,752,256-row** pool; eight independent 1M histories
+and near-1M stress on this new compute overlay remain unqualified.
+
+Sanitized receipts: [original baseline](../results/sparkdash-native-baseline-20261014.json),
+[optimized 2048](../results/sparkdash-native-optimized-2048-20261014.json),
+[selected 4096](../results/sparkdash-native-optimized-4096-20261014.json),
+[three-way comparison](../results/sparkdash-native-comparison-20261014.json).
+
+## Historical Mia96 transport and recipe comparisons
+
+The following tables preserve their original engine, transport, workload and
+harness scope. They are separate from the current compute-overlay study above;
+the RigMark measurements have not been rerun for v0.1.4.
 
 The tables below retain the historical Mia96 transport/recipe comparison. Fresh Mia96 versus Mia107 image-upgrade results are documented separately in [the upgrade report](engine-upgrade.md).
 
@@ -40,7 +115,7 @@ It is a separate control, not the original recipe. Original-versus-native
 comparisons include the NCCL upgrade and recipe/fabric changes; the matched
 2.32.3 comparison isolates dispatch within the new setup.
 
-## Difference from the matched NCCL control
+## Historical difference from the matched NCCL control
 
 Percent differences use the unrounded JSON medians. Both profiles retain P8; C1/C4/C8 denote clients. Positive values indicate higher throughput.
 
@@ -58,7 +133,7 @@ Percent differences use the unrounded JSON medians. Both profiles retain P8; C1/
 
 The C8 code and counting wave ranges overlap between modes. Prose has a modest +3.25% decode median difference; C8 E2E differences are +1.10–2.25%. These three-wave results support workload-specific observations, not statistical significance or a universal speedup. The finite parameter screens use a different output length and repeat count.
 
-## Final SparkDash matrix: NCCL 2.32.3 control and native
+## Historical SparkDash matrix: NCCL 2.32.3 control and native
 
 400 output tokens, three waves per cell, greedy sampler, thinking disabled, DFlash retained. Values are tokens/s: median (minimum–maximum). Aggregate decode uses usage tokens minus one per stream divided by the span from earliest first visible content to latest last visible content. E2E includes prefill and queueing.
 
@@ -74,19 +149,19 @@ The C8 code and counting wave ranges overlap between modes. Prose has a modest +
 | Counting | C4 | 369.32 (368.84–371.60) | 386.16 (384.03–397.09) | 359.92 (359.72–360.69) | 374.59 (373.55–379.02) |
 | Counting | C8 | 491.81 (490.18–495.05) | 495.10 (493.40–497.30) | 481.02 (479.60–487.10) | 487.35 (485.53–489.58) |
 
-## Mia and our original/final P8 recipes
+## Historical Mia TP2/TP3 and our native P8 recipe
 
-| Workload | Clients | Mia TP2/P8 | Mia TP3/P8 | Original TP4/P8, NCCL 2.30.7 decode | Final TP4/P8 native decode |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Prose | C1 | — | 65.7 | 87.98 (87.55–88.43) | 98.14 (97.86–98.14) |
-| Prose | C4 | 103.2 | 121.8 | 157.76 (157.01–157.93) | 166.82 (165.95–169.76) |
-| Prose | C8 | 130.8 | 166.0 | 215.85 (215.62–220.46) | 223.04 (219.55–223.98) |
-| Code | C1 | — | 100.4 | 135.46 (135.45–136.05) | 145.84 (145.75–146.39) |
-| Code | C4 | 126.7 | 165.3 | 219.47 (218.70–226.16) | 227.59 (223.61–229.66) |
-| Code | C8 | 167.0 | 211.5 | 291.45 (290.64–292.07) | 292.26 (290.11–300.85) |
-| Counting | C1 | — | — | 169.10 (168.92–169.88) | 182.46 (182.01–182.73) |
-| Counting | C4 | — | — | 374.88 (374.66–374.98) | 386.16 (384.03–397.09) |
-| Counting | C8 | — | — | 498.30 (496.26–537.49) | 495.10 (493.40–497.30) |
+| Workload | Clients | Mia TP2/P8 | Mia TP3/P8 | Final TP4/P8 native decode |
+| --- | ---: | ---: | ---: | ---: |
+| Prose | C1 | — | 65.7 | 98.14 (97.86–98.14) |
+| Prose | C4 | 103.2 | 121.8 | 166.82 (165.95–169.76) |
+| Prose | C8 | 130.8 | 166.0 | 223.04 (219.55–223.98) |
+| Code | C1 | — | 100.4 | 145.84 (145.75–146.39) |
+| Code | C4 | 126.7 | 165.3 | 227.59 (223.61–229.66) |
+| Code | C8 | 167.0 | 211.5 | 292.26 (290.11–300.85) |
+| Counting | C1 | — | — | 182.46 (182.01–182.73) |
+| Counting | C4 | — | — | 386.16 (384.03–397.09) |
+| Counting | C8 | — | — | 495.10 (493.40–497.30) |
 
 Values are aggregate decode tokens/s, median (minimum–maximum) for our runs.
 A dash means unpublished: Mia TP2/P8 C1 is unavailable for both prose/code workloads;
@@ -95,7 +170,7 @@ TP2/P4 values belong to another lane profile and are not substitutes.
 
 [Mia TP2/P8](https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/7d42f905388a8d7fa91e2dc9458e0a4a68001540/README.md#L49-L61), [TP3/P8](https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/7d42f905388a8d7fa91e2dc9458e0a4a68001540/README.md#L432-L445). Published point values are not local TP2/TP3 reruns. Their original output caps, raw flags and repeats are unavailable; 400 tokens is the retained SparkDash harness default. TP2/P4 has a stated 2200 MHz cap; P8/TP3 per-boot clocks are unverified. Mia smoothing defaults to 400 ms; our smoothing is off. This comparison does not isolate tensor-parallel scaling.
 
-## Full RigMark
+## Historical full RigMark
 
 Exact pinned RigMark protocol, seed and client settings; 15 official completed-output gates, 18 cold/replay prefill requests and 21 C1/C2/C4 short-code responses. Decode includes separately emitted reasoning where present. Concurrent headline rates are E2E. Warm replay measures prefix reuse, not fresh-input processing. Code/prose completion gates establish non-truncated output; they do not prove arbitrary generated-code correctness.
 
