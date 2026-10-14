@@ -18,3 +18,11 @@ known_hosts
 metadata.local.json
 third_party/rigmark-source/
 local/
+
+# Private complete deployment mutation journal
+SYSTEM-BUILD-CHANGES.txt
+
+# Reproduction client dependencies and private runs
+node_modules/
+benchmarks/sparkdash-native/runs/
+benchmarks/sparkdash-native/changes.jsonl

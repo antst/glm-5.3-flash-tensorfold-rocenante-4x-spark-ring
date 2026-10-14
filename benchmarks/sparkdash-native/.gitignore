@@ -1,0 +1,5 @@
+node_modules/
+npm-cache/
+runs/
+cpu-checks-*/
+changes.jsonl

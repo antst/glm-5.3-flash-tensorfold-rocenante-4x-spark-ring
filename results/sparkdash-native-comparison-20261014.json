@@ -1,0 +1,757 @@
+{
+  "schema": "spark-ring-actual-sparkdash-study-comparison/v2",
+  "passed": true,
+  "phase": "all_three_private_arms_complete",
+  "arms": {
+    "baseline": {
+      "public_result": "sparkdash-native-baseline-20261014.json",
+      "public_result_sha256": "dcb60ef04ee109c1fa7aa53c03d49c4bd36847a460882fc7fcf2f8020f203009",
+      "requests": 115
+    },
+    "optimized-2048": {
+      "public_result": "sparkdash-native-optimized-2048-20261014.json",
+      "public_result_sha256": "f5d0f6b83b71821d1cb16a35d65f5c3d6a4529b6b915b336497b0f2bd5fddfec",
+      "requests": 115
+    },
+    "optimized-4096": {
+      "public_result": "sparkdash-native-optimized-4096-20261014.json",
+      "public_result_sha256": "157605d108f0de5bd2c60443be2b59eb130266561edf93ab23c80a33b1bc9b4d",
+      "requests": 115
+    }
+  },
+  "comparisons": {
+    "baseline_vs_optimized2048": {
+      "schema": "sparkdash-actual-collector-matched-comparison/v1",
+      "passed": true,
+      "protocol_matched": true,
+      "decode": [
+        {
+          "type": "prose",
+          "concurrency": 1,
+          "baseline_aggregate_decode_tps_median": 101.23,
+          "candidate_aggregate_decode_tps_median": 102.22,
+          "change_percent": 0.9779709572261153,
+          "baseline_range": [
+            101.21,
+            101.7
+          ],
+          "candidate_range": [
+            102.13,
+            102.55
+          ]
+        },
+        {
+          "type": "prose",
+          "concurrency": 2,
+          "baseline_aggregate_decode_tps_median": 136.39,
+          "candidate_aggregate_decode_tps_median": 136.66,
+          "change_percent": 0.19796172739938722,
+          "baseline_range": [
+            134.02,
+            136.58
+          ],
+          "candidate_range": [
+            134.87,
+            137.34
+          ]
+        },
+        {
+          "type": "prose",
+          "concurrency": 4,
+          "baseline_aggregate_decode_tps_median": 169.6,
+          "candidate_aggregate_decode_tps_median": 172.6,
+          "change_percent": 1.7688679245283057,
+          "baseline_range": [
+            169.06,
+            169.67
+          ],
+          "candidate_range": [
+            167.73,
+            172.98
+          ]
+        },
+        {
+          "type": "prose",
+          "concurrency": 8,
+          "baseline_aggregate_decode_tps_median": 224.2,
+          "candidate_aggregate_decode_tps_median": 229,
+          "change_percent": 2.140945584299736,
+          "baseline_range": [
+            224.08,
+            230.53
+          ],
+          "candidate_range": [
+            224.86,
+            232.06
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 1,
+          "baseline_aggregate_decode_tps_median": 149.01,
+          "candidate_aggregate_decode_tps_median": 150.01,
+          "change_percent": 0.6710958996040572,
+          "baseline_range": [
+            148.95,
+            149.3
+          ],
+          "candidate_range": [
+            149.71,
+            150.34
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 2,
+          "baseline_aggregate_decode_tps_median": 190.56,
+          "candidate_aggregate_decode_tps_median": 191.66,
+          "change_percent": 0.5772460117548173,
+          "baseline_range": [
+            189.54,
+            196.73
+          ],
+          "candidate_range": [
+            191.44,
+            196.9
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 4,
+          "baseline_aggregate_decode_tps_median": 232.9,
+          "candidate_aggregate_decode_tps_median": 229.31,
+          "change_percent": -1.54143409188493,
+          "baseline_range": [
+            229.14,
+            234.13
+          ],
+          "candidate_range": [
+            219.55,
+            234.24
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 8,
+          "baseline_aggregate_decode_tps_median": 294.17,
+          "candidate_aggregate_decode_tps_median": 304.47,
+          "change_percent": 3.501376754937624,
+          "baseline_range": [
+            293.77,
+            304.4
+          ],
+          "candidate_range": [
+            297.65,
+            305.61
+          ]
+        }
+      ],
+      "prefill": [
+        {
+          "targetTokens": 8192,
+          "method": "ttft",
+          "baseline_prefill_tps": 1846.64,
+          "candidate_prefill_tps": 2526.07,
+          "change_percent": 36.79276957067972,
+          "baseline_actual_prompt_tokens": 8216,
+          "candidate_actual_prompt_tokens": 8217,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 4576.26,
+          "candidate_ttft_ms": 3380.18,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 16384,
+          "method": "ttft",
+          "baseline_prefill_tps": 1795.15,
+          "candidate_prefill_tps": 2554.8,
+          "change_percent": 42.316798039161085,
+          "baseline_actual_prompt_tokens": 16407,
+          "candidate_actual_prompt_tokens": 16408,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 9266.73,
+          "candidate_ttft_ms": 6549.72,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 32768,
+          "method": "ttft",
+          "baseline_prefill_tps": 1810.9,
+          "candidate_prefill_tps": 2559.44,
+          "change_percent": 41.33524766690595,
+          "baseline_actual_prompt_tokens": 32796,
+          "candidate_actual_prompt_tokens": 32791,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 18237.41,
+          "candidate_ttft_ms": 12939.11,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 65536,
+          "method": "ttft",
+          "baseline_prefill_tps": 1747.72,
+          "candidate_prefill_tps": 2309.28,
+          "change_percent": 32.13100496647061,
+          "baseline_actual_prompt_tokens": 65564,
+          "candidate_actual_prompt_tokens": 65558,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 37641.05,
+          "candidate_ttft_ms": 28516.25,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 131072,
+          "method": "ttft",
+          "baseline_prefill_tps": 1733.92,
+          "candidate_prefill_tps": 2444.67,
+          "change_percent": 40.99093383777799,
+          "baseline_actual_prompt_tokens": 131097,
+          "candidate_actual_prompt_tokens": 131096,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 75734.38,
+          "candidate_ttft_ms": 53752.45,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 262144,
+          "method": "ttft",
+          "baseline_prefill_tps": 1711.57,
+          "candidate_prefill_tps": 2448.79,
+          "change_percent": 43.07273439006294,
+          "baseline_actual_prompt_tokens": 262170,
+          "candidate_actual_prompt_tokens": 262168,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 153302.07,
+          "candidate_ttft_ms": 107187.74,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        }
+      ],
+      "scope": [
+        "Protocol/source/settings matched; supplied runtime receipts and operator isolation establish hardware/software comparability separately.",
+        "UUID-salted prefill samples preserve upstream cold behavior but actual prompt token counts can differ.",
+        "These are new local measurements, not reconstructed Mia historical runs or a claim of historically identical UI flags/repeats."
+      ],
+      "decode_output_consistency": {
+        "requests_compared": 90,
+        "all_decoded_text_and_usage_match": true,
+        "mismatches": []
+      },
+      "baseline_result_sha256": "3b2f0337d05c3c5533efc3b597ef2fea9aa8a8ef5e0072b76febde0eb92efc5f",
+      "candidate_result_sha256": "5de66e17e71de60a485b87e899dedfa941409c3198e610e967d7d8c0eb82657a",
+      "private_receipt_sha256": "b4ce7b14ee371e7116d09ab8b00d96caca6e66fa45e229dad562ea702b31c443"
+    },
+    "baseline_vs_optimized4096": {
+      "schema": "sparkdash-actual-collector-matched-comparison/v1",
+      "passed": true,
+      "protocol_matched": true,
+      "decode": [
+        {
+          "type": "prose",
+          "concurrency": 1,
+          "baseline_aggregate_decode_tps_median": 101.23,
+          "candidate_aggregate_decode_tps_median": 101.99,
+          "change_percent": 0.750765583325097,
+          "baseline_range": [
+            101.21,
+            101.7
+          ],
+          "candidate_range": [
+            101.64,
+            102.8
+          ]
+        },
+        {
+          "type": "prose",
+          "concurrency": 2,
+          "baseline_aggregate_decode_tps_median": 136.39,
+          "candidate_aggregate_decode_tps_median": 134.56,
+          "change_percent": -1.3417405968179419,
+          "baseline_range": [
+            134.02,
+            136.58
+          ],
+          "candidate_range": [
+            134.55,
+            135.07
+          ]
+        },
+        {
+          "type": "prose",
+          "concurrency": 4,
+          "baseline_aggregate_decode_tps_median": 169.6,
+          "candidate_aggregate_decode_tps_median": 170.08,
+          "change_percent": 0.2830188679245449,
+          "baseline_range": [
+            169.06,
+            169.67
+          ],
+          "candidate_range": [
+            169.22,
+            172.73
+          ]
+        },
+        {
+          "type": "prose",
+          "concurrency": 8,
+          "baseline_aggregate_decode_tps_median": 224.2,
+          "candidate_aggregate_decode_tps_median": 230.94,
+          "change_percent": 3.006244424620874,
+          "baseline_range": [
+            224.08,
+            230.53
+          ],
+          "candidate_range": [
+            225.54,
+            231.56
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 1,
+          "baseline_aggregate_decode_tps_median": 149.01,
+          "candidate_aggregate_decode_tps_median": 150.62,
+          "change_percent": 1.080464398362535,
+          "baseline_range": [
+            148.95,
+            149.3
+          ],
+          "candidate_range": [
+            150.07,
+            150.73
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 2,
+          "baseline_aggregate_decode_tps_median": 190.56,
+          "candidate_aggregate_decode_tps_median": 190.8,
+          "change_percent": 0.12594458438288658,
+          "baseline_range": [
+            189.54,
+            196.73
+          ],
+          "candidate_range": [
+            190.52,
+            196.51
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 4,
+          "baseline_aggregate_decode_tps_median": 232.9,
+          "candidate_aggregate_decode_tps_median": 229.53,
+          "change_percent": -1.4469729497638473,
+          "baseline_range": [
+            229.14,
+            234.13
+          ],
+          "candidate_range": [
+            221.95,
+            229.54
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 8,
+          "baseline_aggregate_decode_tps_median": 294.17,
+          "candidate_aggregate_decode_tps_median": 295.01,
+          "change_percent": 0.28554917224732357,
+          "baseline_range": [
+            293.77,
+            304.4
+          ],
+          "candidate_range": [
+            294.77,
+            304.6
+          ]
+        }
+      ],
+      "prefill": [
+        {
+          "targetTokens": 8192,
+          "method": "ttft",
+          "baseline_prefill_tps": 1846.64,
+          "candidate_prefill_tps": 2954.51,
+          "change_percent": 59.993826625655245,
+          "baseline_actual_prompt_tokens": 8216,
+          "candidate_actual_prompt_tokens": 8217,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 4576.26,
+          "candidate_ttft_ms": 2914.82,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 16384,
+          "method": "ttft",
+          "baseline_prefill_tps": 1795.15,
+          "candidate_prefill_tps": 2970.2,
+          "change_percent": 65.45692560510261,
+          "baseline_actual_prompt_tokens": 16407,
+          "candidate_actual_prompt_tokens": 16410,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 9266.73,
+          "candidate_ttft_ms": 5658.53,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 32768,
+          "method": "ttft",
+          "baseline_prefill_tps": 1810.9,
+          "candidate_prefill_tps": 2963.96,
+          "change_percent": 63.67331161301011,
+          "baseline_actual_prompt_tokens": 32796,
+          "candidate_actual_prompt_tokens": 32793,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 18237.41,
+          "candidate_ttft_ms": 11197.58,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 65536,
+          "method": "ttft",
+          "baseline_prefill_tps": 1747.72,
+          "candidate_prefill_tps": 2649.64,
+          "change_percent": 51.605520335065115,
+          "baseline_actual_prompt_tokens": 65564,
+          "candidate_actual_prompt_tokens": 65564,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 37641.05,
+          "candidate_ttft_ms": 24878.14,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 131072,
+          "method": "ttft",
+          "baseline_prefill_tps": 1733.92,
+          "candidate_prefill_tps": 2805.46,
+          "change_percent": 61.79869890191012,
+          "baseline_actual_prompt_tokens": 131097,
+          "candidate_actual_prompt_tokens": 131095,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 75734.38,
+          "candidate_ttft_ms": 46862.14,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 262144,
+          "method": "ttft",
+          "baseline_prefill_tps": 1711.57,
+          "candidate_prefill_tps": 2828.06,
+          "change_percent": 65.2319215690857,
+          "baseline_actual_prompt_tokens": 262170,
+          "candidate_actual_prompt_tokens": 262168,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 153302.07,
+          "candidate_ttft_ms": 92835.99,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        }
+      ],
+      "scope": [
+        "Protocol/source/settings matched; supplied runtime receipts and operator isolation establish hardware/software comparability separately.",
+        "UUID-salted prefill samples preserve upstream cold behavior but actual prompt token counts can differ.",
+        "These are new local measurements, not reconstructed Mia historical runs or a claim of historically identical UI flags/repeats."
+      ],
+      "decode_output_consistency": {
+        "requests_compared": 90,
+        "all_decoded_text_and_usage_match": true,
+        "mismatches": []
+      },
+      "baseline_result_sha256": "3b2f0337d05c3c5533efc3b597ef2fea9aa8a8ef5e0072b76febde0eb92efc5f",
+      "candidate_result_sha256": "5c5fc7c772513e5b53c62eb2ccace0bb45ffa760420a490568569a17ac6dc686",
+      "private_receipt_sha256": "78215e00bb2e27ee0927fb771a07e590e8ea21b60428d6bb98946a0139ee9345"
+    },
+    "optimized2048_vs_optimized4096": {
+      "schema": "sparkdash-actual-collector-matched-comparison/v1",
+      "passed": true,
+      "protocol_matched": true,
+      "decode": [
+        {
+          "type": "prose",
+          "concurrency": 1,
+          "baseline_aggregate_decode_tps_median": 102.22,
+          "candidate_aggregate_decode_tps_median": 101.99,
+          "change_percent": -0.22500489141068503,
+          "baseline_range": [
+            102.13,
+            102.55
+          ],
+          "candidate_range": [
+            101.64,
+            102.8
+          ]
+        },
+        {
+          "type": "prose",
+          "concurrency": 2,
+          "baseline_aggregate_decode_tps_median": 136.66,
+          "candidate_aggregate_decode_tps_median": 134.56,
+          "change_percent": -1.5366603248938904,
+          "baseline_range": [
+            134.87,
+            137.34
+          ],
+          "candidate_range": [
+            134.55,
+            135.07
+          ]
+        },
+        {
+          "type": "prose",
+          "concurrency": 4,
+          "baseline_aggregate_decode_tps_median": 172.6,
+          "candidate_aggregate_decode_tps_median": 170.08,
+          "change_percent": -1.4600231749710257,
+          "baseline_range": [
+            167.73,
+            172.98
+          ],
+          "candidate_range": [
+            169.22,
+            172.73
+          ]
+        },
+        {
+          "type": "prose",
+          "concurrency": 8,
+          "baseline_aggregate_decode_tps_median": 229,
+          "candidate_aggregate_decode_tps_median": 230.94,
+          "change_percent": 0.8471615720524017,
+          "baseline_range": [
+            224.86,
+            232.06
+          ],
+          "candidate_range": [
+            225.54,
+            231.56
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 1,
+          "baseline_aggregate_decode_tps_median": 150.01,
+          "candidate_aggregate_decode_tps_median": 150.62,
+          "change_percent": 0.4066395573628423,
+          "baseline_range": [
+            149.71,
+            150.34
+          ],
+          "candidate_range": [
+            150.07,
+            150.73
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 2,
+          "baseline_aggregate_decode_tps_median": 191.66,
+          "candidate_aggregate_decode_tps_median": 190.8,
+          "change_percent": -0.44871125952206103,
+          "baseline_range": [
+            191.44,
+            196.9
+          ],
+          "candidate_range": [
+            190.52,
+            196.51
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 4,
+          "baseline_aggregate_decode_tps_median": 229.31,
+          "candidate_aggregate_decode_tps_median": 229.53,
+          "change_percent": 0.09593999389472252,
+          "baseline_range": [
+            219.55,
+            234.24
+          ],
+          "candidate_range": [
+            221.95,
+            229.54
+          ]
+        },
+        {
+          "type": "code",
+          "concurrency": 8,
+          "baseline_aggregate_decode_tps_median": 304.47,
+          "candidate_aggregate_decode_tps_median": 295.01,
+          "change_percent": -3.1070384602752465,
+          "baseline_range": [
+            297.65,
+            305.61
+          ],
+          "candidate_range": [
+            294.77,
+            304.6
+          ]
+        }
+      ],
+      "prefill": [
+        {
+          "targetTokens": 8192,
+          "method": "ttft",
+          "baseline_prefill_tps": 2526.07,
+          "candidate_prefill_tps": 2954.51,
+          "change_percent": 16.960733471360644,
+          "baseline_actual_prompt_tokens": 8217,
+          "candidate_actual_prompt_tokens": 8217,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 3380.18,
+          "candidate_ttft_ms": 2914.82,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 16384,
+          "method": "ttft",
+          "baseline_prefill_tps": 2554.8,
+          "candidate_prefill_tps": 2970.2,
+          "change_percent": 16.25958979176452,
+          "baseline_actual_prompt_tokens": 16408,
+          "candidate_actual_prompt_tokens": 16410,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 6549.72,
+          "candidate_ttft_ms": 5658.53,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 32768,
+          "method": "ttft",
+          "baseline_prefill_tps": 2559.44,
+          "candidate_prefill_tps": 2963.96,
+          "change_percent": 15.805019848091773,
+          "baseline_actual_prompt_tokens": 32791,
+          "candidate_actual_prompt_tokens": 32793,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 12939.11,
+          "candidate_ttft_ms": 11197.58,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 65536,
+          "method": "ttft",
+          "baseline_prefill_tps": 2309.28,
+          "candidate_prefill_tps": 2649.64,
+          "change_percent": 14.738793043719234,
+          "baseline_actual_prompt_tokens": 65558,
+          "candidate_actual_prompt_tokens": 65564,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 28516.25,
+          "candidate_ttft_ms": 24878.14,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 131072,
+          "method": "ttft",
+          "baseline_prefill_tps": 2444.67,
+          "candidate_prefill_tps": 2805.46,
+          "change_percent": 14.758229127039634,
+          "baseline_actual_prompt_tokens": 131096,
+          "candidate_actual_prompt_tokens": 131095,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 53752.45,
+          "candidate_ttft_ms": 46862.14,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        },
+        {
+          "targetTokens": 262144,
+          "method": "ttft",
+          "baseline_prefill_tps": 2448.79,
+          "candidate_prefill_tps": 2828.06,
+          "change_percent": 15.488057367107832,
+          "baseline_actual_prompt_tokens": 262168,
+          "candidate_actual_prompt_tokens": 262168,
+          "baseline_cached_prompt_tokens": 0,
+          "candidate_cached_prompt_tokens": 0,
+          "baseline_ttft_ms": 107187.74,
+          "candidate_ttft_ms": 92835.99,
+          "baseline_low_confidence": false,
+          "candidate_low_confidence": false
+        }
+      ],
+      "scope": [
+        "Protocol/source/settings matched; supplied runtime receipts and operator isolation establish hardware/software comparability separately.",
+        "UUID-salted prefill samples preserve upstream cold behavior but actual prompt token counts can differ.",
+        "These are new local measurements, not reconstructed Mia historical runs or a claim of historically identical UI flags/repeats."
+      ],
+      "decode_output_consistency": {
+        "requests_compared": 90,
+        "all_decoded_text_and_usage_match": true,
+        "mismatches": []
+      },
+      "baseline_result_sha256": "5de66e17e71de60a485b87e899dedfa941409c3198e610e967d7d8c0eb82657a",
+      "candidate_result_sha256": "5c5fc7c772513e5b53c62eb2ccace0bb45ffa760420a490568569a17ac6dc686",
+      "private_receipt_sha256": "5e3966a986af5a041a693b2a3ecea6a4cbe60668bd2dfbe9999f31cf18e14956"
+    }
+  },
+  "protocol_matched": true,
+  "all_90_measured_decode_outputs_match_across_all_arms": true,
+  "sampled_memory_tradeoff": [
+    {
+      "host_label": "spark1",
+      "baseline_minimum_gib": 21.27890396118164,
+      "optimized2048_minimum_gib": 19.194869995117188,
+      "optimized4096_minimum_gib": 18.64599609375
+    },
+    {
+      "host_label": "spark2",
+      "baseline_minimum_gib": 22.825645446777344,
+      "optimized2048_minimum_gib": 19.27222442626953,
+      "optimized4096_minimum_gib": 17.19778823852539
+    },
+    {
+      "host_label": "spark3",
+      "baseline_minimum_gib": 22.939922332763672,
+      "optimized2048_minimum_gib": 19.721492767333984,
+      "optimized4096_minimum_gib": 18.058517456054688
+    },
+    {
+      "host_label": "spark4",
+      "baseline_minimum_gib": 22.986431121826172,
+      "optimized2048_minimum_gib": 19.62725067138672,
+      "optimized4096_minimum_gib": 18.065093994140625
+    }
+  ],
+  "pending_candidates": [],
+  "production_restoration_is_separate_gate": true,
+  "scope": [
+    "Three complete private arms, 115 collector requests each, use the same pinned native protocol and context/lanes/caps.",
+    "Mia TP4 published points remain a separate reference; their historical flags, repeats and per-boot clocks are unknown.",
+    "Retain all observed decode decreases and overlapping ranges; these point/range data are not universal speedup or significance claims.",
+    "Sampler durations/dynamics differ; memory minima differences are not exact allocator deltas.",
+    "No eight-near-1M saturation, real-agent/DSH timeout SLA, image coexistence or long-agent quality guarantee is established."
+  ]
+}

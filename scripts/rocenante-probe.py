@@ -128,6 +128,97 @@ def diagnostic_handshake(data, timeout=600):
     return result
 
 
+def mixed_p2p_probe(torch, comm, ctl, settings):
+    """Changing bytes across native -> side P2P -> native -> guarded graph.
+
+    There is no synchronization/check between these operations. The controller
+    must order the three streams. Two tensors per peer exercise grouped list
+    ordering; source+destination-specific row selection catches peer mixups.
+    This runs outside the native-only hardware-counter measurement windows.
+    """
+    size = min(settings['max_gather_bytes'], max(65536, (settings['min_gather_bytes'] + 15) // 16 * 16))
+    rank, world = comm.rank, comm.world
+    source = torch.zeros(size // 4, device='cuda', dtype=torch.int32)
+    first = torch.empty(source.numel() * world, device='cuda', dtype=source.dtype)
+    peers = [p for p in range(world) if p != rank]
+    sends = {p: [first.view(world, -1)[(rank + p + j) % world] for j in (0, 1)] for p in peers}
+    recvs = {p: [torch.empty_like(source) for _ in (0, 1)] for p in peers}
+    second_source = recvs[(rank + 1) % world][0]
+    second_source.zero_()
+    second = torch.empty_like(first)
+    replayed = torch.empty_like(first)
+    graph = torch.cuda.CUDAGraph()
+    side, replay_stream = torch.cuda.Stream(), torch.cuda.Stream()
+    torch.cuda.synchronize()
+    with torch.cuda.graph(graph):
+        comm.all_gather(second_source, replayed)
+    before = ctl.report()
+    rows = []
+    try:
+        for epoch in (41, 42, 43):
+            raw = torch.frombuffer(bytearray(raw_payload(size, rank, epoch)), dtype=torch.uint8).to('cuda')
+            source.view(torch.uint8).copy_(raw)
+            comm.all_gather(source, first)
+            with torch.cuda.stream(side):
+                comm.exchange_all(sends, recvs)
+            comm.all_gather(second_source, second)
+            with torch.cuda.stream(replay_stream):
+                graph.replay()
+            torch.cuda.synchronize()
+            ctl.check_health()
+            def equal(tensor, expected):
+                return tensor.view(torch.uint8).cpu().numpy().tobytes() == expected
+            if not equal(first, b''.join(raw_payload(size, p, epoch) for p in range(world))):
+                raise RuntimeError('Mixed P2P first native gather differs')
+            for peer in peers:
+                for j in (0, 1):
+                    if not equal(recvs[peer][j], raw_payload(size, (peer + rank + j) % world, epoch)):
+                        raise RuntimeError('Mixed P2P source/destination/list ordering differs')
+            expected = b''.join(raw_payload(size, (p + (p + 1) % world) % world, epoch) for p in range(world))
+            if not equal(second, expected) or not equal(replayed, expected):
+                raise RuntimeError('Mixed P2P dependent gather or guarded replay differs')
+            rows.append({'epoch': epoch, 'send_bytes_per_tensor': size, 'correct': True})
+        after = ctl.report()
+        if (after['eager_p2p_calls'].get('exchange_all', 0) - before['eager_p2p_calls'].get('exchange_all', 0) != len(rows)
+                or after['eager_native_calls'] - before['eager_native_calls'] != 2 * len(rows)
+                or after['guarded_replays'] - before['guarded_replays'] != len(rows)):
+            raise RuntimeError('Mixed P2P native/exchange/guarded-replay dispatch was not observed')
+        return {'passed': True, 'rows': rows, 'before': before, 'after': after,
+                'scope': 'Three streams, no inter-operation synchronize; grouped peer-specific pairs; all bytes checked'}
+    finally:
+        graph.reset()
+
+
+def ring_edge_probe(torch, comm, ctl):
+    """Exercise padded odd relay lengths independently of the mixed ordering case."""
+    before = ctl.report(detailed=True)
+    rows = []
+    for n, dtype_name, epoch in ((1, 'float32', 61), (7, 'bfloat16', 62)):
+        dtype = getattr(torch, dtype_name)
+        width = 4 if dtype_name == 'float32' else 2
+        sends, recvs = {}, {}
+        for peer in range(4):
+            if peer == comm.rank:
+                continue
+            sends[peer] = [torch.tensor(list(raw_payload(n * width, comm.rank, epoch + 10 * peer)),
+                                        dtype=torch.uint8, device='cuda').view(dtype)]
+            recvs[peer] = [torch.empty_like(sends[peer][0])]
+        comm.exchange_all(sends, recvs)
+        torch.cuda.synchronize()
+        ctl.check_health()
+        for peer, tensors in recvs.items():
+            actual = bytes(tensors[0].view(torch.uint8).cpu().tolist())
+            if actual != raw_payload(n * width, peer, epoch + 10 * comm.rank):
+                raise RuntimeError('Odd ring relay payload mismatch')
+        rows.append({'elements': n, 'dtype': dtype_name, 'correct': True})
+    after = ctl.report(detailed=True)
+    if (after['ring_relay']['calls'] - before['ring_relay']['calls'] != 2
+            or after['ring_relay']['rounds'] - before['ring_relay']['rounds'] != 4):
+        raise RuntimeError('Odd ring relay call accounting mismatch')
+    return {'passed': True, 'rows': rows, 'before': before, 'after': after,
+            'alias_scope': 'Overlapping relay inputs/outputs are refused; refusal is CPU-tested.'}
+
+
 def main():
     import torch
     from tensorfold.cuda.comm import NCCL
@@ -171,6 +262,8 @@ def main():
               'timing_scope': 'Python enqueue plus final GPU synchronization; oracle outside native counter windows'}
     report_path = Path(f'/validation/rank-{rank}.json')
     def save():report_path.write_text(json.dumps(report, indent=2) + '\n')
+    if os.environ.get('SPARK_RING_ENGINE_MANIFEST') and os.environ.get('TF_GLM_HC_EXCHANGE')=='p2p':
+        report['mixed_p2p_passed'] = False
     save()
     def source_bytes(source, size, epoch):
         raw = torch.frombuffer(bytearray(raw_payload(size, rank, epoch)), dtype=torch.uint8).to('cuda')
@@ -308,6 +401,14 @@ def main():
     for size, source, output, graph in retained:graph.reset()
     del retained, size, source, output, graph, stream
     gc.collect()
+    if os.environ.get('SPARK_RING_ENGINE_MANIFEST') and os.environ.get('TF_GLM_HC_EXCHANGE')=='p2p':
+        report['mixed_p2p'] = mixed_p2p_probe(torch, comm, ctl, settings)
+        report['mixed_p2p_passed'] = report['mixed_p2p']['passed']
+        if os.environ.get('TF_GLM_HC_RING_RELAY') == '1':
+            report['ring_relay_edges'] = ring_edge_probe(torch, comm, ctl)
+            report['ring_relay_edges_passed'] = report['ring_relay_edges']['passed']
+        gc.collect()
+        save()
     torch.cuda.synchronize()
     ctl.check_health()
     final = ctl.report(detailed=True)

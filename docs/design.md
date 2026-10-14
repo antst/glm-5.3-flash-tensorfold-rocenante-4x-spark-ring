@@ -95,8 +95,10 @@ The existing weight-prefetch side stream and prefill overlap remain enabled.
 Unsupported capture usage is rejected before enqueue. A native error poisons
 the controller and reports a fault to the four-host mesh health guard.
 Neither eager nor graph failures switch transports after native work begins.
-Changing launch geometry does not change TensorFold's rank-major layout, FP32
-rank-order summation, EXL3/Q4 compute, HC split, draft policy, or graph ordering.
+That historical launch-geometry tuning retained TensorFold's rank-major layout,
+FP32 summation, EXL3/Q4 compute, HC split, draft policy and graph ordering. The
+current source-overlay prefill changes are documented separately in
+[prefill-port.md](prefill-port.md).
 
 The historical Mia96 image passes imports of all nine prepared components and the
 native GNU11 proxy ABI check without initializing CUDA or creating RDMA

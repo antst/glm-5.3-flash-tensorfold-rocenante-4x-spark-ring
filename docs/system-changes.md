@@ -418,3 +418,37 @@ hashes. These commands generate only ignored local observations/events; they
 do not perform inference or change host configuration. They are not a new
 qualification or a temperature/throughput measurement. Avoid observer queries
 during timed benchmarks, and use fresh validation for restored model workers.
+
+
+## 2026-10-14 P8 prefill study
+
+The study stopped the owned GLM workers and read-only monitor under the user's
+approved maintenance window. It tested original-Mia107, ported 2048 and ported 4096
+profiles on private port 18897, preserving raw failed attempts, exact ownership,
+source identities and before/after receipts. Each completed arm passed 30 model
+semantic requests and 115 actual-collector benchmark requests. Two 4096 attempts
+stopped at the host-state gate because OS-managed temporary IPv6 addresses rotated
+or expired; a fresh qualification in a stable lifetime window passed. These
+were not payload failures, and no address lifetime or network setting was changed.
+
+The selected update installs a verified 441-file TensorFold source overlay,
+adds the bounded adjacent-ring exchange and atomic controller-health identity,
+selects 4096-row solo prefill with two 2048-row microbatches and the decode side
+stream, and enables P8 admission. The 1M per-request context, 39.5625 GiB extra pool,
+64 retained snapshots, 4 GiB state cap, reasoning budgets, model/image/draft and
+native-library pins stay documented independently. Network routes, NIC/driver
+settings, forwarding policy and firewall are unchanged by this study. Image
+services remain removed.
+
+Production restoration relocates the identical qualified profile to 8888, checks
+all ranks' image/source/command/environment/boot/PID bindings and kernel/paging
+state without submitting inference, and starts a newly identified monitor with
+a fresh matching configuration sample. The management-host start/stop wrappers
+continue to use their no-parameter entry points; the installed control verifies
+the selected P8 engine manifest and flags before launch. No autostart unit is added.
+
+Complete site-specific command, mutation, backup and worker receipts stay private.
+The release includes sanitized measurements, source patch/manifests, builder,
+transport/runtime helpers, tests and the byte-exact upstream collector closure.
+Eight admitted requests share the finite pool; eight independent 1M histories
+and co-resident Qwen performance need separate qualification.

@@ -20,7 +20,7 @@ VENDOR_MANIFEST_SHA256='19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c
 NCCL_COMMIT='12df1a11afad322be5a204a2db890161cbf8131d'
 NCCL_PATCH_SHA256='a0deca2f21b8cad56bc68a5f5468936b7a6b894db160cfa1d62a6a3d59358836'
 SOURCE_FILES=('common.py','cluster.py','network.py','experiment.py','runtime.py','rocenante_adapter.py',
-              'qualify.py','collective-probe.py','rocenante-probe.py','capture-function-counters.py')
+              'qualify.py','collective-probe.py','rocenante-probe.py','capture-function-counters.py','engine_binding.py','ring_exchange.py')
 RECEIPT_FLAGS=('qualified','byte_exact_passed','cuda_graph_passed','mixed_size_passed','inplace_passed',
                'payload_all_hcas_passed','native_health_passed','host_configuration_unchanged',
                'qp_diagnostics_all_hcas_passed','hardware_mesh_payload_passed','hardware_mesh_passed','asymmetric_cache_passed')
@@ -86,8 +86,11 @@ def vendor_identity(cfg):
     return {'path':str(root),'manifest_sha256':VENDOR_MANIFEST_SHA256,'files':len(manifest['files'])}
 
 
+def source_root(cfg):
+    return Path(cfg.get('runtime_source_root', str(Path(cfg['shared_root'])/'scripts')))
+
 def source_hashes(cfg):
-    return {name:sha(Path(cfg['shared_root'])/'scripts'/name) for name in SOURCE_FILES}
+    return {name:sha(source_root(cfg)/name) for name in SOURCE_FILES}
 
 
 def rank_settings(cfg,rank,run_id=None):
@@ -111,12 +114,14 @@ def experiment_identity(cfg,nccl_sha256):
     inventory=json.loads((state_dir(cfg)/'network-inventory.json').read_text())
     plan=make_plan(cfg,inventory)
     if not plan.get('complete'):raise RuntimeError('Exact inventory-backed mesh plan required')
+    from engine_binding import identity as engine_identity
+    engine = engine_identity(cfg, verify=True)
     settings={k:v for k,v in cfg['experiment'].items() if k not in ('mode','network_policy')}
     return {'schema':'tensorfold-rocenante-experiment-identity/v1','image_digest':IMAGE,
             'library_sha256':nccl_sha256,'nccl_build_receipt_sha256':sha(build),'vendor':vendor_identity(cfg),
             'marker_sha256':binary_sha,'marker_receipt_sha256':sha(resolved(cfg,'marker_receipt','lib/mesh/build-receipt.json')),
             'network_plan_id':plan['plan_id'],'network_planner_sha256':plan['upstream_planner_sha256'],
-            'sources':source_hashes(cfg),'hosts':[n['name'] for n in cfg['nodes']],
+            'sources':source_hashes(cfg),'engine_source':engine,'hosts':[n['name'] for n in cfg['nodes']],
             'topology_sha256':topology_sha256(cfg),'profile':cfg['profile'],'settings':settings,
             'transport_env_by_host':{n['name']:__import__('common').transport_environment(environment(cfg,r,nccl_sha256)) for r,n in enumerate(cfg['nodes'])}}
 
@@ -142,6 +147,8 @@ class ExperimentOperator(Operator):
         for flag in RECEIPT_FLAGS:
             if custom.get(flag) is not True:raise RuntimeError('Fresh RoCEnante qualification requires '+flag+'=true')
         identity=experiment_identity(self.config,digest)
+        if (identity.get('engine_source') or {}).get('engine_flags',{}).get('TF_GLM_HC_EXCHANGE')=='p2p' and custom.get('mixed_p2p_passed') is not True:raise RuntimeError('Fresh mixed P2P/native/replay qualification required')
+        if (identity.get('engine_source') or {}).get('engine_flags',{}).get('TF_GLM_HC_RING_RELAY')=='1' and custom.get('ring_relay_passed') is not True:raise RuntimeError('Fresh adjacent-only relay hardware qualification required')
         if custom.get('identity')!=identity:raise RuntimeError('Prepared transport/source/topology/settings/build identity differs; rerun fresh qualification')
         if custom.get('baseline_receipt_sha256')!=sha(path):raise RuntimeError('Fresh NCCL oracle receipt changed')
         if sorted(custom.get('modes_qualified',[]))!=['nccl','rocenante'] or custom.get('network_plan_id')!=identity['network_plan_id']:
@@ -152,7 +159,7 @@ class ExperimentOperator(Operator):
         cache=cache/self.config['experiment']['mode']
         # Replace only the original owned cache mount.
         command=[s.replace('src='+str(cache.parent)+',dst=/cache','src='+str(cache)+',dst=/cache') for s in command]
-        source={name:sha(Path(self.config['shared_root'])/'scripts'/name) if (Path(self.config['shared_root'])/'scripts'/name).is_file() else 'QUALIFY_SOURCE_SHA256' for name in SOURCE_FILES}
+        source=source_hashes(self.config)
         extra={'SPARK_RING_ROCENANTE_MODE':self.config['experiment']['mode'],
                'SPARK_RING_ROCENANTE_SETTINGS':json.dumps(rank_settings(self.config,rank),sort_keys=True,separators=(',',':')),
                'SPARK_RING_VENDOR_ROOT':'/opt/spark-ring/vendor',
@@ -171,15 +178,19 @@ class ExperimentOperator(Operator):
         return cache,command
     def preflight(self,rank,library,digest):
         guard=getattr(self,'mesh_guard',None) or live_guard(self.config)
-        payload={'sources':source_hashes(self.config),'shared_root':self.config['shared_root'],
+        payload={'sources':source_hashes(self.config),'shared_root':self.config['shared_root'],'script_directory':str(source_root(self.config)),
+                 'engine_config':{k:self.config[k] for k in ('engine_overlay_root','engine_manifest','engine_manifest_sha256','engine_flags') if k in self.config},
                  'vendor':str(vendor_path(self.config)),'vendor_manifest_sha256':VENDOR_MANIFEST_SHA256,
                  'hcas':ordered_hcas(self.config['nodes'][rank]),
                  'allowed_marker_pids':guard['allowed_marker_pids_by_host'][self.config['nodes'][rank]['name']]}
         code='data='+repr(payload)+'\n'+r'''
-import hashlib,json,pathlib,subprocess
+import hashlib,json,pathlib,subprocess,sys
+sys.path.insert(0,data['script_directory'])
+import engine_binding
+engine_binding.identity(data['engine_config'],verify=True)
 if subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader,nounits'],text=True).strip():raise RuntimeError('Active GPU workload; experimental start never stops another model')
 for name,wanted in data['sources'].items():
- if hashlib.sha256((pathlib.Path(data['shared_root'])/'scripts'/name).read_bytes()).hexdigest()!=wanted:raise RuntimeError('Shared experiment source changed')
+ if hashlib.sha256((pathlib.Path(data['script_directory'])/name).read_bytes()).hexdigest()!=wanted:raise RuntimeError('Shared experiment source changed')
 manifest=pathlib.Path(data['vendor'])/'source-manifest.json'
 if hashlib.sha256(manifest.read_bytes()).hexdigest()!=data['vendor_manifest_sha256']:raise RuntimeError('Prepared vendor manifest changed')
 for name,wanted in json.loads(manifest.read_text())['files'].items():

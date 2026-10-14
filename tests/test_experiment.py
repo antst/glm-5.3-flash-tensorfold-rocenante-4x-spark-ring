@@ -2,6 +2,7 @@
 import copy
 import json
 from pathlib import Path
+from config_fixtures import prepared_example
 import sys
 import unittest
 from unittest.mock import patch
@@ -16,7 +17,7 @@ from experiment import (ExperimentOperator,prepare_config,rank_settings,RECEIPT_
 
 class ExperimentTests(unittest.TestCase):
     def config(self,mode='rocenante'):
-        cfg=prepare_config(ROOT/'config.example.json',mode);cfg['shared_root']=str(ROOT)
+        cfg=prepared_example(mode);cfg['shared_root']=str(ROOT)
         cfg['state_root']=str(ROOT/'state');cfg['library']='lib/nccl/libnccl.so.2'
         return cfg
     def test_offline_plan_command_never_calls_ssh_or_writes(self):

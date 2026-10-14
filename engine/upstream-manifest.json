@@ -1,0 +1,65 @@
+{
+  "candidate_before_manifest_sha256": "b4731db28fb34089b6f7be1a1cb8cdf1433f2f2a93704bd9b1d0153e6e0c1c83",
+  "commit": "d22003070575c2774de0f010062aa57bae06f3c7",
+  "downloaded": "2026-10-14T16:09:34.426343+00:00",
+  "files": {
+    "patches/0101-glm-prompt-attention-msa.patch": {
+      "bytes": 30333,
+      "sha256": "a887e379edf3a56be309e83123c54537fae270684aeb67438fc6d8a63cc4720a",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0101-glm-prompt-attention-msa.patch"
+    },
+    "patches/0102-glm-prompt-own-front.patch": {
+      "bytes": 33956,
+      "sha256": "a5d2d4dfe01b8c4075f0833535a708225e641ec48c36ce236abd0bec552f61b9",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0102-glm-prompt-own-front.patch"
+    },
+    "patches/0104-glm-prompt-microbatch.patch": {
+      "bytes": 26196,
+      "sha256": "dea9905216bf9fe71a40cb59476457e4801107f1c9e60ba71ad15e88c2e24cad",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0104-glm-prompt-microbatch.patch"
+    },
+    "patches/0105-glm-decode-side-stream.patch": {
+      "bytes": 5432,
+      "sha256": "d1bdd048b1351c0f9302cc06b7c1dec6c5693a640f98067a0e58cf02c199f51d",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0105-glm-decode-side-stream.patch"
+    },
+    "patches/0107-glm-prompt-arith-identity.patch": {
+      "bytes": 7131,
+      "sha256": "ddedd8a8e8e19bc88e9841e6243a518999ff34418af24217948660f149780f13",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0107-glm-prompt-arith-identity.patch"
+    },
+    "tests/cpu/conftest.py": {
+      "bytes": 4373,
+      "sha256": "1f65d5ea1826f334a7d59fe1dec602118bf7a3eeaaa64cd159a7d0d81118fda5",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/tests/cpu/conftest.py"
+    },
+    "tests/cpu/flash_fakes.py": {
+      "bytes": 9999,
+      "sha256": "d68fa13a2b0e943a38d1cedfc72fc6b2d0856d9433eee1e37ce2d0b2436049de",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/tests/cpu/flash_fakes.py"
+    },
+    "tests/cpu/test_prompt_arith_identity.py": {
+      "bytes": 6022,
+      "sha256": "90b8dc40c8cb89c39a2637d347f5951c9b6f110ada9d26b81cb79afff557868a",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/tests/cpu/test_prompt_arith_identity.py"
+    },
+    "tests/cpu/test_prompt_own_front.py": {
+      "bytes": 12043,
+      "sha256": "37a81994e9ae644c4716e89233555b4507632c422023fa2cdb0e3dedfff93b0c",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/tests/cpu/test_prompt_own_front.py"
+    },
+    "tests/gpu/test_decode_side_stream_gpu.py": {
+      "bytes": 3294,
+      "sha256": "f74f1310ea876d55059cd2cdf40bb27993b5a8f73a3e8545bac388748e35061e",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/tests/gpu/test_decode_side_stream_gpu.py"
+    },
+    "tests/gpu/test_prompt_split_streams_gpu.py": {
+      "bytes": 6400,
+      "sha256": "76b79b927fc0580e3bcfc4dfb10dfb2ba30920c02724699c2fe8a8ba08be5778",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/tests/gpu/test_prompt_split_streams_gpu.py"
+    }
+  },
+  "repository": "MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold",
+  "schema": "glm-prefill-port-upstream/v1",
+  "scope": "Source-only isolated port; no host/container/GPU actions."
+}

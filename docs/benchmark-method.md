@@ -29,7 +29,7 @@ required for the direct-neighbor NCCL control.
 ## Source versions and proof scope
 
 The original phase-one baseline is the published NCCL 2.30.7 recipe at commit
-`d6f455248bfc9c83187d89e000ec8fbdf7c19546`. This recipe uses the same
+`d6f455248bfc9c83187d89e000ec8fbdf7c19546`. Those historical transport arms used the same
 digest-pinned Mia image and unmodified TensorFold engine/drafter, with NCCL 2.32.3
 source commit `12df1a11afad322be5a204a2db890161cbf8131d` and its recorded patch.
 
@@ -133,21 +133,20 @@ deltas and counter windows in new private receipts. Context 1M and eight lanes
 do not establish a full 1M-input test, eight simultaneous 1M inputs, vision
 correctness, or reboot recovery. Those remain separate untested scopes.
 
-## Reproduce the final benchmarks
+## Reproduce the historical transport benchmarks
 
-Run from the shared recipe checkout against an idle endpoint at the common
-rank-zero API port **8888**. Use the same selected config for the matched NCCL
-and native modes; stop and start with `experiment.py` when switching those modes.
-When switching between the original and this recipe, stop both with their own
-launchers and follow [recovery](system-changes.md) before starting the selected
-stack. The client URL stays stable; owner/container, bootstrap and local cache
-separation remains. Qualify both transports after any bound configuration change.
-Run the model validator before timing each newly started arm.
+These commands reproduce the historical Python-client/RigMark protocols; the
+current actual-collector study is documented separately below. Use an idle
+**private qualification endpoint on 18897**, with the production service stopped
+for this exclusive study. Copy the selected configuration to ignored
+`local/qualification.json` and set its `api_port` to 18897, as in the README.
+Use the same profile for matched NCCL/native modes and separate receipt paths.
+Qualify both transports after any bound configuration change, and run the model
+validator before timing each newly started arm.
 
-Retained historical Mia96 transport-arm receipts were measured on the initial
-18888 test endpoint. The later Mia96-versus-Mia107 image-upgrade arms were
-measured on 8888. Current reproduction commands below use 8888; historical
-metrics and endpoint records are not rewritten.
+Retained historical Mia96 transport-arm receipts used 18888; later image-upgrade
+arms used 8888. Those historical metrics and endpoint records remain unchanged.
+Production restoration to 8888 uses GET-only readiness/identity checks.
 
 The maintained clients use Python's standard library. Fetch a clean copy of
 the pinned RigMark source into ignored state, and prepare its required appliance
@@ -170,9 +169,9 @@ origin URL, without `/v1`. Replace the documentation address below. Every
 output directory must be new:
 
 ```sh
-python3 -B scripts/validate-model.py --config local/config.json --mode rocenante --output state/final-native-model
-python3 -B scripts/run-sparkdash.py --url http://192.0.2.11:8888 --output state/final-native-sparkdash --tokens 400 --repeats 3 --concurrency 1 4 8 --workloads prose code structured --serving-lanes 8 --context-window 1048576 --metadata local/rigmark-metadata.json
-python3 -B scripts/run-rigmark.py --source state/rigmark-source --url http://192.0.2.11:8888 --output state/final-native-rigmark --metadata local/rigmark-metadata.json
+python3 -B scripts/validate-model.py --config local/qualification.json --mode rocenante --output state/final-native-model
+python3 -B scripts/run-sparkdash.py --url http://192.0.2.11:18897 --output state/final-native-sparkdash --tokens 400 --repeats 3 --concurrency 1 4 8 --workloads prose code structured --serving-lanes 8 --context-window 1048576 --metadata local/rigmark-metadata.json
+python3 -B scripts/run-rigmark.py --source state/rigmark-source --url http://192.0.2.11:18897 --output state/final-native-rigmark --metadata local/rigmark-metadata.json
 ```
 
 Repeat with the identical profile in `nccl` mode and separate metadata/output
@@ -189,3 +188,12 @@ and GPU telemetry around each timing window. Those assessments must establish
 both PCIe roots/all 16 functions and, in native mode, all eight hardware-only
 diagonal rules. The final report keeps the repeated benchmarks separate from
 the shorter parameter screens.
+
+## Current actual-collector prefill study
+
+The new [prefill study](sparkdash-native.md) uses the 441-file hash-bound compute
+overlay and the [actual upstream SparkDash collectors](../benchmarks/sparkdash-native/README.md).
+Its C1/C2/C4/C8, three 400-token jobs per prose/code workload and fresh 8K–256K
+prefill samples are separate from the historical Python derivative and RigMark
+protocols above. Each complete arm submits 115 inference requests on a private
+endpoint; production restoration uses GET-only source, worker and readiness checks.

@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+from config_fixtures import config_file
 import struct
 import socket
 import sys
@@ -133,7 +134,7 @@ class QualificationTests(unittest.TestCase):
             with self.assertRaises(OSError):ordinary.bind(('127.0.0.1',port))
         exec(code,namespace)
     def test_offline_plan_no_processes_or_writes(self):
-        with patch.object(sys,'argv',['qualify.py','plan','--config',str(ROOT/'config.example.json'),'--transport','rocenante']), \
+        with config_file() as fixture, patch.object(sys,'argv',['qualify.py','plan','--config',str(fixture),'--transport','rocenante']), \
              patch('subprocess.run',side_effect=AssertionError('No processes')), \
              patch.object(Path,'mkdir',side_effect=AssertionError('No directories')), \
              patch.object(Path,'write_text',side_effect=AssertionError('No writes')),patch('sys.stdout',new_callable=io.StringIO) as output:

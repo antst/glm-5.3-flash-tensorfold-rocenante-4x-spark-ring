@@ -103,8 +103,10 @@ class Operator:
                "--mount", f"type=bind,src={cfg['model_dir']},dst=/models/glm53-exl3,readonly",
                "--mount", f"type=bind,src={cfg['drafter_dir']},dst=/models/dflash2,readonly",
                "--mount", f"type=bind,src={library.parent},dst=/opt/spark-ring/lib,readonly",
-               "--mount", f"type=bind,src={cfg['shared_root']}/scripts,dst=/opt/spark-ring/scripts,readonly",
+               "--mount", f"type=bind,src={cfg.get('runtime_source_root', cfg['shared_root']+'/scripts')},dst=/opt/spark-ring/scripts,readonly",
                "--mount", f"type=bind,src={cache},dst=/cache"]
+        from engine_binding import mounts as engine_mounts
+        cmd += engine_mounts(cfg)
         for key, value in sorted(environment(cfg, rank, digest).items()):
             cmd += ["-e", key + "=" + value]
         cmd += [IMAGE, "python", "/opt/spark-ring/scripts/runtime.py", "serve", "/models/glm53-exl3",
@@ -131,7 +133,7 @@ else:
         cfg, node = self.config, self.config["nodes"][rank]
         payload = {"node": node, "image": IMAGE, "library": str(library), "sha256": digest,
                    "model_dir": cfg["model_dir"], "drafter_dir": cfg["drafter_dir"], "model_root": cfg["model_root"],
-                   "pins": MODEL_PINS, "scripts": cfg["shared_root"] + "/scripts", "mtu": cfg["mtu"],
+                   "pins": MODEL_PINS, "scripts": cfg.get("runtime_source_root", cfg["shared_root"] + "/scripts"), "mtu": cfg["mtu"],
                    "shared_root": cfg["shared_root"], "cache_root": cfg["cache_root"],
                    "container": cfg["container_name"], "free_ports": [cfg["bootstrap_port"], cfg["api_port"]] if rank == 0 else []}
         code = "data=" + repr(payload) + "\n" + r'''

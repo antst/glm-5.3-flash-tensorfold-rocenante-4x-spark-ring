@@ -172,6 +172,11 @@ def load_config(path):
             p = Path(ssh[key])
             ssh[key] = str(p if p.is_absolute() else config_path.parent / p)
     library_path(cfg)
+    if cfg.get('runtime_source_root'):
+        cfg['runtime_source_root'] = _absolute(cfg['runtime_source_root'], 'runtime_source_root')
+    from engine_binding import identity as engine_identity, flags as engine_flags
+    engine_flags(cfg)
+    engine_identity(cfg)
     return cfg
 
 
@@ -223,6 +228,8 @@ def transport_environment(env):
     names = {k for k in env if k.startswith("NCCL_") and not k.startswith("NCCL_DEBUG")}
     names |= {"NCCL_PROTO", "NCCL_THREAD_THRESHOLDS", "NCCL_IB_GID_INDEX",
               "TF_GLM_COMM", "TF_GLM_HC_EXCHANGE", "GLOO_SOCKET_IFNAME", "TORCH_USE_RTLD_GLOBAL"}
+    from engine_binding import FLAG_VALUES
+    names |= set(FLAG_VALUES) & set(env)
     names |= {k for k in env if k.startswith('B12X_ROCE_')}
     return {key: env.get(key) for key in sorted(names)}
 
@@ -274,4 +281,6 @@ def environment(config, rank, digest):
     for field, name in (("keep_reasoning_entries", "TF_GLM_KEEP_REASONING"), ("keep_reasoning_mb", "TF_GLM_KEEP_REASONING_MB")):
         if field in profile:
             env[name] = str(profile[field])
+    from engine_binding import environment as engine_environment
+    env.update(engine_environment(config))
     return env

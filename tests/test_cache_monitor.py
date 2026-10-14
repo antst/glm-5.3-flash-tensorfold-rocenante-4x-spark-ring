@@ -223,6 +223,19 @@ class DataTests(unittest.TestCase):
         c['image'] = 'different-model'
         self.assertEqual(m.p8_estimate(sample(), c)['status'], 'unsupported_profile')
 
+    def test_p8_admission_still_does_not_qualify_eight_full_histories(self):
+        c = config()
+        c['profile']['parallel'] = 8
+        value = sample()
+        value['health']['data']['streams']['max'] = 8
+        estimate = m.p8_estimate(value, c)
+        self.assertEqual(estimate['configured_admission_lanes'], 8)
+        self.assertFalse(estimate['eight_lanes_qualified'])
+        self.assertFalse(estimate['eight_near_1m_histories_qualified'])
+        self.assertEqual(estimate['decision'], 'hardware_qualification_required')
+        value['health']['data']['streams']['max'] = 6
+        self.assertEqual(m.p8_estimate(value, c)['status'], 'unsupported_profile')
+
 
 class StorageAndOwnershipTests(unittest.TestCase):
     def test_rotation_total_bytes_and_age(self):

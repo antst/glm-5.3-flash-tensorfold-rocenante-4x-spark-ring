@@ -1,0 +1,24 @@
+Mia107 TensorFold prefill source port
+
+This package modifies seven files of the TensorFold source distributed in the
+immutable MiaAI-Lab Mia107 image. Selected changes are adapted from MiaAI-Lab's
+TP4 branch, commit d22003070575c2774de0f010062aa57bae06f3c7, patches 0101 (only
+small-head launch choice), 0102, 0104, 0105 and 0107. The port preserves Mia107 CUDA
+score/onepass dispatch and DFlash prelaunch, excludes optional MSA and BF16
+partials, and adds explicit 4|8 small-head launch control/arithmetic identity.
+
+Copyright 2026 MiaAI-Lab and TensorFold contributors. The adapted patches and
+the source they modify retain Apache-2.0 and the historical TensorFold MIT
+notice where applicable. See licenses/ and provenance.json for exact sources.
+New builder/tests in this directory use Apache-2.0.
+
+Design credit retained from the new own_front.py and microbatch.py modules:
+drowzeys (https://github.com/drowzeys/TensorFold, glm53-tp4-2026-10-05) designed
+the replicated-front sequence partitioning and two-microbatch communication
+pipeline followed by MiaAI-Lab; the module comments state no code was copied.
+MiaAI-Lab's complete upstream NOTICE is retained in licenses/Mia-NOTICE.
+
+The source-manifest.json includes historical direct-diagonal NCCL point-to-point
+qualification status. Network/adaptor relay implementation and current runtime
+qualification are outside this engine port. No modelweights or NVIDIA runtime
+binaries are distributed by this source package.

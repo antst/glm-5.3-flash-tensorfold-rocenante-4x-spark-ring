@@ -89,6 +89,10 @@ def verify_vendor(root, expected_manifest_sha256):
 
 def verify_tensorfold(comm_module):
     root = Path(inspect.getfile(comm_module)).resolve().parents[1]
+    from engine_binding import runtime_verify
+    overlay = runtime_verify(root)
+    if overlay is not None:
+        return overlay
     observed = {}
     for relative, expected in SOURCE_HASHES.items():
         path = root / relative
@@ -219,8 +223,20 @@ class _GraphProxy:
 
 class Controller:
     def __init__(self, settings, *, mode, vendor_root, vendor_manifest_sha256,
-                 source_hashes, torch_module, original_gather):
+                 source_hashes, torch_module, original_gather, original_exchange_all=None):
         self.settings = validate_settings(settings)
+        relay = os.environ.get("TF_GLM_HC_RING_RELAY", "0")
+        if relay not in ("0", "1"):
+            raise ValueError("TF_GLM_HC_RING_RELAY must be exactly 0 or 1")
+        self._relay_enabled = relay == "1"
+        if self._relay_enabled and os.environ.get("TF_GLM_HC_EXCHANGE") != "p2p":
+            raise ValueError("TF_GLM_HC_RING_RELAY=1 requires TF_GLM_HC_EXCHANGE=p2p")
+        if self._relay_enabled and not callable(original_exchange_all):
+            raise ValueError("ring relay requires the saved original NCCL.exchange_all")
+        self._original_exchange_all = original_exchange_all
+        self._ring_relay = None
+        self._relay_path = Path(__file__).with_name("ring_exchange.py")
+        self._relay_sha256 = sha256(self._relay_path) if self._relay_enabled else None
         if mode not in {"rocenante", "nccl"}:
             raise ValueError("mode must be rocenante or nccl")
         self.mode, self.vendor_root = mode, Path(vendor_root)
@@ -238,6 +254,7 @@ class Controller:
         self._fallbacks, self._geometries = Counter(), Counter()
         self._failure = None
         self._closed = False
+        self._p2p_calls = Counter()
 
     def _check(self):
         if self._closed:
@@ -261,7 +278,21 @@ class Controller:
             if self.torch.cuda.is_current_stream_capturing():
                 raise RuntimeError("RoCEnante initialization must finish before CUDA capture")
             self._comm = comm
+            if self._relay_enabled:
+                try:
+                    module = importlib.import_module("ring_exchange")
+                    if (Path(inspect.getfile(module)).resolve() != self._relay_path.resolve()
+                            or sha256(self._relay_path) != self._relay_sha256):
+                        raise RuntimeError("ring relay helper source differs")
+                    self._ring_relay = module.RingExchange(comm, self._original_exchange_all, self.torch,
+                        max_scratch_bytes=64 << 20, max_growth_bytes=128 << 20)
+                except BaseException as exc:
+                    self._poison(exc)
+                    raise
             if self.mode == "nccl":
+                if self._relay_enabled:
+                    self._event = self.torch.cuda.Event()
+                    self._mark()
                 return self
             try:
                 import torch.distributed as dist
@@ -285,6 +316,7 @@ class Controller:
                     "peer_hosts": self.settings["peer_hosts"],
                     "vendor_manifest_sha256": self.vendor_manifest_sha256,
                     "tensorfold_source_sha256": self.source_hashes,
+                    "ring_relay": self.relay_identity(),
                     "selection_cache": "disabled",
                 }
                 policies = [None] * comm.world
@@ -359,6 +391,43 @@ class Controller:
                 self._original_gather(comm, send, recv)
                 if not capturing:
                     self._mark()
+            except BaseException as exc:
+                self._poison(exc)
+                raise
+
+    def nccl_exchange(self, comm, operation, original, *args, **kwargs):
+        """Eager NCCL P2P shares the native/graph ordering event and lock.
+
+        No event is inserted into a capture: the prefill exchanges are eager.
+        Refused identity/capture calls do not poison an otherwise healthy runtime;
+        an error once ordering/submission starts does, with no transport retry.
+        """
+        with self._lock:
+            self._check()
+            if comm is not self._comm:
+                raise RuntimeError("P2P communicator was not preinitialized")
+            if self._active_graph is not None or self.torch.cuda.is_current_stream_capturing():
+                raise RuntimeError("NCCL P2P is eager-only; submission during capture is unsupported")
+            if self._relay_enabled:
+                if self._ring_relay is None:
+                    raise RuntimeError("ring relay is not initialized")
+                if operation == "exchange":
+                    peer = kwargs.get("peer", args[2] if len(args) > 2 else None)
+                    rank = self.settings["rank"]
+                    if type(peer) is not int or peer not in ((rank - 1) % 4, (rank + 1) % 4):
+                        raise ValueError("ring relay forbids direct diagonal paired exchange")
+                elif operation != "exchange_all":
+                    raise ValueError("unknown ring relay operation")
+            self.check_health()
+            try:
+                self._order()
+                result = (self._ring_relay.exchange_all(*args, **kwargs)
+                          if self._relay_enabled and operation == "exchange_all"
+                          else original(comm, *args, **kwargs))
+                self._mark()
+                self._p2p_calls[operation] += 1
+                self.check_health()
+                return result
             except BaseException as exc:
                 self._poison(exc)
                 raise
@@ -488,6 +557,11 @@ class Controller:
             raise RuntimeError("health check communicator was not preinitialized")
         self.check_health()
 
+    def relay_identity(self):
+        return {"enabled": self._relay_enabled, "source_sha256": self._relay_sha256,
+                "route": "adjacent-two-round" if self._relay_enabled else "direct",
+                "max_scratch_bytes": 64 << 20, "max_growth_bytes": 128 << 20}
+
     def report(self, *, detailed=False):
         """Ordinary reports read host proxy state only; detailed stats may sync GPU."""
         with self._lock:
@@ -501,6 +575,8 @@ class Controller:
                 "vendor_manifest_sha256": self.vendor_manifest_sha256,
                 "adapter_sha256": sha256(__file__),
                 "tensorfold_source_sha256": self.source_hashes,
+                "ring_relay": {**(self._ring_relay.report() if self._ring_relay is not None else {}),
+                               **self.relay_identity()},
                 "max_gather_bytes": self.settings["max_gather_bytes"],
                 "min_gather_bytes": self.settings["min_gather_bytes"],
                 "native_threads": self.settings["native_threads"],
@@ -513,6 +589,7 @@ class Controller:
                 "captured_native_calls": self._captured_calls, "captured_native_bytes": self._captured_bytes,
                 "eager_native_calls": self._eager_calls, "eager_native_bytes": self._eager_bytes,
                 "alias_staging_calls": self._alias_calls, "guarded_replays": self._guarded_replays,
+                "eager_p2p_calls": dict(self._p2p_calls),
                 "fallback_reasons": dict(self._fallbacks), "failure": self._failure,
                 "closed": self._closed,
                 "geometry_cache_entries": [{"dtype": d, "bytes": n, "calls": c}
@@ -574,7 +651,8 @@ def install(settings, vendor_root, expected_vendor_manifest_sha256, mode="rocena
     original_init, original_gather = cls.__init__, cls.all_gather
     controller = Controller(normalized, mode=mode, vendor_root=root,
         vendor_manifest_sha256=expected_vendor_manifest_sha256, source_hashes=observed,
-        torch_module=torch, original_gather=original_gather)
+        torch_module=torch, original_gather=original_gather,
+        original_exchange_all=getattr(cls, "exchange_all", None))
 
     def initialize(comm, *args, **kwargs):
         if controller._comm is not None and comm is not controller._comm:
@@ -612,6 +690,15 @@ def install(settings, vendor_root, expected_vendor_manifest_sha256, mode="rocena
             raise
 
     cls.__init__, cls.all_gather, cls.check = initialize, gather, check
+    # Older/fake communicators need not expose these optional eager operations.
+    def wrap_exchange(name, original):
+        def exchange(comm, *args, **kwargs):
+            return controller.nccl_exchange(comm, name, original, *args, **kwargs)
+        return exchange
+    for name in ("exchange", "exchange_all"):
+        original = getattr(cls, name, None)
+        if original is not None:
+            setattr(cls, name, wrap_exchange(name, original))
     if mode == "rocenante":
         graph_cls.capture_begin, graph_cls.capture_end = capture_begin, capture_end
         graph_cls.replay = lambda graph: controller._replay(graph)

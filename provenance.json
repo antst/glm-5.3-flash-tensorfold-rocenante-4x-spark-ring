@@ -1,6 +1,6 @@
 {
   "schema": "tensorfold-rocenante-provenance/v1",
-  "status": "v0.1.3 Mia107 P6 source release; six large linear histories/cache replay and 24 short semantic requests hardware-qualified; P8 benchmark results remain historical",
+  "status": "v0.1.4 Mia107 P8 prefill update; matched115-request baseline/2048/4096 sweeps; selected4096 deployed on8888",
   "baseline_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring",
   "baseline_commit": "d6f455248bfc9c83187d89e000ec8fbdf7c19546",
   "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf",
@@ -71,57 +71,6 @@
     "full_1m_prompt_tested": false,
     "vision_tested": false,
     "scope": "Historical initial16MiB admission configuration; selected current-source evidence is separate"
-  },
-  "selected_configuration": {
-    "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
-    "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
-    "native_geometry": {
-      "blocks": 8,
-      "threads": 512
-    },
-    "nccl_build_receipt_sha256": "cb6228db18a0792242c85a0993a2fa47c1c43f298beceae83883b2f2f98e97a7",
-    "network_plan_id": "4e46a559df6dc830e3bbd395dc93a391c435d98a9e50d5b33a10934059d8f9d1",
-    "network_planner_sha256": "b201ede9554bd6a02cc09a07a6accf242a63b2d46744bab9132ee4a7e318dbda",
-    "profile": {
-      "cache_entries": 32,
-      "cache_gib": 24.0,
-      "context": 1048576,
-      "max_tokens": 32768,
-      "multi_window": 64,
-      "nccl_channels": 4,
-      "parallel": 8,
-      "protocol": "auto",
-      "reserve_gib": 20.0,
-      "thread_thresholds": null
-    },
-    "settings": {
-      "compile_workers": 0,
-      "forward_chunk_bytes": 16384,
-      "forward_window_bytes": 65536,
-      "max_gather_bytes": 4194304,
-      "min_gather_bytes": 1,
-      "native_blocks": 8,
-      "paths_per_peer": 2,
-      "scope": "all-gather",
-      "sircl_enabled": false,
-      "timeout_seconds": 600,
-      "transport": "prepared-rocenante-tp4",
-      "vendor_manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89"
-    },
-    "source_sha256": {
-      "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
-      "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
-      "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
-      "common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
-      "experiment.py": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
-      "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
-      "qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
-      "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
-      "rocenante_adapter.py": "ebbd0c83359448c617dbcc9e1b34d8d2e8529504165fbf8d95de631f647927b0",
-      "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f"
-    },
-    "topology_sha256": "093af403ee4fec18addc997b9de9752e6ca35b4d5657bd2834ac027d174ac3ec",
-    "world_size": 4
   },
   "final_validation": {
     "results": "results/final-benchmarks.json",
@@ -412,7 +361,58 @@
     "pinned_image": false,
     "scope": "Management-host offline release checks; image/Torch-dependent cases skipped."
   },
-  "current_cache_profile": {
+  "historical_transport_selected_configuration": {
+    "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
+    "library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+    "native_geometry": {
+      "blocks": 8,
+      "threads": 512
+    },
+    "nccl_build_receipt_sha256": "cb6228db18a0792242c85a0993a2fa47c1c43f298beceae83883b2f2f98e97a7",
+    "network_plan_id": "4e46a559df6dc830e3bbd395dc93a391c435d98a9e50d5b33a10934059d8f9d1",
+    "network_planner_sha256": "b201ede9554bd6a02cc09a07a6accf242a63b2d46744bab9132ee4a7e318dbda",
+    "profile": {
+      "cache_entries": 32,
+      "cache_gib": 24.0,
+      "context": 1048576,
+      "max_tokens": 32768,
+      "multi_window": 64,
+      "nccl_channels": 4,
+      "parallel": 8,
+      "protocol": "auto",
+      "reserve_gib": 20.0,
+      "thread_thresholds": null
+    },
+    "settings": {
+      "compile_workers": 0,
+      "forward_chunk_bytes": 16384,
+      "forward_window_bytes": 65536,
+      "max_gather_bytes": 4194304,
+      "min_gather_bytes": 1,
+      "native_blocks": 8,
+      "paths_per_peer": 2,
+      "scope": "all-gather",
+      "sircl_enabled": false,
+      "timeout_seconds": 600,
+      "transport": "prepared-rocenante-tp4",
+      "vendor_manifest_sha256": "19b6189f2856655b6919bdcfcb4974bcf9dc7b71882f179b814de36c3615bf89"
+    },
+    "source_sha256": {
+      "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+      "cluster.py": "c07b0fafa88c48e833aca7898518067475f4ff6e8c5e9d2cc38374a733de5461",
+      "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+      "common.py": "ec70fec5c41feb854872c905a426be6887c1e98306a864e2710aec4f4f58bf47",
+      "experiment.py": "6d6fdcee90cc63a18957f7233bf18a707c18b43fe7c1b874282dbecb0b5a9d1c",
+      "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+      "qualify.py": "8d36511d7aaadddd64556a9140093e0e8aa6defead58198dd2f4fc50877c2ad6",
+      "rocenante-probe.py": "8ee4cf26e90aadc3db0371a1d76b87340aecfb94c949d56f2a8fd3702790740f",
+      "rocenante_adapter.py": "ebbd0c83359448c617dbcc9e1b34d8d2e8529504165fbf8d95de631f647927b0",
+      "runtime.py": "c3f01b2cae56ffca481aa4635f91c78add8a3eab313d36adbb065229280cac5f"
+    },
+    "topology_sha256": "093af403ee4fec18addc997b9de9752e6ca35b4d5657bd2834ac027d174ac3ec",
+    "world_size": 4
+  },
+  "historical_trim_cache_profile": {
     "profile": {
       "context": 1048576,
       "parallel": 6,
@@ -449,5 +449,82 @@
       "thread_thresholds": null
     },
     "scope": "Approved memory trim; source-bound transport, startup, short cache reuse and 24 semantic checks. Historical v0.1.3 near-1M proof remains separate."
+  },
+  "current_p8_prefill_profile": {
+    "profile": {
+      "context": 1048576,
+      "parallel": 8,
+      "multi_window": 64,
+      "cache_entries": 64,
+      "max_tokens": 32768,
+      "cache_gib": 39.5625,
+      "reserve_gib": 16.0,
+      "protocol": "auto",
+      "thread_thresholds": null,
+      "nccl_channels": 4,
+      "kept_bytes_gib": 4.0,
+      "keep_reasoning_entries": 8192,
+      "keep_reasoning_mb": 128
+    },
+    "engine_flags": {
+      "TF_GLM_HC_EXCHANGE": "p2p",
+      "TF_GLM_PROMPT_OWN_FRONT": "1",
+      "TF_GLM_PROMPT_MICROBATCH": "1",
+      "TF_GLM_PREFILL_ROWS": "4096",
+      "TF_GLM_SIDE": "1",
+      "TF_GLM_PROMPT_PARTIALS": "fp32",
+      "TF_GLM_MSA": "0",
+      "TF_GLM_ONEPASS_SMALL_WARPS": "4",
+      "TF_GLM_HC_RING_RELAY": "1"
+    },
+    "engine_manifest": "engine/manifests/source-4096.json",
+    "engine_manifest_sha256": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666",
+    "engine_source_files": 441,
+    "source_id": "mia107-tp4-prefill-port-v1",
+    "source_patch": "engine/patches/mia107-prefill.patch",
+    "source_patch_sha256": "dd1e8848d19c8a084a713bd7220a6e16bcaa1235f91d5f961105ba1652ec95c4",
+    "runtime_sources": {
+      "common.py": "586bf0b6d90a3424890e4906e24a6ba923d03b6fd7ec3ced6ded0f92149e2f4a",
+      "cluster.py": "acfc2fba5813453d867d3b19ddf9b4f2f2b6aa4186b296d67c808b4a22c31b18",
+      "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+      "experiment.py": "5be39f64afe881b4ff53e2e399459b0fad0cb35faeaac204c67e2ff94633a9b2",
+      "runtime.py": "ebffd5537e8c7486ce99f9c075a833ddb07f4bb346593b26dbc9ffd5f69ec73b",
+      "rocenante_adapter.py": "6657ef9190c1cced12db6c5cc1d67a30952da98b23e3c37ab6733c1549362a6d",
+      "qualify.py": "994f1ef5979abfc2773c7e7baec27b187f672ac7d145ae1fe4c2c8fe980e5b6c",
+      "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+      "rocenante-probe.py": "15b023b1d757b09642cf6e68614bab8b8b8f43e96de68168772cd2066b7e1376",
+      "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+      "engine_binding.py": "45f143ce85f3ee3fe5b8dfdd8b664bd54285ade4affec31dc84405f19879f55f",
+      "ring_exchange.py": "c2f635183cc46bc88e7a0c4876f6020d843c11ecaa09ea40208376758e5f77c3"
+    },
+    "baseline_image_engine_unchanged": false,
+    "model_draft_pins_unchanged": true,
+    "prefill_rows": 4096,
+    "microbatch_half_rows": 2048,
+    "fp32_partial_rank_order_preserved": true,
+    "optional_msa": false,
+    "communication": "prepared RoCEnante gathers plus NCCL2.32.3; destination HC exchanges use bounded adjacent-two-round relay",
+    "fixed_pool_rows": 6752256,
+    "eight_full_1m_histories_qualified": false,
+    "historical_six_near_1m_qualification_applies_to_old_source_profile_only": true,
+    "benchmark_document": "docs/sparkdash-native.md",
+    "benchmark_protocol": "actual SparkDash fab8dadff951d1c8cc1450a657805d8e3ea5c9f6;115requests/arm;C1/C2/C4/C8;3jobs/type;400tokens",
+    "benchmark_requests": 345,
+    "short_semantic_requests": 90,
+    "all90_measured_decode_responses_match_between_each_pair": true,
+    "compute_port_gpu_tests": 9,
+    "management_cpu_suite": {
+      "total": 164,
+      "passed": 162,
+      "skipped": 2
+    },
+    "collector_cpu_tests": 28,
+    "engine_builder_full_cpu_tests": 12,
+    "production_restored": true,
+    "production_api_port": 8888,
+    "production_ready_utc": "2026-10-14T18:40:22Z",
+    "production_config_sha256": "a4df0be21be050244bf72cc152332554cc03315994f60a7af5755c7cc427b237",
+    "production_result": "results/production-prefill-p8-20261014.json",
+    "production_monitor_source_sha256": "657828c258d09802e919e772d2a848943f617e83b75d138aff40368467418191"
   }
 }

@@ -199,12 +199,12 @@ def collect(cfg, config_sha):
 def p8_estimate(sample, cfg):
     h = sample['health']
     p = cfg.get('profile', {})
-    supported = (h['ok'] and len(cfg['nodes']) == 4 and p.get('parallel') == 6 and
+    supported = (h['ok'] and len(cfg['nodes']) == 4 and p.get('parallel') in (6, 8) and
                  p.get('multi_window') == 64 and p.get('context') == 1048576 and
                  cfg.get('image', '').endswith('@' + GLM_MIA107_DIGEST) and
-                 h['data']['streams']['max'] == 6 and h['data']['context_length'] == 1048576)
+                 h['data']['streams']['max'] == p.get('parallel') and h['data']['context_length'] == 1048576)
     out = {'status': 'unqualified_estimate' if supported else 'unsupported_profile',
-           'eight_lanes_qualified': False, 'decision': 'hardware_qualification_required',
+           'eight_lanes_qualified': False, 'configured_admission_lanes': p.get('parallel'), 'eight_near_1m_histories_qualified': False, 'decision': 'hardware_qualification_required',
            'model_scope': 'Mia107 GLM5.3Flash TP4 W64 only; estimated geometry6780 bytes/row',
            'additional_p8_fixed_buffer_bytes': None,
            'note': 'Host MemAvailable is shared OS memory, not a CUDA/process allocation guarantee. '

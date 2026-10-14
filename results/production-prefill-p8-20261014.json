@@ -1,0 +1,97 @@
+{
+  "schema": "spark-ring-production-prefill-deployment/v1",
+  "passed": true,
+  "ready_utc": "2026-10-14T18:40:22Z",
+  "api_port": 8888,
+  "selected_arm": "optimized-4096",
+  "profile": {
+    "context": 1048576,
+    "parallel": 8,
+    "multi_window": 64,
+    "cache_entries": 64,
+    "max_tokens": 32768,
+    "cache_gib": 39.5625,
+    "reserve_gib": 16.0,
+    "protocol": "auto",
+    "thread_thresholds": null,
+    "nccl_channels": 4,
+    "kept_bytes_gib": 4.0,
+    "keep_reasoning_entries": 8192,
+    "keep_reasoning_mb": 128
+  },
+  "engine_flags": {
+    "TF_GLM_HC_EXCHANGE": "p2p",
+    "TF_GLM_PROMPT_OWN_FRONT": "1",
+    "TF_GLM_PROMPT_MICROBATCH": "1",
+    "TF_GLM_PREFILL_ROWS": "4096",
+    "TF_GLM_SIDE": "1",
+    "TF_GLM_PROMPT_PARTIALS": "fp32",
+    "TF_GLM_MSA": "0",
+    "TF_GLM_ONEPASS_SMALL_WARPS": "4",
+    "TF_GLM_HC_RING_RELAY": "1"
+  },
+  "pool_tokens": 6752256,
+  "config_sha256": "a4df0be21be050244bf72cc152332554cc03315994f60a7af5755c7cc427b237",
+  "engine_manifest_sha256": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666",
+  "runtime_sources": {
+    "common.py": "586bf0b6d90a3424890e4906e24a6ba923d03b6fd7ec3ced6ded0f92149e2f4a",
+    "cluster.py": "acfc2fba5813453d867d3b19ddf9b4f2f2b6aa4186b296d67c808b4a22c31b18",
+    "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+    "experiment.py": "5be39f64afe881b4ff53e2e399459b0fad0cb35faeaac204c67e2ff94633a9b2",
+    "runtime.py": "ebffd5537e8c7486ce99f9c075a833ddb07f4bb346593b26dbc9ffd5f69ec73b",
+    "rocenante_adapter.py": "6657ef9190c1cced12db6c5cc1d67a30952da98b23e3c37ab6733c1549362a6d",
+    "qualify.py": "994f1ef5979abfc2773c7e7baec27b187f672ac7d145ae1fe4c2c8fe980e5b6c",
+    "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+    "rocenante-probe.py": "15b023b1d757b09642cf6e68614bab8b8b8f43e96de68168772cd2066b7e1376",
+    "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+    "engine_binding.py": "45f143ce85f3ee3fe5b8dfdd8b664bd54285ade4affec31dc84405f19879f55f",
+    "ring_exchange.py": "c2f635183cc46bc88e7a0c4876f6020d843c11ecaa09ea40208376758e5f77c3"
+  },
+  "all_four_workers_running": true,
+  "all_four_workers_oom_killed": false,
+  "boots_unchanged": true,
+  "worker_swap_bytes": {
+    "spark1": 0,
+    "spark4": 0,
+    "spark3": 0,
+    "spark2": 0
+  },
+  "worker_cgroup_swap_bytes": {
+    "spark1": 0,
+    "spark4": 0,
+    "spark3": 0,
+    "spark2": 0
+  },
+  "startup_mem_available_bytes": {
+    "spark1": 21709463552,
+    "spark4": 23081390080,
+    "spark3": 22923689984,
+    "spark2": 22495600640
+  },
+  "new_kernel_memory_diagnostics": {
+    "spark1": 0,
+    "spark4": 0,
+    "spark3": 0,
+    "spark2": 0
+  },
+  "monitor": {
+    "running": true,
+    "fresh": true,
+    "source_sha256": "657828c258d09802e919e772d2a848943f617e83b75d138aff40368467418191",
+    "interval_seconds": 30,
+    "retention_days": 7,
+    "maximum_log_bytes": 67108864,
+    "admission_lanes": 8,
+    "eight_full_1m_histories_qualified": false
+  },
+  "private_evidence_sha256": {
+    "result.json": "dcb97def170b8383d0e44e50864af23bd9aabdfdc46e1c1d4dfed8e04c485e93",
+    "production-proof.json": "cd392894f65367ffdc4c9bdc7200bff16b1389cd59c0082c281b1ebf571a86d3",
+    "production-monitor-proof.json": "78bcf10140bea7962c1934f14cabfd269da90a7680af756158c36fde1ca5ca09",
+    "final-workers.json": "8a1718b31bf9bcefc18299da0a2cac6892842aca1881080b710cccd7bde1b1a0",
+    "final-kernel.json": "b74c3df68d9fc7b47918d8dc6d27772cfac5268075af2219f0dfcf58cb484ccd",
+    "launch-identity.json": "69deee89a3772848b788769d8a1185c896f3e48af3e6f0884289d03c64cc3f23"
+  },
+  "checks": "GET-only production readiness plus exact source/worker/boot/monitor identity. Reused selected-arm transport/model receipts only after identical identity proof. No new inference traffic on8888.",
+  "capacity_scope": "P8 admits eight requests into a shared 6752256-row arena. Eight independent1M histories, near1M stress on this new compute overlay, Qwen coexistence and reboot were not qualified by this study."
+}

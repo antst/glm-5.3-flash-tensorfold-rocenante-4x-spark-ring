@@ -184,6 +184,10 @@ def worker(payload, action):
         for filename, digest in payload['source_sha256'].items():
             if sha(Path(payload['script_directory']) / filename) != digest:
                 raise RuntimeError('Shared qualification source differs from operator source')
+        import sys
+        sys.path.insert(0,payload['script_directory'])
+        import engine_binding
+        engine_binding.identity(payload.get('engine_config', {}), verify=True)
         if not Path('/usr/sbin/ethtool').is_file() or not Path('/lib/aarch64-linux-gnu/libmnl.so.0').is_file():
             raise RuntimeError('Host ethtool/libmnl bind dependencies are missing; no packages are installed here')
         interfaces = {p['ifname']: p for p in json.loads(command(['ip', '-j', 'address', 'show']).stdout)}
@@ -288,6 +292,7 @@ def worker(payload, action):
                 '--mount', f'type=bind,src={case / "cache"},dst=/cache',
                 '--mount', f'type=bind,src={payload["vendor_root"]},dst=/opt/spark-ring/vendor,readonly',
                 '--mount', f"type=bind,src={payload['library']},dst={CONTAINER_LIBRARY},readonly"]
+        args += payload.get('engine_mounts', [])
         for key, value in labels.items():
             args += ['--label', key + '=' + value]
         for key, value in payload['environment'].items():
@@ -407,6 +412,57 @@ def native_geometry_matches(native, settings):
                 'runtime_native_threads': 512, 'runtime_native_blocks': blocks}
     return all(type(native.get(field)) is int and native[field] == value
                for field, value in expected.items())
+
+
+def validate_ring_state(state, rank, source_sha):
+    """Receipt metadata, not a substitute for the byte-exact physical probe."""
+    try:
+        integers = ('rank', 'world', 'calls', 'rounds', 'scratch_bytes', 'peak_growth_bytes',
+                    'max_scratch_bytes', 'max_growth_bytes')
+        if not all(type(state[k]) is int and state[k] >= 0 for k in integers):
+            return False
+        banks = state['scratch_by_dtype']
+        if not isinstance(banks, dict):return False
+        total = 0
+        widths = {'torch.float32': 4, 'torch.bfloat16': 2, 'torch.int32': 4, 'torch.int64': 8}
+        for dtype, bank in banks.items():
+            if (dtype not in widths or type(bank['buffers']) is not int or bank['buffers'] != 2
+                    or type(bank['elements_each']) is not int or bank['elements_each'] < 0
+                    or type(bank['bytes']) is not int
+                    or bank['bytes'] != 2 * bank['elements_each'] * widths[dtype]):return False
+            total += bank['bytes']
+        return (state['enabled'] is True and state['source_sha256'] == source_sha
+                and state['route'] == 'adjacent-two-round' and state['rank'] == rank and state['world'] == 4
+                and state['neighbors'] == sorted(((rank-1)%4, (rank+1)%4))
+                and state['rounds'] == 2 * state['calls']
+                and state['max_scratch_bytes'] == 64 << 20 and state['max_growth_bytes'] == 128 << 20
+                and total == state['scratch_bytes'] <= 64 << 20
+                and state['scratch_bytes'] <= state['peak_growth_bytes'] <= 128 << 20)
+    except (KeyError, TypeError, ValueError):return False
+
+
+def validate_mixed_p2p(report, *, relay_sha=None):
+    try:
+        mixed=report['mixed_p2p'];rows=mixed['rows'];before=mixed['before'];after=mixed['after']
+        valid = (report.get('mixed_p2p_passed') is True and mixed.get('passed') is True
+                and len(rows)==3 and [r['epoch'] for r in rows]==[41,42,43]
+                and all(r['correct'] is True and type(r['send_bytes_per_tensor']) is int and r['send_bytes_per_tensor']>=65536 for r in rows)
+                and after['eager_p2p_calls'].get('exchange_all',0)-before['eager_p2p_calls'].get('exchange_all',0)==3
+                and after['eager_native_calls']-before['eager_native_calls']==6
+                and after['guarded_replays']-before['guarded_replays']==3)
+        if relay_sha is None:return valid
+        edges = report['ring_relay_edges']; eb = edges['before']; ea = edges['after']
+        states = [x['ring_relay'] for x in (before, after, eb, ea, report['native_final'])]
+        return (valid and all(validate_ring_state(s, report['rank'], relay_sha) for s in states)
+                and states[1]['calls'] - states[0]['calls'] == 3
+                and states[2]['calls'] == states[1]['calls']
+                and states[3]['calls'] - states[2]['calls'] == 2
+                and states[4]['calls'] == states[3]['calls']
+                and report.get('ring_relay_edges_passed') is True and edges.get('passed') is True
+                and edges['rows'] == [{'elements': 1, 'dtype': 'float32', 'correct': True},
+                                      {'elements': 7, 'dtype': 'bfloat16', 'correct': True}])
+    except (KeyError,TypeError,ValueError):
+        return False
 
 
 def validate_rocenante_report(report, rank, hcas, digest, settings):
@@ -545,9 +601,13 @@ def main():
     canonical = state_dir(cfg) / ('collective-qualification.json' if args.transport == 'nccl' else 'rocenante-qualification.json')
     name = 'spark-ring-qualify-' + run_id.lower()
     source = Path(__file__).read_text()
-    script_directory = Path(cfg['shared_root']) / 'scripts'
+    from engine_binding import mounts as engine_mounts, identity as engine_identity
+    engine_identity(cfg, verify=True)
+    script_directory = Path(cfg.get('runtime_source_root', str(Path(cfg['shared_root']) / 'scripts')))
     source_hashes = {filename: sha(script_directory / filename) for filename in
-                     ('collective-probe.py', 'rocenante-probe.py', 'rocenante_adapter.py', 'capture-function-counters.py')}
+                     ('collective-probe.py', 'rocenante-probe.py', 'rocenante_adapter.py', 'capture-function-counters.py', 'engine_binding.py', 'ring_exchange.py')}
+    relay_sha = (source_hashes['ring_exchange.py'] if
+                 (identity.get('engine_source') or {}).get('engine_flags', {}).get('TF_GLM_HC_RING_RELAY') == '1' else None)
     environments, hcas = {}, {}
     payloads = []
     for rank, node in enumerate(cfg['nodes']):
@@ -567,6 +627,8 @@ def main():
         payloads.append({'node': node, 'rank': rank, 'recipe_id': cfg['recipe_id'], 'run_id': run_id,
                          'container_name': name, 'image': IMAGE, 'library': str(lib), 'library_sha256': digest,
                          'source_sha256': source_hashes, 'script_directory': str(script_directory),
+                         'engine_mounts': engine_mounts(cfg),
+                         'engine_config': {k:cfg[k] for k in ('engine_overlay_root','engine_manifest','engine_manifest_sha256','engine_flags') if k in cfg},
                          'fabric_address_range': cfg['fabric_address_range'], 'mtu': cfg['mtu'],
                          'master_port': port, 'timeout': args.timeout, 'environment': test_env,
                          'probe': 'collective-probe.py' if args.transport == 'nccl' else 'rocenante-probe.py',
@@ -658,6 +720,8 @@ def main():
             (case / f'os-after-rank-{rank}.json').write_text(json.dumps(result['snapshot'], indent=2) + '\n')
             valid = (validate_report(report, rank, hcas[node['name']], digest) if args.transport == 'nccl'
                      else validate_rocenante_report(report, rank, hcas[node['name']], digest, cfg['experiment']))
+            if args.transport=='rocenante' and (identity.get('engine_source') or {}).get('engine_flags',{}).get('TF_GLM_HC_EXCHANGE')=='p2p':
+                valid &= validate_mixed_p2p(report, relay_sha=relay_sha)
             correctness &= result['exit_code'] == '0' and valid
             preserve &= result['snapshot'] == before[rank]['snapshot']
             diag = sorted(set(re.findall(r'RouteFinal[^\n]* hca=([^\s]+)', result['log'])))
@@ -696,6 +760,7 @@ def main():
                 (case / f'asymmetric-rank-{rank}.log').write_text(result['log'])
                 asym_ok &= (result['exit_code'] == '0' and validate_rocenante_report(report, rank, hcas[node['name']], digest, cfg['experiment'])
                             and result['snapshot'] == asym_before[rank]['snapshot'] and asym_diagnostics[rank]['passed'] is True)
+                if (identity.get('engine_source') or {}).get('engine_flags',{}).get('TF_GLM_HC_EXCHANGE')=='p2p':asym_ok &= validate_mixed_p2p(report, relay_sha=relay_sha)
                 cache_inventories[node['name']] = report.get('cache_before', {}) if isinstance(report, dict) else {}
             asym_ok &= bool(cache_inventories[cfg['nodes'][0]['name']]) and not any(cache_inventories[n['name']] for n in cfg['nodes'][1:])
             summary.update(asymmetric_cache_passed=bool(asym_ok), asymmetric_cache_inventories=cache_inventories,
@@ -711,6 +776,8 @@ def main():
             summary['hardware_mesh_payload_passed'] = True
         summary.update(hardware_mesh_passed=mesh_ok, qualified=bool(correctness and preserve and diag_ok and mesh_ok))
         if args.transport == 'rocenante':
+            if (identity.get('engine_source') or {}).get('engine_flags',{}).get('TF_GLM_HC_EXCHANGE')=='p2p':summary['mixed_p2p_passed']=bool(correctness)
+            if relay_sha is not None:summary['ring_relay_passed']=bool(correctness)
             summary.update(byte_exact_passed=bool(correctness), mixed_size_passed=bool(correctness),
                            inplace_passed=bool(correctness), native_health_passed=bool(correctness),
                            modes_qualified=['nccl', 'rocenante'] if correctness else [])

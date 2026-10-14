@@ -1,5 +1,9 @@
 # Performance
 
+The current [actual SparkDash prefill study](sparkdash-native.md) includes new
+Mia TP4 comparisons at C1/C2/C4/C8 and cold prefill through 256K. The tables
+below retain their historical transport/image/harness scope.
+
 The tables below retain the historical Mia96 transport/recipe comparison. Fresh Mia96 versus Mia107 image-upgrade results are documented separately in [the upgrade report](engine-upgrade.md).
 
 RoCEnante improves lower-concurrency generation in this tested profile: aggregate

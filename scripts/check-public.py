@@ -9,7 +9,7 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parent.parent
-EXCLUDED = {'.git', '__pycache__', 'local', 'state', 'logs', 'lib', 'models', 'cache', 'build', 'rigmark-source'}
+EXCLUDED = {'.git', '__pycache__', 'local', 'state', 'logs', 'lib', 'models', 'cache', 'build', 'rigmark-source', 'node_modules', 'runs'}
 
 
 def main():
@@ -21,7 +21,7 @@ def main():
         relative = path.relative_to(ROOT)
         if any(part in EXCLUDED for part in relative.parts) or not path.is_file():
             continue
-        if path.name == 'release-manifest.json' or path.name.startswith('config.local') or path.name in ('config.json', 'metadata.local.json'):
+        if path.name in ('release-manifest.json', 'SYSTEM-BUILD-CHANGES.txt') or path.name.startswith('config.local') or path.name in ('config.json', 'metadata.local.json'):
             continue
         if path.is_symlink():
             raise RuntimeError('Unexpected portable-source symlink: ' + str(relative))

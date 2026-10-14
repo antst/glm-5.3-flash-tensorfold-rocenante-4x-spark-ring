@@ -20,8 +20,9 @@ remains the independent baseline and recovery path.
 
 Release **v0.1.3** retains **TensorFold 0.6.0 with 107 Mia patches** and qualified a long-context profile: six lanes, 1,048,576 total context tokens, 40 GiB extra cache, a 16 GiB reserve, 64 retained prompt snapshots and a 4 GiB retained-state budget per rank. Reasoning retention is bounded at 8,192 tool-call replies and 128 Mi characters. **Six-lane cache qualification passed:** six independent 1,046,528-token histories retained their prefixes across all four growth/replay waves, with exact 32-token replay consistency. A separate 24-request P6 semantic check passed before production returned to API8888. These are capacity and correctness results; generation benchmarks remain historical P8. See [cache capacity, validation and limits](docs/cache-retention.md). The [Mia107 image-upgrade results](docs/engine-upgrade.md) and published P8 performance tables retain their original profiles; they are not P6 measurements. Historical v0.1.1 remains Mia96 and v0.1.2 remains Mia107/P8.
 
-The current example trims the extra cache request to **39.5625 GiB per rank**;
-P6, 1M total context and the other retention budgets stay the same. The
+The 2026-10-14 trim used **39.5625 GiB per rank** at P6, 1M total context
+and the existing retention budgets. The current P8 prefill update retains that
+cache request and changes admission/source settings as documented separately. The
 2026-10-14 trim passed startup-capacity, six short-history replay and 24-request
 semantic checks before production returned to API8888. Rank zero reported
 **6,752,256 token-pool rows**, including **460,800 spare rows** beyond six full
@@ -39,13 +40,28 @@ See the [sanitized six-lane qualification result](results/six-lane-cache-qualifi
 See the [complete performance comparison](docs/performance.md) and
 [eight-configuration tuning results](docs/tuning.md).
 
+The current prefill update uses **P8 admission** with the same 1M per-request
+context and **39.5625 GiB extra cache per rank**. It ports selected Mia TP4
+compute optimizations into a fully hash-bound source overlay and retains the
+prepared RoCEnante/NCCL transport. New measurements use the actual pinned
+SparkDash collectors at **C1/C2/C4/C8**, with three 400-token decode jobs per
+workload and fresh cold-prefill prompts through 256K. See the
+[prefill port](docs/prefill-port.md) and its measured comparison below the
+historical tables. Eight admitted requests share the existing arena; eight
+independent 1M histories have not been qualified.
+The selected **4096-row** setting is deployed on port 8888. Cold 256K prefill
+measured **2828.06 tokens/s**, with 92.84s TTFT, versus 1711.57 tokens/s and 153.30s
+on the original local baseline. See the [complete measured comparison](docs/sparkdash-native.md)
+and [production verification](results/production-prefill-p8-20261014.json).
+
 ## What is being ported
 
 The source is pinned to SparkRing commit
 `6d27dd10a9f97da21278ae504ea6235f8634f303`. Its recommended GLM profile
 uses prepared RoCEnante and NCCL, whereas its older research mesh profile also
 uses SIRCL. This recipe uses the current prepared gather kernels and proxy.
-It does not replace TensorFold's compute kernels or weights with vLLM/NVFP4.
+The current compute overlay contains the selected TensorFold GLM prefill port;
+the EXL3 target and DFlash2 checkpoints retain their pinned identities.
 
 RoCEnante's generic gather transports FP32, BF16 and integer bit patterns
 without the vocabulary packing needed by the superseded SIRCL prototype.
@@ -82,12 +98,12 @@ host-local work on the four Sparks. Build compilation runs on an ARM64 Spark.
 
 ## Release checkout
 
-The current source release is [v0.1.3](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.3). Earlier releases remain historical. On the management host,
+The current source release is [v0.1.4](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.4). Earlier releases remain historical. On the management host,
 clone it into a shared path mounted at the same absolute location on all four
 Sparks:
 
 ```sh
-git clone --branch v0.1.3 https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring.git /shared/spark-ring-tensorfold-rocenante
+git clone --branch v0.1.4 https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring.git /shared/spark-ring-tensorfold-rocenante
 cd /shared/spark-ring-tensorfold-rocenante
 ```
 
@@ -103,7 +119,14 @@ key aliases. List the nodes in physical f0-next/f1-previous ring order. Keep bot
 Socket Direct functions on each cable in the fabric inventory. Existing model
 snapshots can be reused from phase one. Use this checkout's exact Mia image pin; the Mia107 release has a different digest from the published Mia96 recipe. Set
 `api_port` to `8888`; retain this recipe's own container, bootstrap port and local
-compiler/HF caches. The current example selects P6 with 39.5625 GiB extra cache per rank. Check actual startup pool capacity and host MemAvailable on your cluster; selected memory budgets do not guarantee capacity on every installation. Image generation and other substantial GPU workloads must be stopped for this qualification.
+compiler/HF caches. The current example selects P8 admission with 39.5625 GiB extra cache per rank. Check actual startup pool capacity and host MemAvailable on your cluster; selected memory budgets do not guarantee capacity on every installation. Image generation and other substantial GPU workloads must be stopped for this qualification.
+
+Build the declared engine overlay on an ARM64 Docker host first, following
+[the CPU-only engine builder](engine/README.md). Keep the output at the same
+shared absolute path on all ranks, and set `engine_overlay_root`,
+`engine_manifest`, its SHA256 and the selected flags in `local/config.json`.
+The explicit example requires this overlay; an unbuilt or changed manifest is
+refused before launch. Review the builder plan before executing it.
 
 Check sources and perform an offline model launch plan:
 
@@ -139,9 +162,6 @@ python3 -B scripts/network.py prepare --config local/config.json --inventory sta
 python3 -B scripts/network.py inventory --config local/config.json --output state/network-inventory.json
 python3 -B scripts/network.py apply --config local/config.json --inventory state/network-inventory.json
 python3 -B scripts/network.py check --config local/config.json --inventory state/network-inventory.json
-python3 -B scripts/qualify.py run --config local/config.json --transport nccl
-python3 -B scripts/qualify.py run --config local/config.json --transport rocenante
-python3 -B scripts/experiment.py start --config local/config.json --mode rocenante
 ```
 
 The NCCL control uses `--mode nccl` with the same library, model and compute
@@ -165,15 +185,28 @@ Replace that documentation IP with the configured rank-zero address. The same
 URL works when switching to the exclusive original recipe. See the client's
 `--help` for a one-shot prompt and generation settings.
 
-Validate the running six-lane model and retain a new private receipt:
+Qualify inference on a private endpoint before serving clients. Copy the complete
+configuration to `local/qualification.json` and set only `api_port` to **18897**;
+keep the selected source, owner, profile, fabric and transport settings identical.
+Run one stack at a time. Port relocation preserves the qualification identity,
+while the live worker command and environment are checked again at startup.
 
 ```sh
-python3 -B scripts/validate-model.py --config local/config.json --mode rocenante --output state/model-validation
+python3 -B scripts/qualify.py run --config local/qualification.json --transport nccl
+python3 -B scripts/qualify.py run --config local/qualification.json --transport rocenante
+python3 -B scripts/experiment.py start --config local/qualification.json --mode rocenante
+python3 -B scripts/validate-model.py --config local/qualification.json --mode rocenante --output state/model-validation
+python3 -B scripts/experiment.py stop --config local/qualification.json
+python3 -B scripts/experiment.py start --config local/config.json --mode rocenante
 ```
+
+After restoration to **8888**, verify readiness with GET-only health/models checks
+and the all-rank source/worker/monitor receipts. Keep inference tests and performance
+measurements on the isolated endpoint so normal clients cannot affect them.
 
 This checks selected answers, serial/speculative/concurrent output equality,
 live deployment bindings and payload/error counters. The configured 1,048,576
-token context is advertised by the API. The historical [long-context cache test](docs/cache-retention.md) qualified six independent 1,046,528-token prompts with 32-token completions and exact replay at 40 GiB extra cache; the current trim received the shorter checks described there. Context includes prompt and output together; a full 1,048,576-token prompt plus a reply is not valid. Vision, branching histories and real-agent reasoning restoration need their own tests.
+token context is advertised by the API. The historical [long-context cache test](docs/cache-retention.md) qualified six independent 1,046,528-token prompts with 32-token completions and exact replay at 40 GiB extra cache; the historical P6 trim received the shorter checks described there. Context includes prompt and output together; a full 1,048,576-token prompt plus a reply is not valid. Vision, branching histories and real-agent reasoning restoration need their own tests.
 
 ## Stop and recover
 

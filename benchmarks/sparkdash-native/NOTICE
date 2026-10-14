@@ -1,0 +1,5 @@
+SparkRing actual-collector benchmark wrapper.
+The separate wrapper/recording/comparison/test code is provided under Apache-2.0.
+The byte-exact SparkDash source closure is Copyright 2026 Mia's AI Lab.
+See upstream/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/LICENSE, LICENSE-MIT and NOTICE for original notices.
+No model weights, third-party binaries, private run data or credentials are bundled.

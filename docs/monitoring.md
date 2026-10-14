@@ -35,16 +35,18 @@ cancelled requests. Large ongoing cold prefills may not yet appear. Restart or
 collection gaps invalidate counter comparisons where detected. Host-wide memory
 and paging include other workloads, and sampled minima can miss short transients.
 
-## Assessing eight lanes
+## Assessing eight full context windows
 
-The selected service remains P6. Monitor status never authorizes P8 or changes
-serving settings. For the exact Mia107 GLM-5.3-Flash TP4/W64 profile it provides an
+The current service admits eight requests. Monitor status changes no serving
+settings and does not qualify eight independent full-context histories. For the exact Mia107 GLM-5.3-Flash TP4/W64 profile it provides an
 unqualified sizing estimate for eight independent 1M allocations plus 530,432 spare
 rows. The estimate uses 6,780 bytes per additional row and excludes unknown extra
-P8 fixed-buffer costs. It is disabled for an unmatched image/profile.
+P8 fixed-buffer costs. It is disabled for an unmatched image/profile. Its admission count is reported
+separately from its unqualified full-history estimate.
 
-With a 6,821,888-row P6 arena, this target needs 2,097,152 additional rows:
-approximately 13.24 GiB per rank before additional P8 overhead. Compare that cost
+With the current 6,752,256-row arena, this target needs 2,166,784 additional
+rows: approximately 13.68 GiB per rank before additional overhead. The
+historical 6,821,888-row P6 arena required about 13.24 GiB. Compare that cost
 against sampled available memory during realistic long-context traffic, including
 retained-state growth and other host workloads. The 12 GiB runtime and 16 GiB startup
 comparison margins are policy checks, not enforced OS reservations.
@@ -61,4 +63,5 @@ It continues collecting host data if GLM stops. After a management-host reboot,
 start it explicitly or from your site's GLM startup wrapper; no autostart unit is
 installed by this portable recipe.
 
-The [six-lane cache qualification](cache-retention.md) records the measured pool and memory limits. Eight-lane capacity remains unqualified.
+The [six-lane cache qualification](cache-retention.md) records the measured pool and memory limits. Eight independent full-context histories remain unqualified. The new P8
+short-prompt and cold-prefill measurements are separate evidence.

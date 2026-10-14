@@ -6,6 +6,7 @@ import os
 import hashlib
 import socket
 from pathlib import Path
+from config_fixtures import loaded_example
 import sys
 import tempfile
 from types import SimpleNamespace
@@ -20,7 +21,7 @@ from network import make_plan,hardware_rule_attestation,hardware_payload_delta,p
 
 class NetworkTests(unittest.TestCase):
     def config(self):
-        c=load_config(ROOT/'config.example.json');c['shared_root']=str(ROOT)
+        c=loaded_example();c['shared_root']=str(ROOT)
         for rank,node in enumerate(c['nodes']):
             for p in node['fabric']:p['mac']='02:00:00:%02x:%02x:%02x'%(rank,p['physical_port'],p['rail'])
         return c

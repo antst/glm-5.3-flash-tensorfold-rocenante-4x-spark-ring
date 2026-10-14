@@ -16,7 +16,7 @@
   },
   "profile": {
     "context": 1048576,
-    "parallel": 6,
+    "parallel": 8,
     "multi_window": 64,
     "cache_entries": 64,
     "max_tokens": 32768,
@@ -251,5 +251,19 @@
     "upstream_planner": "third_party/sparkring/fabric.py",
     "upstream_planner_sha256": "b201ede9554bd6a02cc09a07a6accf242a63b2d46744bab9132ee4a7e318dbda",
     "health_port": 29661
+  },
+  "engine_overlay_root": "/shared/spark-ring-tensorfold-rocenante/local/engine-prefill",
+  "engine_manifest": "/shared/spark-ring-tensorfold-rocenante/local/engine-prefill/source-manifest.json",
+  "engine_manifest_sha256": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666",
+  "engine_flags": {
+    "TF_GLM_HC_EXCHANGE": "p2p",
+    "TF_GLM_PROMPT_OWN_FRONT": "1",
+    "TF_GLM_PROMPT_MICROBATCH": "1",
+    "TF_GLM_PREFILL_ROWS": "4096",
+    "TF_GLM_SIDE": "1",
+    "TF_GLM_PROMPT_PARTIALS": "fp32",
+    "TF_GLM_MSA": "0",
+    "TF_GLM_ONEPASS_SMALL_WARPS": "4",
+    "TF_GLM_HC_RING_RELAY": "1"
   }
 }

@@ -7,9 +7,13 @@ The [sanitized result](../results/six-lane-cache-qualification.json) binds the
 selected profile and source to these 72 exclusive requests. Production returned
 to API8888 with an empty cache. No P6 throughput improvement is claimed.
 
-## Selected configuration
+The new P8 compute overlay retains the same cache request and budgets, but the
+historical six-near-1M replay test does not qualify that workload on the new
+source/profile. See the [current measured prefill study](sparkdash-native.md).
 
-| Setting | v0.1.2 published profile | v0.1.3 full qualification | Current 2026-10-14 trim |
+## Historical selected configurations
+
+| Setting | v0.1.2 published profile | v0.1.3 full qualification | Historical P6 trim |
 |---|---:|---:|---:|
 | Tensor-parallel ranks | 4 | 4 | 4 |
 | Concurrent decode lanes | 8 | 6 | 6 |
@@ -27,15 +31,17 @@ and keep_reasoning_mb emit TF_GLM_CACHE_ENTRIES, TF_GLM_KEPT_BYTES_GIB,
 TF_GLM_KEEP_REASONING and TF_GLM_KEEP_REASONING_MB on every rank. The last
 setting counts characters in this pinned engine; it is not a precise RAM
 limit. Omitted optional fields preserve existing engine behavior. The module's
-fallback profile remains historical; copy the complete current example for P6.
+fallback profile remains historical. The current example selects P8 admission
+with a prefill source overlay; use the complete recorded historical configuration
+when reproducing the P6 result.
 
-Image, model and draft weights, compute code, network plan, prepared
+For that historical P6 trim, image, model and draft weights, compute code, network plan, prepared
 RoCEnante/NCCL settings and API8888 retain their previous pins. This adjusts
 configuration and launcher validation; it does not rewrite the KV subsystem.
 
 ## Cache budget trim: 2026-10-14
 
-The current example requests **39.5625 GiB extra cache per rank**, a reduction
+The historical P6 trim requested **39.5625 GiB extra cache per rank**, a reduction
 of 0.4375 GiB from the released 40 GiB profile. Six lanes, 1,048,576 total
 context tokens, the 16 GiB reserve and all snapshot/reasoning budgets are
 unchanged. This reduces the fixed pool request without changing model math.

@@ -169,7 +169,7 @@ def host_observation(payload):
         raise RuntimeError('Candidate environment differs from the qualified rank command')
     if any(env.get(key) != value for key, value in payload['transport_env'].items()):
         raise RuntimeError('Candidate transport environment differs')
-    inside = '''import hashlib,importlib.util,json,os,pathlib
+    inside = '''import hashlib,importlib.util,json,os,pathlib,sys
 data=PAYLOAD
 library=pathlib.Path(os.environ['TF_NCCL_LIB']).resolve(strict=True)
 maps=sorted({line.split(maxsplit=5)[-1].strip() for line in pathlib.Path('/proc/1/maps').read_text().splitlines() if '/libnccl' in line and len(line.split(maxsplit=5))==6})
@@ -184,13 +184,32 @@ for name,wanted in data['engine_sources'].items():
  observed[name]=actual
 for name,wanted in data['sources'].items():
  if hashlib.sha256((pathlib.Path('/opt/spark-ring/scripts')/name).read_bytes()).hexdigest()!=wanted:raise RuntimeError('Candidate source changed: '+name)
+sys.path.insert(0,'/opt/spark-ring/scripts')
+from runtime import read_controller_snapshot,source_map_digest
+controller=read_controller_snapshot()
+controller_report=controller['report']
+controller_sources=data['engine_sources'] if data.get('engine_overlay') is not None else data['controller_sources']
+if (controller_report.get('tensorfold_source_digest_sha256')!=source_map_digest(controller_sources) or
+    type(controller_report.get('tensorfold_source_file_count')) is not int or
+    controller_report['tensorfold_source_file_count']!=len(controller_sources)):
+ raise RuntimeError('Controller snapshot source digest/count differs')
+if data.get('engine_overlay') is not None:
+ sys.path.insert(0,'/opt/spark-ring/scripts')
+ from engine_binding import runtime_verify
+ if runtime_verify(root)!=data['engine_sources']:raise RuntimeError('Complete engine overlay differs')
+ if os.environ.get('SPARK_RING_ENGINE_MANIFEST_SHA256')!=data['engine_overlay']['manifest_sha256']:raise RuntimeError('Engine manifest identity differs')
+ if controller_report.get('engine_manifest_sha256')!=data['engine_overlay']['manifest_sha256']:raise RuntimeError('Controller engine manifest identity differs')
+ if any(os.environ.get(k)!=v for k,v in data['engine_overlay']['engine_flags'].items()):raise RuntimeError('Engine flags differ')
 vendor=pathlib.Path('/opt/spark-ring/vendor');manifest=vendor/'source-manifest.json'
 if hashlib.sha256(manifest.read_bytes()).hexdigest()!=data['vendor_manifest_sha256']:raise RuntimeError('Prepared vendor manifest changed')
 for name,wanted in json.loads(manifest.read_text())['files'].items():
  if hashlib.sha256((vendor/name).read_bytes()).hexdigest()!=wanted:raise RuntimeError('Prepared vendor source changed: '+name)
-print(json.dumps({'library':str(library),'library_sha256':digest,'mapped_nccl':maps,'engine_sources':observed,'sources_verified':True,'vendor_verified':True}))
+if read_controller_snapshot()['service_start_ticks']!=controller['service_start_ticks']:raise RuntimeError('Controller process changed during source observation')
+print(json.dumps({'library':str(library),'library_sha256':digest,'mapped_nccl':maps,'engine_sources':observed,'sources_verified':True,'vendor_verified':True,'controller':controller}))
 '''.replace('PAYLOAD', repr(payload))
-    loader = json.loads(run(['docker', 'exec', name, 'python3', '-B', '-c', inside]))
+    # The complete overlay manifest can exceed the per-argument exec limit.
+    loader = json.loads(subprocess.check_output(['docker', 'exec', '-i', name, 'python3', '-B', '-'],
+                       input=inside, text=True, stderr=subprocess.STDOUT, timeout=120))
     snapshot_env = dict(os.environ, SPARK_RING_REQUIRED_HCAS=json.dumps(payload['hcas']), PYTHONDONTWRITEBYTECODE='1')
     snapshot = json.loads(subprocess.check_output(['python3', '-B', payload['counter_script']],
                                                 env=snapshot_env, text=True, timeout=120))
@@ -211,11 +230,12 @@ print(json.dumps({'library':str(library),'library_sha256':digest,'mapped_nccl':m
             'image_spec': container['Config']['Image'], 'image_id': container['Image'],
             'labels': container['Config'].get('Labels', {}), 'command': container['Config']['Cmd'],
             'environment': env, 'loader': loader, 'snapshot': snapshot,
-            'qp_owners': owners, 'qps': rows, 'runtime_log': log}
+            'qp_owners': owners, 'qps': rows, 'runtime_log': log,'controller':loader['controller']}
 
 
 def observation(op, rank, library, digest, identity):
     cfg = op.config
+    engine = identity.get('engine_source')
     _, command = op.command(rank, library, digest)
     env = dict(command[i + 1].split('=', 1) for i, item in enumerate(command) if item == '-e')
     payload = {'container': cfg['container_name'], 'image': IMAGE,
@@ -223,18 +243,29 @@ def observation(op, rank, library, digest, identity):
                           'spark-ring.nccl-sha256': digest},
                'command': command[command.index(IMAGE) + 1:], 'env': env,
                'transport_env': transport_environment(env), 'library_sha256': digest,
-               'engine_sources': dict(SOURCE_HASHES, **ENGINE_HASHES), 'sources': identity['sources'],
+               'engine_sources': engine['files'] if engine is not None else dict(SOURCE_HASHES, **ENGINE_HASHES),
+               'controller_sources': engine['files'] if engine is not None else SOURCE_HASHES,
+               'engine_overlay': {k: v for k, v in engine.items() if k != 'files'} if engine is not None else None,
+               'sources': identity['sources'],
                'vendor_manifest_sha256': identity['vendor']['manifest_sha256'],
                'hcas': ordered_hcas(cfg['nodes'][rank]),
-               'counter_script': str(Path(cfg['shared_root']) / 'scripts/capture-function-counters.py')}
+               'counter_script': str(Path(cfg.get('runtime_source_root', str(Path(cfg['shared_root']) / 'scripts'))) / 'capture-function-counters.py')}
     code = inspect.getsource(host_observation) + '\nprint(__import__("json").dumps(host_observation(' + repr(payload) + ')))\n'
     record = json.loads(op.remote_python(rank, code, timeout=180))
-    record['controller'] = parse_active(record['runtime_log'])
     check_controller(record['controller']['report'], cfg, rank, identity)
     return record
 
 
 def check_controller(report, cfg, rank, identity):
+    engine = identity.get('engine_source')
+    files=engine['files'] if engine is not None else SOURCE_HASHES
+    digest=hashlib.sha256(json.dumps(files,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    compact=(report.get('tensorfold_source_digest_sha256')==digest and
+             type(report.get('tensorfold_source_file_count')) is int and report['tensorfold_source_file_count']==len(files))
+    # A full-map legacy receipt is accepted only for the legacy four-file case.
+    source_ok=compact if engine is not None else (compact or report.get('tensorfold_source_sha256')==files)
+    if engine is not None:
+        source_ok=source_ok and report.get('engine_manifest_sha256')==engine['manifest_sha256']
     require(report.get('mode') == cfg['experiment']['mode'] and report.get('rank') == rank and
             report.get('world') == 4 and report.get('initialized') is True and
             report.get('closed') is False and report.get('failure') is None,
@@ -243,7 +274,7 @@ def check_controller(report, cfg, rank, identity):
             report.get('hca_names') == ordered_hcas(cfg['nodes'][rank]) and
             report.get('vendor_manifest_sha256') == identity['vendor']['manifest_sha256'] and
             report.get('adapter_sha256') == identity['sources']['rocenante_adapter.py'] and
-            report.get('tensorfold_source_sha256') == SOURCE_HASHES and
+            source_ok and
             report.get('max_gather_bytes') == cfg['experiment']['max_gather_bytes'] and
             report.get('min_gather_bytes') == cfg['experiment']['min_gather_bytes'],
             'Live controller native/source/vendor/admission identity mismatch')

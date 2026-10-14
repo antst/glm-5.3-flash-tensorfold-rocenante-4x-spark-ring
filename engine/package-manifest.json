@@ -1,0 +1,24 @@
+{
+  "files": {
+    "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "NOTICE": "4d49ea18b4e5ff4eddc3383c3891daa9f16505ae5c3d57522dcde85cd84d3b7d",
+    "README.md": "a63e250616bc24e39f723994e0acbdacbf50b5d550156fa66a64b09774476625",
+    "build.py": "273416360bc9672ca63c09917fa1d36fe9d69d5481cec43182839b6ea04bf9d9",
+    "licenses/Mia-LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "licenses/Mia-NOTICE": "ee701e5d31c2bc766a1af791e6a394fc5fcfc8435f0361e7e9b596292e2dc7e1",
+    "licenses/TensorFold-LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "licenses/TensorFold-MIT.txt": "be6a9ee4462784a762b21790954b8e76c4dcacc9fb6da2a40d03a8a9bddec93e",
+    "licenses/TensorFold-NOTICE": "74b59811a5ebc3c28e7fc89f8f189854b6ca6d44392a98394950b24ba3c1b8e7",
+    "licenses/TensorFold-THIRD_PARTY_NOTICES.md": "2e7ce3c19e1e4ed5113b7e9ae11d4bcfcf946a367de45eac643f4cafc6b74ea3",
+    "manifests/source-2048.json": "3abe7f60184aaaaed1f97eca49ae4fdfe7ba08a0267a722b25d7e7470aadd958",
+    "manifests/source-4096.json": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666",
+    "patches/mia107-prefill.patch": "dd1e8848d19c8a084a713bd7220a6e16bcaa1235f91d5f961105ba1652ec95c4",
+    "provenance.json": "c61ecb05abd3079a35d6ba9c464c9cda9236372f4b7a72e4dae261e7c508a049",
+    "source-after.json": "ef0ff873b6af918d77db0395fc80dd1d12ac30e0278426a58dc6b6852417d5a4",
+    "source-before.json": "b4731db28fb34089b6f7be1a1cb8cdf1433f2f2a93704bd9b1d0153e6e0c1c83",
+    "source-manifest.json": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666",
+    "tests/test_builder.py": "90ad9eee31016ef85e7193df024b78eb298c42aeb47b39eadf3782f3b6691190",
+    "upstream-manifest.json": "c4360faa55c48c7060e36973575b3281c192b8ee02a820aff973e7e1a52f31c8"
+  },
+  "schema": "glm-prefill-public-engine-package/v1"
+}

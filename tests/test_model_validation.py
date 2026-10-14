@@ -5,6 +5,7 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+from config_fixtures import prepared_example
 import sys
 import unittest
 from unittest.mock import patch
@@ -33,7 +34,7 @@ class ModelValidationTests(unittest.TestCase):
             validator.check_idle(healthy,8)
 
     def test_offline_plans_use_selected_concurrency_without_host_or_api_actions(self):
-        cfg=validator.prepare_config(ROOT/"config.example.json","rocenante")
+        cfg=prepared_example("rocenante")
         for lanes,count in ((6,24),(8,30)):
             selected=copy.deepcopy(cfg);selected["profile"]["parallel"]=lanes
             output=Path(selected["state_root"])/"test-model-plan-unused"

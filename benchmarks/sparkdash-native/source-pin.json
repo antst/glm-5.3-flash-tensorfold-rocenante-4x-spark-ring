@@ -1,0 +1,100 @@
+{
+  "schema": "sparkdash-private-source-pin/v1",
+  "repository": "https://github.com/MiaAI-Lab/sparkDash",
+  "revision": "fab8dadff951d1c8cc1450a657805d8e3ea5c9f6",
+  "commit_author_utc": "2026-10-09T19:38:14Z",
+  "commit_committer_utc": "2026-10-09T19:38:14Z",
+  "historical_pin": "fab8dadff951d1c8cc1450a657805d8e3ea5c9f6",
+  "latest_commit_at_or_before_utc": "2026-10-09T23:59:59Z",
+  "latest_commit_at_cutoff": "fab8dadff951d1c8cc1450a657805d8e3ea5c9f6",
+  "historical_and_cutoff_source_are_same": true,
+  "query_url": "https://api.github.com/repos/MiaAI-Lab/sparkDash/commits?until=2026-10-09T23%3A59%3A59Z&per_page=1",
+  "files": {
+    "server/collectors/DecodeBench.js": {
+      "sha256": "38f52e3a032c23cceb70ca3f672514a186979f7c7e2451a45785ee6809dac0f6",
+      "bytes": 30960,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/server/collectors/DecodeBench.js"
+    },
+    "server/collectors/PrefillBench.js": {
+      "sha256": "059104c2bf709efd0a573280361ec7e9ad5e4443e51d20204238c49dd18ca78d",
+      "bytes": 30498,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/server/collectors/PrefillBench.js"
+    },
+    "package.json": {
+      "sha256": "656603fe838b91b9d8eebc11fd8a6567b4f3f60bb0e5c39fbcdac4179317bd81",
+      "bytes": 2253,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/package.json"
+    },
+    "package-lock.json": {
+      "sha256": "2bd1ce090dc4af78297bdd631f2db69dfde9f959e12de86eb8390af52371f422",
+      "bytes": 138229,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/package-lock.json"
+    },
+    "LICENSE": {
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "bytes": 11358,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/LICENSE"
+    },
+    "LICENSE-MIT": {
+      "sha256": "1126322e2cc8d165adc4c792eeb195717de2bcc7b39be1ce77959d78e87ef685",
+      "bytes": 1056,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/LICENSE-MIT"
+    },
+    "NOTICE": {
+      "sha256": "1bdd74e322165901d937f43a144a19c627a003c974d71b07d9460e98273dbf9e",
+      "bytes": 788,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/NOTICE"
+    },
+    "server/util/atomicWrite.js": {
+      "sha256": "d6bd946e48e48b1119f937d917ee749607c9b3e096a28716bc6c8f81ebb90329",
+      "bytes": 2780,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/server/util/atomicWrite.js"
+    },
+    "server/collectors/LlmStreaming.js": {
+      "sha256": "7bdccf13247cbed58e8e457842c2211a3ad0a675c76b5ecb60fe0b4b197a33d1",
+      "bytes": 25900,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/server/collectors/LlmStreaming.js"
+    },
+    "src/shared/llmPrompts.js": {
+      "sha256": "f930fcfa13a041fcfe1ff6cfbf882f2c946293dc1ac29aba9f3768fd1ad327aa",
+      "bytes": 14529,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/src/shared/llmPrompts.js"
+    },
+    "src/shared/llmTarget.js": {
+      "sha256": "74913ffd206454f31743d8bba76892f12d1204eae21055173bdde3796c793443",
+      "bytes": 2934,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/src/shared/llmTarget.js"
+    },
+    "src/shared/prefillBench.js": {
+      "sha256": "2b1c076c92ff491892f414fa733eb9c180914bee75b9ce6df2203a698654207f",
+      "bytes": 1272,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/src/shared/prefillBench.js"
+    },
+    "src/shared/contextFit.js": {
+      "sha256": "e62f92a55abfb8595f4da0fd894c3f824d9ba8765dffc1b8f3597b829e56d652",
+      "bytes": 1819,
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/sparkDash/fab8dadff951d1c8cc1450a657805d8e3ea5c9f6/src/shared/contextFit.js"
+    }
+  },
+  "historical_local_byte_matches": {
+    "server/collectors/DecodeBench.js": true,
+    "LICENSE": true,
+    "LICENSE-MIT": true,
+    "NOTICE": true,
+    "server/collectors/LlmStreaming.js": true,
+    "src/shared/llmPrompts.js": true
+  },
+  "undici_lock": {
+    "version": "8.9.0",
+    "resolved": "https://registry.npmjs.org/undici/-/undici-8.9.0.tgz",
+    "integrity": "sha512-aWZpUj7XoGonMClx4gdDRfgBjqeA+F473aDmROQQbM9n6PRfK/u1q/a0X4wMTgcHfT8H6fpbt98PFuDUwFg2YA==",
+    "license": "MIT",
+    "engines": {
+      "node": ">=22.19.0"
+    }
+  },
+  "limits": [
+    "Mia's published benchmark does not preserve all UI settings, output caps or number/order of repeats; matching collector revision does not prove those historical choices.",
+    "This source closure is copied byte-exact; the private CLI/recording instrumentation is separate and hash-recorded."
+  ]
+}

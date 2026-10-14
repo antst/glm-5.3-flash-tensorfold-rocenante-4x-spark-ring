@@ -4,14 +4,74 @@
 import ctypes
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import sys
 import threading
+import tempfile
 import time
 import urllib.request
 sys.dont_write_bytecode=True
 _CONTROLLER=None
+HEALTH_PATH=Path('/cache/spark-ring-controller-health.json')
+
+
+def source_map_digest(files):
+    return hashlib.sha256(json.dumps(files,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+
+
+def compact_controller_report(report):
+    result=dict(report)
+    files=result.pop('tensorfold_source_sha256')
+    if not isinstance(files,dict) or not files:raise RuntimeError('Missing controller source map')
+    result.update(tensorfold_source_digest_sha256=source_map_digest(files),
+                  tensorfold_source_file_count=len(files),
+                  engine_manifest_sha256=os.environ.get('SPARK_RING_ENGINE_MANIFEST_SHA256'))
+    return result
+
+
+def process_start_ticks(pid,proc_root=Path('/proc')):
+    # The comm field may contain spaces and parentheses. Fields after its last
+    # closing parenthesis start at stat field 3; starttime is field 22.
+    text=(Path(proc_root)/str(pid)/'stat').read_text()
+    fields=text.rsplit(')',1)[1].split()
+    if fields[0] in ('Z','X','x'):raise RuntimeError('Controller service process is not live')
+    return int(fields[19])
+
+
+def write_controller_snapshot(report,path=HEALTH_PATH,proc_root=Path('/proc')):
+    path=Path(path);pid=os.getpid()
+    envelope={'unix_seconds':time.time(),'service_pid':pid,
+              'service_start_ticks':process_start_ticks(pid,proc_root),
+              'host_boot_id':(Path(proc_root)/'sys/kernel/random/boot_id').read_text().strip(),
+              'report':compact_controller_report(report)}
+    fd,temporary=tempfile.mkstemp(prefix=path.name+'.',suffix='.tmp',dir=path.parent)
+    try:
+        with os.fdopen(fd,'w') as stream:
+            json.dump(envelope,stream,sort_keys=True,separators=(',',':'),allow_nan=False)
+            stream.write('\n')
+        os.replace(temporary,path)
+    finally:
+        if os.path.exists(temporary):os.unlink(temporary)
+    return envelope
+
+
+def read_controller_snapshot(path=HEALTH_PATH,proc_root=Path('/proc'),expected_pid=1):
+    path=Path(path)
+    with path.open() as stream:
+        metadata=os.fstat(stream.fileno())
+        if metadata.st_mode & 0o777 != 0o600:raise RuntimeError('Controller snapshot mode differs')
+        row=json.load(stream)
+    pid=row.get('service_pid');ticks=row.get('service_start_ticks');stamp=row.get('unix_seconds')
+    if (type(pid) is not int or pid!=expected_pid or type(ticks) is not int or ticks<=0
+            or type(stamp) not in (float,int) or not math.isfinite(stamp) or stamp<=0
+            or not isinstance(row.get('report'),dict)):
+        raise RuntimeError('Controller snapshot envelope differs')
+    if (process_start_ticks(pid,proc_root)!=ticks or
+            row.get('host_boot_id')!=(Path(proc_root)/'sys/kernel/random/boot_id').read_text().strip()):
+        raise RuntimeError('Controller snapshot process/boot identity differs')
+    return row
 
 
 def health_watch(stop,controller,health):
@@ -26,10 +86,13 @@ def health_watch(stop,controller,health):
             if (row.get('plan_id')!=health['plan_id'] or row.get('ready') is not True or
                 row.get('all_peers_ready') is not True or row.get('failure') is not None):raise RuntimeError('Four-rank native mesh became unhealthy')
             controller.check_health()
+            # Commit the machine receipt before any potentially interleaved
+            # human log write. This contains no CUDA query or synchronization.
+            snapshot=write_controller_snapshot(controller.report())
             now=time.monotonic()
             if now>=next_report:
                 # Host proxy counters only: no CUDA synchronization or GPU stats.
-                print('SPARK_RING_ROCENANTE_ACTIVE '+json.dumps(controller.report()),flush=True)
+                print('SPARK_RING_ROCENANTE_ACTIVE '+json.dumps(snapshot['report']),flush=True)
                 next_report=now+60
         except BaseException as error:
             print('SPARK_RING_NATIVE_FATAL '+json.dumps({'rank':health['rank'],'error':str(error)}),flush=True)

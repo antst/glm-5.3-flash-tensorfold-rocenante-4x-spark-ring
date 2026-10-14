@@ -1,0 +1,472 @@
+{
+  "schema": "spark-ring-actual-sparkdash-baseline/v1",
+  "passed": true,
+  "phase": "baseline_complete",
+  "started_utc": "2026-10-14T17:26:23.479Z",
+  "finished_utc": "2026-10-14T17:37:31.964Z",
+  "model_id": "GLM-5.3-Flash-EXL3",
+  "tp_ranks": 4,
+  "configured_lanes": 8,
+  "context_tokens": 1048576,
+  "profile": {
+    "context": 1048576,
+    "parallel": 8,
+    "multi_window": 64,
+    "cache_entries": 64,
+    "max_tokens": 32768,
+    "cache_gib": 39.5625,
+    "reserve_gib": 16,
+    "protocol": "auto",
+    "thread_thresholds": null,
+    "nccl_channels": 4,
+    "kept_bytes_gib": 4,
+    "keep_reasoning_entries": 8192,
+    "keep_reasoning_mb": 128
+  },
+  "prefill_features": {
+    "TF_GLM_PREFILL_ROWS": 2048,
+    "TF_GLM_PROMPT_OWN_FRONT": 0,
+    "TF_GLM_PROMPT_MICROBATCH": 0,
+    "TF_GLM_PROMPT_PARTIALS": "fp32",
+    "TF_GLM_MSA": 0,
+    "TF_GLM_SIDE": 0,
+    "TF_GLM_ONEPASS_SMALL_WARPS": 8,
+    "TF_GLM_HC_RING_RELAY": 0
+  },
+  "engine": {
+    "source_id": "mia107-original-14b5072e8e99",
+    "source_manifest_sha256": "70d2dcc36e9b225e8f6159d6d2ba272731a435846806da424c88ce37a63a0d2b",
+    "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf"
+  },
+  "transport": {
+    "name": "prepared-rocenante-plus-patched-nccl",
+    "nccl_library_sha256": "01d04c83cf666155466c6a00368a40cd3caa50beca5265abb89d9f14ae99da87",
+    "max_gather_bytes": 4194304,
+    "paths_per_peer": 2,
+    "forward_window_bytes": 65536,
+    "forward_chunk_bytes": 16384
+  },
+  "pool": {
+    "startup_rows": 6752256,
+    "finished_rows": 6752256,
+    "fixed_pool_is_not_eight_full_1m_slots": true
+  },
+  "collector": {
+    "revision": "fab8dadff951d1c8cc1450a657805d8e3ea5c9f6",
+    "source_pin_sha256": "8f9d4c8b9dee535504ffe53d5500d9830e3687f248b8d0766509f31556a5ba27",
+    "actual_byte_exact_collectors": true,
+    "default_measured_decode_max_tokens": 400,
+    "selected_decode_types": [
+      "prose",
+      "code"
+    ],
+    "selected_concurrency": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "decode_complete_jobs_per_type": 3,
+    "decode_requests_including_warmups": 96,
+    "prefill_requests_including_warmups_calibration": 19,
+    "prefill_target_lengths": [
+      8192,
+      16384,
+      32768,
+      65536,
+      131072,
+      262144
+    ],
+    "prefill_sample_counts": [
+      3,
+      3,
+      3,
+      2,
+      2,
+      1
+    ],
+    "prefill_rate_row_selection": "Native median-rate sample; lower middle for an even sample count.",
+    "raw_harness_sources_sha256": {
+      "run-sparkdash.mjs": "21322358a7223615ae4ad0ea34593b2e7119b2fafb12bb039d4d2f8d632b856e",
+      "capture.mjs": "2d012ae72df916df8ad8a7c982d6b177f1e6d5bbac9690988b804656d8d57c33",
+      "protocol.mjs": "9e8bf75c0159579eeca92206d52b2c6c98c7cf040ecad0a340cea4e1eb497308",
+      "recorded-undici.mjs": "454f831e7cd9f0df5b8422ba1edd7b76eae9e42253dc54ad3f8519ea9f48fcb3"
+    }
+  },
+  "audit": {
+    "expected_requests": 115,
+    "observed_request_delta": 115,
+    "actual_http_attempts": 115,
+    "exclusive_request_accounting_passed": true,
+    "raw_requests_not_published": true
+  },
+  "decode": [
+    {
+      "type": "prose",
+      "concurrency": 1,
+      "job_repeats": 3,
+      "aggregate_decode_tps_median": 101.23,
+      "aggregate_decode_tps_range": [
+        101.21,
+        101.7
+      ],
+      "individual_wave_aggregate_decode_tps": [
+        101.7,
+        101.21,
+        101.23
+      ],
+      "mia_published_tp4_aggregate_decode_tps": 95.2,
+      "reported_difference_percent": 6.334033613445378
+    },
+    {
+      "type": "prose",
+      "concurrency": 2,
+      "job_repeats": 3,
+      "aggregate_decode_tps_median": 136.39,
+      "aggregate_decode_tps_range": [
+        134.02,
+        136.58
+      ],
+      "individual_wave_aggregate_decode_tps": [
+        136.58,
+        134.02,
+        136.39
+      ],
+      "mia_published_tp4_aggregate_decode_tps": 133.2,
+      "reported_difference_percent": 2.3948948948948834
+    },
+    {
+      "type": "prose",
+      "concurrency": 4,
+      "job_repeats": 3,
+      "aggregate_decode_tps_median": 169.6,
+      "aggregate_decode_tps_range": [
+        169.06,
+        169.67
+      ],
+      "individual_wave_aggregate_decode_tps": [
+        169.67,
+        169.6,
+        169.06
+      ],
+      "mia_published_tp4_aggregate_decode_tps": 163.3,
+      "reported_difference_percent": 3.8579301898346463
+    },
+    {
+      "type": "prose",
+      "concurrency": 8,
+      "job_repeats": 3,
+      "aggregate_decode_tps_median": 224.2,
+      "aggregate_decode_tps_range": [
+        224.08,
+        230.53
+      ],
+      "individual_wave_aggregate_decode_tps": [
+        230.53,
+        224.2,
+        224.08
+      ],
+      "mia_published_tp4_aggregate_decode_tps": 222.4,
+      "reported_difference_percent": 0.8093525179855954
+    },
+    {
+      "type": "code",
+      "concurrency": 1,
+      "job_repeats": 3,
+      "aggregate_decode_tps_median": 149.01,
+      "aggregate_decode_tps_range": [
+        148.95,
+        149.3
+      ],
+      "individual_wave_aggregate_decode_tps": [
+        148.95,
+        149.3,
+        149.01
+      ],
+      "mia_published_tp4_aggregate_decode_tps": 138.6,
+      "reported_difference_percent": 7.510822510822512
+    },
+    {
+      "type": "code",
+      "concurrency": 2,
+      "job_repeats": 3,
+      "aggregate_decode_tps_median": 190.56,
+      "aggregate_decode_tps_range": [
+        189.54,
+        196.73
+      ],
+      "individual_wave_aggregate_decode_tps": [
+        190.56,
+        189.54,
+        196.73
+      ],
+      "mia_published_tp4_aggregate_decode_tps": 185.1,
+      "reported_difference_percent": 2.9497568881685643
+    },
+    {
+      "type": "code",
+      "concurrency": 4,
+      "job_repeats": 3,
+      "aggregate_decode_tps_median": 232.9,
+      "aggregate_decode_tps_range": [
+        229.14,
+        234.13
+      ],
+      "individual_wave_aggregate_decode_tps": [
+        232.9,
+        229.14,
+        234.13
+      ],
+      "mia_published_tp4_aggregate_decode_tps": 224.5,
+      "reported_difference_percent": 3.7416481069042273
+    },
+    {
+      "type": "code",
+      "concurrency": 8,
+      "job_repeats": 3,
+      "aggregate_decode_tps_median": 294.17,
+      "aggregate_decode_tps_range": [
+        293.77,
+        304.4
+      ],
+      "individual_wave_aggregate_decode_tps": [
+        293.77,
+        294.17,
+        304.4
+      ],
+      "mia_published_tp4_aggregate_decode_tps": 286.0,
+      "reported_difference_percent": 2.8566433566433513
+    }
+  ],
+  "prefill": [
+    {
+      "targetTokens": 8192,
+      "promptTokens": 8216,
+      "prefillTps": 1846.64,
+      "method": "ttft",
+      "cachedTokens": 0,
+      "samples": 3,
+      "samplesRequested": 3,
+      "lowConfidence": false,
+      "overheadMs": 127.09,
+      "ttftMs": 4576.26,
+      "ttftContentMs": 4576.26,
+      "completionTokens": 2,
+      "durationMs": 13975.31,
+      "mia_published_tp4": {
+        "target_tokens": 8192,
+        "published_prompt_tokens": 8218,
+        "prefill_tps": 2568.8,
+        "ttft_seconds": 3.33
+      },
+      "reported_difference_percent": -28.112737464964187
+    },
+    {
+      "targetTokens": 16384,
+      "promptTokens": 16407,
+      "prefillTps": 1795.15,
+      "method": "ttft",
+      "cachedTokens": 0,
+      "samples": 3,
+      "samplesRequested": 3,
+      "lowConfidence": false,
+      "overheadMs": 127.09,
+      "ttftMs": 9266.73,
+      "ttftContentMs": 9266.73,
+      "completionTokens": 2,
+      "durationMs": 27885.87,
+      "mia_published_tp4": {
+        "target_tokens": 16384,
+        "published_prompt_tokens": 16409,
+        "prefill_tps": 2574.4,
+        "ttft_seconds": 6.51
+      },
+      "reported_difference_percent": -30.269188937228087
+    },
+    {
+      "targetTokens": 32768,
+      "promptTokens": 32796,
+      "prefillTps": 1810.9,
+      "method": "ttft",
+      "cachedTokens": 0,
+      "samples": 3,
+      "samplesRequested": 3,
+      "lowConfidence": false,
+      "overheadMs": 127.09,
+      "ttftMs": 18237.41,
+      "ttftContentMs": 18237.41,
+      "completionTokens": 2,
+      "durationMs": 54810.38,
+      "mia_published_tp4": {
+        "target_tokens": 32768,
+        "published_prompt_tokens": 32789,
+        "prefill_tps": 2583.3,
+        "ttft_seconds": 12.83
+      },
+      "reported_difference_percent": -29.89974064181473
+    },
+    {
+      "targetTokens": 65536,
+      "promptTokens": 65564,
+      "prefillTps": 1747.72,
+      "method": "ttft",
+      "cachedTokens": 0,
+      "samples": 2,
+      "samplesRequested": 2,
+      "lowConfidence": false,
+      "overheadMs": 127.09,
+      "ttftMs": 37641.05,
+      "ttftContentMs": 37641.05,
+      "completionTokens": 2,
+      "durationMs": 73965.16,
+      "mia_published_tp4": {
+        "target_tokens": 65536,
+        "published_prompt_tokens": 65556,
+        "prefill_tps": 2568.0,
+        "ttft_seconds": 25.66
+      },
+      "reported_difference_percent": -31.9423676012461
+    },
+    {
+      "targetTokens": 131072,
+      "promptTokens": 131097,
+      "prefillTps": 1733.92,
+      "method": "ttft",
+      "cachedTokens": 0,
+      "samples": 2,
+      "samplesRequested": 2,
+      "lowConfidence": false,
+      "overheadMs": 127.09,
+      "ttftMs": 75734.38,
+      "ttftContentMs": 75734.38,
+      "completionTokens": 2,
+      "durationMs": 149675.26,
+      "mia_published_tp4": {
+        "target_tokens": 131072,
+        "published_prompt_tokens": 131097,
+        "prefill_tps": 2530.7,
+        "ttft_seconds": 51.94
+      },
+      "reported_difference_percent": -31.484569486703272
+    },
+    {
+      "targetTokens": 262144,
+      "promptTokens": 262170,
+      "prefillTps": 1711.57,
+      "method": "ttft",
+      "cachedTokens": 0,
+      "samples": 1,
+      "samplesRequested": 1,
+      "lowConfidence": false,
+      "overheadMs": 127.09,
+      "ttftMs": 153302.07,
+      "ttftContentMs": 153302.07,
+      "completionTokens": 2,
+      "durationMs": 153329.62,
+      "mia_published_tp4": {
+        "target_tokens": 262144,
+        "published_prompt_tokens": 262170,
+        "prefill_tps": 2462.7,
+        "ttft_seconds": 106.59
+      },
+      "reported_difference_percent": -30.500263937954276
+    }
+  ],
+  "mia_tp4_reference": {
+    "repository": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold",
+    "revision": "d22003070575c2774de0f010062aa57bae06f3c7",
+    "published_measurement_date": "2026-10-09",
+    "files": {
+      "README.md": {
+        "bytes": 113010,
+        "sha256": "880ee78d230e42db7fad17cf0eb089f92829a89f7e757f3478613041ae3e364e",
+        "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/README.md"
+      },
+      "CHANGELOG.md": {
+        "bytes": 65175,
+        "sha256": "81b0bbd3c772acae2530955f8f68036d5f5d872be80cdf41c2add835e83d036e",
+        "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/CHANGELOG.md"
+      },
+      "scripts/config.sh": {
+        "bytes": 37843,
+        "sha256": "7f3993dadddadc9a890d557e6179a50bd42a2e70440bec41cc0018b6708b5416",
+        "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/scripts/config.sh"
+      }
+    },
+    "reported_point_values_not_local_rerun": true,
+    "exact_historical_sparkdash_flags_and_repeats_known": false
+  },
+  "all_rank_memory_paging_diagnostics": {
+    "spark1": {
+      "samples": 520,
+      "minimum_mem_available_gib": 21.27890396118164,
+      "pswpin_delta": 0,
+      "pswpout_delta": 0,
+      "maximum_worker_swap_bytes": 0,
+      "maximum_cgroup_swap_bytes": 0,
+      "kernel_diagnostic_events": 0,
+      "oom_events": 0,
+      "private_sample_receipt_sha256": "e3d65c623a8a75c24a1933c56366bdb4cabef8a184b006ca39ad9a0d0b44ba93"
+    },
+    "spark2": {
+      "samples": 520,
+      "minimum_mem_available_gib": 22.825645446777344,
+      "pswpin_delta": 0,
+      "pswpout_delta": 0,
+      "maximum_worker_swap_bytes": 0,
+      "maximum_cgroup_swap_bytes": 0,
+      "kernel_diagnostic_events": 0,
+      "oom_events": 0,
+      "private_sample_receipt_sha256": "2291b601d44ee459028943ed642eb3369785bedf1844f20e2ee2ca21df2dd689"
+    },
+    "spark3": {
+      "samples": 520,
+      "minimum_mem_available_gib": 22.939922332763672,
+      "pswpin_delta": 0,
+      "pswpout_delta": 0,
+      "maximum_worker_swap_bytes": 0,
+      "maximum_cgroup_swap_bytes": 0,
+      "kernel_diagnostic_events": 0,
+      "oom_events": 0,
+      "private_sample_receipt_sha256": "77664aa1ec433db0ac5a2ebd9aa207d0f68a537ab1392da92d978be262020b2f"
+    },
+    "spark4": {
+      "samples": 520,
+      "minimum_mem_available_gib": 22.986431121826172,
+      "pswpin_delta": 0,
+      "pswpout_delta": 0,
+      "maximum_worker_swap_bytes": 0,
+      "maximum_cgroup_swap_bytes": 0,
+      "kernel_diagnostic_events": 0,
+      "oom_events": 0,
+      "private_sample_receipt_sha256": "331472ba23dcdc4b879668fe32ee20d34ae3034fe442f8e52f7ccdf989484094"
+    }
+  },
+  "evidence_sha256": {
+    "private_baseline_benchmark_result": "3b2f0337d05c3c5533efc3b597ef2fea9aa8a8ef5e0072b76febde0eb92efc5f",
+    "private_baseline_arm_result": "d45c8fad7f29ba7bec7d8da594868375e101e33706d14ff42feea74cb7e827eb",
+    "private_baseline_runtime_metadata": "cc690cccc4378db6e852b2d0c53135c30c942d71894f73fe74bde6a14f65f3a1",
+    "private_baseline_after": "91d9b69de8c1856650daddcc26f6bd4b3a9d5ec1c502beaf46938ceace82694e",
+    "private_baseline_final_kernel": "88087e005e212ec6d8e0b3750aafad12d9b549e60b901366a61210ea8563c031"
+  },
+  "candidates": [
+    {
+      "name": "optimized-2048",
+      "status": "passed",
+      "public_result": "sparkdash-native-optimized-2048-20261014.json"
+    },
+    {
+      "name": "optimized-4096",
+      "status": "passed",
+      "public_result": "sparkdash-native-optimized-4096-20261014.json"
+    }
+  ],
+  "scope": [
+    "This receipt documents the completed original-Mia107/P8 local baseline. Each candidate's successful arm and comparison are recorded in separate receipts.",
+    "The baseline returned idle and its owned cleanup passed; final production restoration and candidate selection are outside this result.",
+    "Mia's TP4 values are published point references with different engine/transport; exact historical flags/repeats/clocks are not reconstructed.",
+    "Prefix-cache reuse in decode is preserved by actual collector warmups/repeated prompts. All selected prefill samples report zero cached prompt tokens.",
+    "A configured 1M window is not eight simultaneously full1M caches; no eight-near1M saturation, real-agent SLA, realistic quality or workload-wide speedup is established.",
+    "Sampler minima and zero observed events do not prove absence of shorter peaks between samples."
+  ]
+}

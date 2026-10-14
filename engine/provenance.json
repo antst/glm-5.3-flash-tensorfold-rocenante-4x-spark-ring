@@ -1,0 +1,141 @@
+{
+  "adaptations": [
+    "0101: only small-head default4-warps launch, controllable4|8; no MSA import/kernel. Main10717-24head CUDA path and explicit launch overrides preserved.",
+    "0102: own-front/hcsplit clean hunks; sparse selector refactoring retains main107 conditional CUDA-score/lazy Triton fallback, prompt_pools and onepass CUDA selection.",
+    "0104: microbatch/hcsplit/forward clean dependent hunks; grouped multi-prompt mixer bypass retained.",
+    "0105: exact shared-expert side-stream patch; default0, explicit1 required. Prompt buffers do not get this side stream.",
+    "0107: prompt arithmetic startup/cache identity adapted to fixed FP32/MSA-off, plus explicit small-head warp selection; existing draft prelaunch agreement retained."
+  ],
+  "candidate_after_manifest_sha256": "ef0ff873b6af918d77db0395fc80dd1d12ac30e0278426a58dc6b6852417d5a4",
+  "candidate_before_manifest_sha256": "b4731db28fb34089b6f7be1a1cb8cdf1433f2f2a93704bd9b1d0153e6e0c1c83",
+  "changed_files": {
+    "families/glm5_next/cuda/engine.py": {
+      "after_sha256": "0fbe5c73d9b17c206002be5e9a76a42b3ad4df97f48ed3c7deaa9ce6b170a665",
+      "before_sha256": "f986b4c005aa99652b125f88e13f7ce33af30c55a7a1fdfe1f97f3aadc4d9361"
+    },
+    "families/glm5_next/cuda/forward.py": {
+      "after_sha256": "5779f88d1449a913fd26fb200c4f5400b6324a731aba508e81b93a62920ce553",
+      "before_sha256": "efb7a4d425f9e6dc0ac19c7ab007feb0113cdd800cfb8198902f8a46789772a9"
+    },
+    "families/glm5_next/cuda/hcsplit.py": {
+      "after_sha256": "56dbd111b72810d94866e7241ed9d172ae8e68bcd890bf9b6c8bcd65d5f7d8d0",
+      "before_sha256": "fb5c8e31820859b621e7da8d9aa7edc296b87c56d1a4f09adf43bc8647c52232"
+    },
+    "families/glm5_next/cuda/latent.py": {
+      "after_sha256": "7d6c02a44d58fde933e12890090eba16d5f9dd1c9b91061d82f61ad4d6d8f5fa",
+      "before_sha256": "73edd5297525ee5fc457c04e4e622e0413b17666c194427d9ddb993e0ce000e6"
+    },
+    "families/glm5_next/cuda/microbatch.py": {
+      "after_sha256": "4f3a6a07967e7830e85b41c7016ae93d5e578a3ec7e08afe2439c2a1b671c5e7",
+      "before_sha256": null
+    },
+    "families/glm5_next/cuda/own_front.py": {
+      "after_sha256": "623183c0f025f2a3e1654322102ba48890655e52b6d13ef434fa7b8da8f09b4e",
+      "before_sha256": null
+    },
+    "families/glm5_next/cuda/sparse.py": {
+      "after_sha256": "d9394d1699e4e694ce1c5d9942c7654c3287d9382f8ce22bce3c1855f3ec7920",
+      "before_sha256": "80b8de2c2aaccc3c128fdaf65d83b25f66973bb76b58693f2d95b399b723d1cd"
+    }
+  },
+  "changes_patch_sha256": "dd1e8848d19c8a084a713bd7220a6e16bcaa1235f91d5f961105ba1652ec95c4",
+  "excluded": [
+    "0098 neighbor NCCL relay",
+    "0099 native proxy relay",
+    "0106 BF16 partials",
+    "optional MSA",
+    "driver/network changes",
+    "DFlash prelaunch/fill/concurrency upgrades"
+  ],
+  "licenses": {
+    "Mia-LICENSE": {
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/d22003070575c2774de0f010062aa57bae06f3c7/LICENSE"
+    },
+    "Mia-NOTICE": {
+      "sha256": "ee701e5d31c2bc766a1af791e6a394fc5fcfc8435f0361e7e9b596292e2dc7e1",
+      "url": "https://raw.githubusercontent.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/d22003070575c2774de0f010062aa57bae06f3c7/NOTICE"
+    },
+    "TensorFold-LICENSE": {
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "url": "https://github.com/ashhart/TensorFold/blob/c812f8b65b34e4d0290b6326e9d5416688ed56ab/LICENSE"
+    },
+    "TensorFold-MIT.txt": {
+      "sha256": "be6a9ee4462784a762b21790954b8e76c4dcacc9fb6da2a40d03a8a9bddec93e",
+      "url": "https://github.com/ashhart/TensorFold/blob/c812f8b65b34e4d0290b6326e9d5416688ed56ab/LICENSES/MIT.txt"
+    },
+    "TensorFold-NOTICE": {
+      "sha256": "74b59811a5ebc3c28e7fc89f8f189854b6ca6d44392a98394950b24ba3c1b8e7",
+      "url": "https://github.com/ashhart/TensorFold/blob/c812f8b65b34e4d0290b6326e9d5416688ed56ab/NOTICE"
+    },
+    "TensorFold-THIRD_PARTY_NOTICES.md": {
+      "sha256": "2e7ce3c19e1e4ed5113b7e9ae11d4bcfcf946a367de45eac643f4cafc6b74ea3",
+      "url": "https://github.com/ashhart/TensorFold/blob/c812f8b65b34e4d0290b6326e9d5416688ed56ab/THIRD_PARTY_NOTICES.md"
+    }
+  },
+  "memory": {
+    "explanation": "Own-front lists allocated lazily; up to4 microbatch shape-cache entries plus full parent lists. Each two-half entry sums at most parentallocrows forworld4. Existing estimator does not account these lists.",
+    "own_lists_4096_bytes": 42008576,
+    "own_lists_bytes_per_row": 10256,
+    "own_lists_conservative_world4_bound_4096_bytes": 210042880,
+    "partial_staging": "World\u00d7rows\u00d7hidden\u00d74 retained; p2p traffic reduction would not save this scratch.",
+    "prompt_4096_extra_gib_estimate": 0.9,
+    "prompt_4096_extra_is": "Source-level upstream estimate for doubled rowbuffers, not measured peak; own-list overhead additional."
+  },
+  "multi_prefill": "TF_GLM_MULTI_PREFILL=1 supported: solo chunk mixer=None gets optimized paths; grouped2+piece mixer bypasses own-front/microbatch.",
+  "patches": {
+    "patches/0101-glm-prompt-attention-msa.patch": {
+      "bytes": 30333,
+      "sha256": "a887e379edf3a56be309e83123c54537fae270684aeb67438fc6d8a63cc4720a",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0101-glm-prompt-attention-msa.patch"
+    },
+    "patches/0102-glm-prompt-own-front.patch": {
+      "bytes": 33956,
+      "sha256": "a5d2d4dfe01b8c4075f0833535a708225e641ec48c36ce236abd0bec552f61b9",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0102-glm-prompt-own-front.patch"
+    },
+    "patches/0104-glm-prompt-microbatch.patch": {
+      "bytes": 26196,
+      "sha256": "dea9905216bf9fe71a40cb59476457e4801107f1c9e60ba71ad15e88c2e24cad",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0104-glm-prompt-microbatch.patch"
+    },
+    "patches/0105-glm-decode-side-stream.patch": {
+      "bytes": 5432,
+      "sha256": "d1bdd048b1351c0f9302cc06b7c1dec6c5693a640f98067a0e58cf02c199f51d",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0105-glm-decode-side-stream.patch"
+    },
+    "patches/0107-glm-prompt-arith-identity.patch": {
+      "bytes": 7131,
+      "sha256": "ddedd8a8e8e19bc88e9841e6243a518999ff34418af24217948660f149780f13",
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/blob/d22003070575c2774de0f010062aa57bae06f3c7/patches/0107-glm-prompt-arith-identity.patch"
+    }
+  },
+  "preserved_files": {
+    "cuda/comm.py": "92f1be63fc4bf1ba77675eb74a13716d07e39bc74839579a82ee47b34bf2f986",
+    "families/glm5_next/cuda/graphs.py": "43e31efc653c61d3e0c0a6fef4bc78afaa057582d16c7a8613986d3a73a4465d",
+    "families/glm5_next/cuda/multi.py": "3f90da926a0bcb4de124dcd4416b2251c2f96723c05abb17568368314a2b9981",
+    "families/glm5_next/cuda/multi_prefill.py": "a158e1ffceff25d3593fbe0d583a39f0b004c66d26b6e4b147a172a1718a6dc2",
+    "families/glm5_next/cuda/prompt_scores.cu": "8d1a52333cbc188ba503bed7878290de458f4a18dc6b6585aa31690121290d26",
+    "families/glm5_next/cuda/sliced_fill.py": "1437c79cb18db33329eb5647a18bd4e3f5b5edab13a356f5435f656cac7f550e",
+    "families/glm5_next/cuda/sparse_onepass.cu": "8042d8f5d9e55fdcaf1c18916cc31180da91a72cb9cb609c52bf7b4aa4ae6fef",
+    "families/glm5_next/cuda/verify.py": "e0d450b84fe6b4e285ae0bb5942e92aa86762a554e29aae8e38d53c447b1e13f"
+  },
+  "schema": "glm-prefill-public-port-provenance/v1",
+  "scope": "Reproducible frozen seven-file engine source port. Builder equivalence tests do not qualify CUDA kernels, network or performance.",
+  "source_count_after": 441,
+  "source_count_before": 439,
+  "source_manifest_note": "Exact frozen optimized4096 manifest; optimized2048 document is equal but serialization key order differed. Its diagonal p2p provenance is historical; external runtime relay/qualification is separate.",
+  "source_manifest_sha256": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666",
+  "source_manifest_templates": {
+    "2048": {
+      "file_count": 441,
+      "sha256": "3abe7f60184aaaaed1f97eca49ae4fdfe7ba08a0267a722b25d7e7470aadd958"
+    },
+    "4096": {
+      "file_count": 441,
+      "sha256": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666"
+    }
+  },
+  "upstream_commit": "d22003070575c2774de0f010062aa57bae06f3c7",
+  "upstream_repository": "MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold"
+}
