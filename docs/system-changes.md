@@ -1,5 +1,81 @@
 # System changes and recovery
 
+## v0.1.5 local NVMe cache update
+
+**Full-profile private qualification and production restoration PASSED.**
+The completed eight-near-1M, full P8 semantic, both transport, private 64K
+pressure/replay and clean four-worker restart gates
+are documented in [the NVMe guide](nvme-tier.md) and the
+[sanitized qualification and production result](../results/nvme-tier-p8-20261015.json).
+Historical v0.1.3/v0.1.4
+measurements and their source/profile bindings below are unchanged.
+
+The approved maintenance sequence stopped the owned production GLM and read-only
+monitor, preserved its exact config/source/qualification/control backups, and
+cleared its in-memory cache. It created an isolated 443-file engine overlay and
+source-bound runtime/controller configuration, local state/compiler caches and
+per-rank host-local snapshot stores. The selected profile retains P8, 1M context,
+39.5625 GiB extra cache, the 16 GiB reserve and prior snapshot/reasoning budgets,
+and adds an explicit 6,098,944-row pool ceiling plus bounded NVMe settings.
+The public example contains portable values; private inventories, worker IDs,
+boot IDs, host keys, paths and raw test fixtures remain outside the export.
+
+Private qualification created and removed owned workers on an isolated API.
+It recorded fresh NCCL and prepared-RoCEnante proofs, ran short model checks,
+wrote synthetic snapshots and exercised RAM eviction/disk restore. A deliberate
+clean restart recreated all four workers with unchanged config/source and the
+same local stores; the restart phase began with empty RAM and submitted no fresh
+controls. Owned shutdown is ordered: rank zero completes the bounded all-rank
+flush while followers are alive, then followers stop. Verify the truthful flush
+outcome independently of docker-stop success. The ordinary launcher archives
+pre-stop logs; final flush evidence needs a separate shutdown capture/receipt.
+Startup/shutdown receipts,
+point-manifest identities and failure attempts are retained in the private
+ledger. The full eight-near-1M suite passed all 24 fresh/replay requests,
+followed by 30 P8 semantic requests. Both full-profile transports passed.
+Private rank-zero/follower flushes completed before shutdown. Production was
+restored to API 8888 with P8 admission, 1M context, the 6,098,944-row pool and
+control protocol 3. Actual source/config/worker bindings on all four ranks and
+fresh matching monitoring passed at 2026-10-15 09:21:35 UTC. The final readiness
+check submitted no production inference. No new throughput claim is made.
+
+This update changes source/config/controller selection, owned worker lifecycle,
+local NVMe snapshot contents, cache/state/log files and source-bound receipts.
+It reuses the pinned model, DFlash2, image and NCCL/RoCEnante artifacts. It does
+not require network apply on an unchanged healthy mesh and does not change
+routes, forwarding, firewall, NIC/driver settings or host packages. No automatic
+boot service is installed. A monitor restart must bind the final selected config.
+
+### Portable upgrade and recovery
+
+Archive the prior config, source revision, both qualification receipts and
+control/startup/monitor bindings before stopping. Build a new 4096-nvme output
+with the [CPU builder](../engine/README.md); keep the old overlay untouched.
+Update the complete selected profile, exact manifest/flags and tier block in
+ignored local config while preserving site inventory, owner, SSH trust,
+model/library paths and ports. Verify each host's snapshot path is on its
+intended local NVMe filesystem with enough space above the 64 GiB floor.
+Do not put snapshots in the shared checkout or delete compatible stores during
+an ordinary restart.
+
+Review the offline launch plan, freshly qualify both transports against the
+changed source/profile, then run model/cache/restart checks on a private API
+with all-host memory/paging evidence. Reuse healthy owned mesh state after its
+read-only check; do not apply routes or forwarding merely to enable persistence.
+Only after all gates pass should the coordinator restore the same profile to
+8888, verify every live worker/source/environment and restart monitoring with
+the new config hash. This sequence passed for the recorded deployment; each
+installation needs its own bound receipts.
+
+For rollback, stop through the selected owned launcher, preserve new snapshots
+and logs, and restore the exact previous source/config/control/receipts together.
+Changing source or arithmetic can invalidate the disk compatibility namespace;
+never rewrite identities to force use of old snapshots. A RAM-only rollback
+may need cold prefill. After a host reboot or changed binding, old qualification
+is invalid and both source-bound transport modes must be requalified. A clean
+process-restart result is not an arbitrary power-loss guarantee.
+
+
 Preparation creates an isolated source/config tree, pinned dependency sources,
 native builds, logs and receipts. The superseded SIRCL prototype is retained
 for audit and has never been deployed. Original TensorFold image, model

@@ -1,13 +1,19 @@
 # Performance
 
-## Current production: Mia107 TP4/P8, 4096-row prefill
+## Latest throughput measurements: v0.1.4, before the NVMe tier
 
-The current [v0.1.4 recipe](../README.md) serves GLM-5.3-Flash with DFlash2,
-prepared RoCEnante and patched NCCL 2.32.3. It selects the hash-bound Mia107
+The historical [v0.1.4 recipe](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/tree/v0.1.4) served GLM-5.3-Flash with DFlash2,
+prepared RoCEnante and patched NCCL 2.32.3. It selected the hash-bound Mia107
 compute overlay with 4096-row prefill, P8 admission, 1M total context and
 39.5625 GiB extra cache per rank. Production readiness and source/worker/monitor
 identity passed separately on API 8888; see the
 [deployment receipt](../results/production-prefill-p8-20261014.json).
+
+These tables were measured without NVMe persistence. The
+[v0.1.5 tier](nvme-tier.md) passed private retention/correctness and production
+readiness on API 8888; see its [sanitized result](../results/nvme-tier-p8-20261015.json).
+Throughput has not been rebenchmarked with the tier. Its cache-replay wall times
+are a different metric.
 
 The 2026-10-14 study used the pinned **actual SparkDash collectors**. Three
 complete local arms each submitted 115 private requests: three 400-token decode
@@ -65,8 +71,10 @@ rather than warm cache replay or every real-agent prompt.
 The lowest sampled MemAvailable was 17.20 GiB across the **complete selected
 arm**, including startup/qualification and benchmark phases. These watermarks
 are not isolated resident-byte deltas or guaranteed reserves. P8 admits eight
-requests into a shared **6,752,256-row** pool; eight independent 1M histories
-and near-1M stress on this new compute overlay remain unqualified.
+requests into that historical shared **6,752,256-row** pool. That study did
+not qualify eight independent near-1M histories. The new source/tier's separate
+sequential disk-retention proof is documented above; it does not establish
+eight simultaneous full-context allocations or alter these measurements.
 
 Sanitized receipts: [original baseline](../results/sparkdash-native-baseline-20261014.json),
 [optimized 2048](../results/sparkdash-native-optimized-2048-20261014.json),
@@ -76,7 +84,7 @@ Sanitized receipts: [original baseline](../results/sparkdash-native-baseline-202
 ## Historical Mia96 transport and recipe comparisons
 
 The following tables preserve their original engine, transport, workload and
-harness scope. They are separate from the current compute-overlay study above;
+harness scope. They are separate from the historical v0.1.4 compute-overlay study above;
 the RigMark measurements have not been rerun for v0.1.4.
 
 The tables below retain the historical Mia96 transport/recipe comparison. Fresh Mia96 versus Mia107 image-upgrade results are documented separately in [the upgrade report](engine-upgrade.md).

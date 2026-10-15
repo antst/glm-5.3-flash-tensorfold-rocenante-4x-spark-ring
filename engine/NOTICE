@@ -22,3 +22,14 @@ The source-manifest.json includes historical direct-diagonal NCCL point-to-point
 qualification status. Network/adaptor relay implementation and current runtime
 qualification are outside this engine port. No modelweights or NVIDIA runtime
 binaries are distributed by this source package.
+
+NVMe-v3 TP4 source overlay
+
+The separate mia107-nvme-v3.patch adapts the block-spill architecture from
+MiaAI-Lab PR124, head f32226b3cc5f443117d6d2411b1f2433c52f33a6, onto the
+retained prefill overlay. Local changes add generation-coherent TP4 persistence
+and restore, bounded staging/admission, failure handling and honest durability
+reporting. It is a corrected derivative rather than the unmodified PR124 patch;
+PR118 is not separately applied. Existing copyright/license notices remain.
+The new local integration and builder/test changes use Apache-2.0.
+See nvme-provenance.json for exact source/patch hashes and scope.

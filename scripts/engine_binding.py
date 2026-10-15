@@ -16,6 +16,7 @@ FLAG_VALUES = {
     'TF_GLM_MSA': {'0'},
     'TF_GLM_ONEPASS_SMALL_WARPS': {'4','8'},
     'TF_GLM_HC_RING_RELAY': {'0','1'},
+    'TF_GLM_POOL_TOKENS': {'6098944', '262144', '524288'},
 }
 
 def sha(path):

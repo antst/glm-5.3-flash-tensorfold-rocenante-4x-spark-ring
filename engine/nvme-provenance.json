@@ -1,0 +1,49 @@
+{
+  "adaptations": [
+    "Separate token-prefix and immutable shared computation-generation identities; generation-aware common TP4 restore and versioned compatibility namespace.",
+    "Bounded write/read staging, fixed-state/IDs/pending accounting, disk-floor-before-eviction, explicit status and truthful bounded flush.",
+    "Ordered engine-thread rank coordination for eligibility, persist acknowledgment, release, fixed-state/pool admission, ready-prefix restore, cancellation and common fallback; background disk threads never use collectives.",
+    "Nonblocking read-copy event recycling during ordered load polling; durable re-open and transient versus corrupt restore handling.",
+    "Additional public metrics and source/flag/cache arithmetic identity binding."
+  ],
+  "base_manifest_sha256": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666",
+  "changed_files": {
+    "cuda/spill_blocks.py": {
+      "after_sha256": "55f42f43aedefe5b8dde07cae948de309b7a054a6e1b541f17fe2f42275fc0f6",
+      "before_sha256": null
+    },
+    "cuda/tier_protocol.py": {
+      "after_sha256": "1ee64750b0b96e5b965c5d1dce1a95e984a2fc2ca7e95fff3e858931964129c9",
+      "before_sha256": null
+    },
+    "families/glm5_next/cuda/engine.py": {
+      "after_sha256": "1ed12e2a4e518718d51d3beb6311038b9e8ded2fdb00c72699eb489e620c414d",
+      "before_sha256": "0fbe5c73d9b17c206002be5e9a76a42b3ad4df97f48ed3c7deaa9ce6b170a665"
+    },
+    "families/glm5_next/cuda/multi.py": {
+      "after_sha256": "5edf3b8c73fc900e6162b8f23b714e1d1805e4faf84cf16bf6784754dad9a61e",
+      "before_sha256": "3f90da926a0bcb4de124dcd4416b2251c2f96723c05abb17568368314a2b9981"
+    },
+    "server/metrics.py": {
+      "after_sha256": "2c2d971bf962ef77b69e86a78b7b89d849d64d16c98c900a2570685c179cb5f8",
+      "before_sha256": "9b3cb261c8b21cac847fd16ea772d2c93daf1d1c6d75f6c1af7a1a4162e6d4c1"
+    }
+  },
+  "control_protocol": 3,
+  "final_manifest_sha256": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
+  "license": "Apache-2.0; original TensorFold MIT and third-party notices retained in licenses/. Existing prefill provenance stays in provenance.json.",
+  "patch_sha256": "05c4a44926878b18d2e0514904a04db18f9784bcfc2265eaeae3454c47e01f94",
+  "preserves": "Original prefill patch/manifests, unchanged cache plane math, quantization, model weights, native CUDA/NCCL/RoCEnante implementations and licenses. External runtime configuration and qualification are separate.",
+  "schema": "glm-nvme-public-port-provenance/v1",
+  "scope": "Packaging verifies exact original439 -> prefill441 -> NVMe443 source bytes only. The exact final manifest is retained byte-for-byte, including its historical qualification text. Runtime/model/GPU/transport qualification, durable capacity and deployment are separately recorded; none is inferred by the builder.",
+  "source_file_count_after": 443,
+  "source_file_count_before": 441,
+  "source_id": "mia107-tp4-prefill-nvme-tier-v3",
+  "storage_format": "tensorfold-cuda-spill-blocks-generation-2",
+  "upstream_pr124": {
+    "head": "f32226b3cc5f443117d6d2411b1f2433c52f33a6",
+    "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/pull/124",
+    "use": "Initial block-spill architecture adapted from PR124; corrected TP4 integration is a local derivative, not an unmodified upstream patch. PR118 is not separately layered."
+  },
+  "upstream_repository": "MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold"
+}

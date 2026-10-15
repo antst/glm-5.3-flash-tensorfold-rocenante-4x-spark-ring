@@ -252,9 +252,9 @@
     "upstream_planner_sha256": "b201ede9554bd6a02cc09a07a6accf242a63b2d46744bab9132ee4a7e318dbda",
     "health_port": 29661
   },
-  "engine_overlay_root": "/shared/spark-ring-tensorfold-rocenante/local/engine-prefill",
-  "engine_manifest": "/shared/spark-ring-tensorfold-rocenante/local/engine-prefill/source-manifest.json",
-  "engine_manifest_sha256": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666",
+  "engine_overlay_root": "/shared/spark-ring-tensorfold-rocenante/local/engine-nvme",
+  "engine_manifest": "/shared/spark-ring-tensorfold-rocenante/local/engine-nvme/source-manifest.json",
+  "engine_manifest_sha256": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
   "engine_flags": {
     "TF_GLM_HC_EXCHANGE": "p2p",
     "TF_GLM_PROMPT_OWN_FRONT": "1",
@@ -264,6 +264,18 @@
     "TF_GLM_PROMPT_PARTIALS": "fp32",
     "TF_GLM_MSA": "0",
     "TF_GLM_ONEPASS_SMALL_WARPS": "4",
-    "TF_GLM_HC_RING_RELAY": "1"
+    "TF_GLM_HC_RING_RELAY": "1",
+    "TF_GLM_POOL_TOKENS": "6098944"
+  },
+  "tier": {
+    "root": "/var/tmp/spark-ring-nvme-tier-v2",
+    "gib": 256,
+    "min_free_gib": 64,
+    "min_tokens": 8192,
+    "turns": 4,
+    "host_mib": 512,
+    "read_host_mib": 256,
+    "stage_mib": 256,
+    "read_blocks": 16
   }
 }

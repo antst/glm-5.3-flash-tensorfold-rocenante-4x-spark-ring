@@ -1,5 +1,9 @@
 # Actual SparkDash protocol: P8 baseline and prompt-path candidates
 
+These v0.1.4 measurements were taken without the NVMe tier. The qualified
+[v0.1.5 tiered profile](nvme-tier.md) has separate capacity/correctness gates;
+these tables do not measure its throughput or latency.
+
 The original-Mia107 baseline, optimized 2048-row candidate and optimized
 4096-row candidate each completed **115 private inference requests** using
 byte-exact SparkDash collectors: **345 requests** across three complete arms.

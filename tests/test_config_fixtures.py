@@ -14,11 +14,11 @@ import engine_binding
 
 
 class ConfigFixtureTests(unittest.TestCase):
-    def test_transport_fixture_removes_only_the_optional_engine_fields(self):
+    def test_transport_fixture_removes_only_engine_fields_and_optional_tier(self):
         original = json.loads((ROOT / "config.example.json").read_text())
         self.assertTrue(all(field in original for field in ENGINE_FIELDS))
         stripped = example()
-        self.assertEqual(stripped, {key:value for key,value in original.items() if key not in ENGINE_FIELDS})
+        self.assertEqual(stripped, {key:value for key,value in original.items() if key not in (*ENGINE_FIELDS, "tier")})
         with patch("subprocess.run", side_effect=AssertionError("host action forbidden")):
             parsed = loaded_example()
         self.assertNotIn("engine_overlay_root", parsed)

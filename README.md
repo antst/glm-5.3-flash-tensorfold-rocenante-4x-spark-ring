@@ -6,7 +6,7 @@ DFlash2, TensorFold's raw rank-major gather and FP32 summation, and the existing
 four directly cabled Sparks. It selects prepared RoCEnante for eligible gathers
 and patched NCCL 2.32.3 for the remaining communication. SIRCL is disabled.
 
-**Developed, hardware/model-qualified and benchmarked.** The historical P8 configuration passed four-rank GPU collective qualification and
+**Historical transport and prefill releases are hardware/model-qualified and benchmarked.** The historical P8 configuration passed four-rank GPU collective qualification and
 full-model correctness checks, including eight concurrent streams,
 all 16 HCA functions and hardware diagonal forwarding. Initial matched
 generation measurements are retained. The generation-priority profile uses a
@@ -17,6 +17,20 @@ C8 changes were modest, 0–3%. Cold 64K prefill was about 0.6% slower than the
 local NCCL control. These are measured point estimates, with ranges retained.
 The published [phase-one recipe](https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring/tree/v0.1.0)
 remains the independent baseline and recovery path.
+
+**v0.1.5 NVMe profile — qualified and serving on API 8888.**
+The example selects a host-local persistent cache tier with a 6,098,944-row RAM
+ceiling, P8 admission and the unchanged 1M per-request context/39.5625 GiB cache
+request. Eight independent 1,046,528-token histories passed all 24 fresh/replay
+requests, full cached-token counts and exact 32-token continuation checks.
+The 11 disk-hit replays had a **3.375 s** median HTTP wall time, versus **376.392 s**
+for the eight fresh controls. A separate 30-request P8 semantic gate and both
+full-profile transports passed. The 64K pressure and four-worker clean-restart
+checks also passed. Production readiness, all four live source bindings and
+fresh matching monitoring were verified on **2026-10-15 at 09:21:35 UTC**.
+See the [sanitized qualification and production result](results/nvme-tier-p8-20261015.json)
+and [NVMe configuration, measurements and limits](docs/nvme-tier.md).
+These are retention/correctness measurements; no new throughput benchmark is claimed.
 
 Release **v0.1.3** retains **TensorFold 0.6.0 with 107 Mia patches** and qualified a long-context profile: six lanes, 1,048,576 total context tokens, 40 GiB extra cache, a 16 GiB reserve, 64 retained prompt snapshots and a 4 GiB retained-state budget per rank. Reasoning retention is bounded at 8,192 tool-call replies and 128 Mi characters. **Six-lane cache qualification passed:** six independent 1,046,528-token histories retained their prefixes across all four growth/replay waves, with exact 32-token replay consistency. A separate 24-request P6 semantic check passed before production returned to API8888. These are capacity and correctness results; generation benchmarks remain historical P8. See [cache capacity, validation and limits](docs/cache-retention.md). The [Mia107 image-upgrade results](docs/engine-upgrade.md) and published P8 performance tables retain their original profiles; they are not P6 measurements. Historical v0.1.1 remains Mia96 and v0.1.2 remains Mia107/P8.
 
@@ -40,16 +54,17 @@ See the [sanitized six-lane qualification result](results/six-lane-cache-qualifi
 See the [complete performance comparison](docs/performance.md) and
 [eight-configuration tuning results](docs/tuning.md).
 
-The current prefill update uses **P8 admission** with the same 1M per-request
+The historical v0.1.4 prefill update used **P8 admission** with the same 1M per-request
 context and **39.5625 GiB extra cache per rank**. It ports selected Mia TP4
 compute optimizations into a fully hash-bound source overlay and retains the
-prepared RoCEnante/NCCL transport. New measurements use the actual pinned
+prepared RoCEnante/NCCL transport. Its measurements used the actual pinned
 SparkDash collectors at **C1/C2/C4/C8**, with three 400-token decode jobs per
 workload and fresh cold-prefill prompts through 256K. See the
 [prefill port](docs/prefill-port.md) and its measured comparison below the
-historical tables. Eight admitted requests share the existing arena; eight
-independent 1M histories have not been qualified.
-The selected **4096-row** setting is deployed on port 8888. Cold 256K prefill
+historical tables. In that RAM-only profile, eight admitted requests shared the
+existing arena; eight independent 1M histories were not qualified. The v0.1.5
+NVMe retention result above is a separate source/profile qualification.
+The selected **4096-row** setting was restored to port 8888 in v0.1.4, before the NVMe tier. Cold 256K prefill
 measured **2828.06 tokens/s**, with 92.84s TTFT, versus 1711.57 tokens/s and 153.30s
 on the original local baseline. See the [complete measured comparison](docs/sparkdash-native.md)
 and [production verification](results/production-prefill-p8-20261014.json).
@@ -98,12 +113,13 @@ host-local work on the four Sparks. Build compilation runs on an ARM64 Spark.
 
 ## Release checkout
 
-The current source release is [v0.1.4](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.4). Earlier releases remain historical. On the management host,
-clone it into a shared path mounted at the same absolute location on all four
-Sparks:
+The published prefill baseline is [v0.1.4](https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.4).
+The v0.1.5 NVMe profile passed private qualification and production readiness.
+On the management host, clone the tagged recipe into a shared path mounted at
+the same absolute location on all four Sparks:
 
 ```sh
-git clone --branch v0.1.4 https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring.git /shared/spark-ring-tensorfold-rocenante
+git clone --branch v0.1.5 https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring.git /shared/spark-ring-tensorfold-rocenante
 cd /shared/spark-ring-tensorfold-rocenante
 ```
 
@@ -119,13 +135,13 @@ key aliases. List the nodes in physical f0-next/f1-previous ring order. Keep bot
 Socket Direct functions on each cable in the fabric inventory. Existing model
 snapshots can be reused from phase one. Use this checkout's exact Mia image pin; the Mia107 release has a different digest from the published Mia96 recipe. Set
 `api_port` to `8888`; retain this recipe's own container, bootstrap port and local
-compiler/HF caches. The current example selects P8 admission with 39.5625 GiB extra cache per rank. Check actual startup pool capacity and host MemAvailable on your cluster; selected memory budgets do not guarantee capacity on every installation. Image generation and other substantial GPU workloads must be stopped for this qualification.
+compiler/HF caches. The example selects P8 admission, 39.5625 GiB extra cache, an explicit 6,098,944-row pool and the bounded local NVMe tier described in [the tier guide](docs/nvme-tier.md). Check actual startup pool capacity and host MemAvailable on your cluster; selected memory budgets do not guarantee capacity on every installation. Image generation and other substantial GPU workloads must be stopped for this qualification.
 
 Build the declared engine overlay on an ARM64 Docker host first, following
 [the CPU-only engine builder](engine/README.md). Keep the output at the same
 shared absolute path on all ranks, and set `engine_overlay_root`,
 `engine_manifest`, its SHA256 and the selected flags in `local/config.json`.
-The explicit example requires this overlay; an unbuilt or changed manifest is
+Use builder variant `4096-nvme` and a new `local/engine-nvme` output. The explicit example requires this overlay; an unbuilt or changed manifest is
 refused before launch. Review the builder plan before executing it.
 
 Check sources and perform an offline model launch plan:
@@ -186,7 +202,7 @@ URL works when switching to the exclusive original recipe. See the client's
 `--help` for a one-shot prompt and generation settings.
 
 Qualify inference on a private endpoint before serving clients. Copy the complete
-configuration to `local/qualification.json` and set only `api_port` to **18897**;
+configuration to `local/qualification.json` and set only `api_port` to **18899**;
 keep the selected source, owner, profile, fabric and transport settings identical.
 Run one stack at a time. Port relocation preserves the qualification identity,
 while the live worker command and environment are checked again at startup.
@@ -209,6 +225,11 @@ live deployment bindings and payload/error counters. The configured 1,048,576
 token context is advertised by the API. The historical [long-context cache test](docs/cache-retention.md) qualified six independent 1,046,528-token prompts with 32-token completions and exact replay at 40 GiB extra cache; the historical P6 trim received the shorter checks described there. Context includes prompt and output together; a full 1,048,576-token prompt plus a reply is not valid. Vision, branching histories and real-agent reasoning restoration need their own tests.
 
 ## Stop and recover
+
+For the tiered profile, use the owned stop command below so rank zero can finish
+the bounded all-rank flush while followers remain alive. Preserve the host-local
+snapshot stores across a clean restart; see [NVMe recovery](docs/nvme-tier.md).
+
 
 ```sh
 python3 -B scripts/experiment.py stop --config local/config.json

@@ -1,5 +1,9 @@
 # Mia TP4 prefill port on the hardware-forwarded ring
 
+These v0.1.4 measurements were taken without the NVMe tier. The qualified
+[v0.1.5 tiered profile](nvme-tier.md) has separate capacity/correctness gates;
+these tables do not measure its throughput or latency.
+
 The 2026-10-14 study keeps the pinned Mia107 image, GLM EXL3 weights,
 DFlash2 checkpoint, prepared RoCEnante gathers and patched NCCL 2.32.3.
 It ports selected compute changes from Mia's TP4 branch at

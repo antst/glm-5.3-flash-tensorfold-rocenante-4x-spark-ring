@@ -155,6 +155,15 @@ def clean_health(raw):
     out['counters'] = counters
     out['kept_mix'] = {k: number(raw.get('kept_mix', {}).get(k), 'kept_mix.' + k)
                        for k in ('own', 'shared', 'chats')}
+    spill = raw.get('spill')
+    if spill is not None:
+        if not isinstance(spill,dict) or spill.get('protocol') != 3:
+            raise ValueError('Unsupported NVMe tier health protocol')
+        fields=('entries','blocks','pending','stored_bytes','disk_free_bytes','host_pending_bytes',
+                'host_pending_cap_bytes','index_metadata_bytes','read_small_pending_bytes',
+                'read_small_cap_bytes','small_io_scratch_bytes','pending_generations',
+                'committed_all_ranks','failed_all_ranks')
+        out['spill'] = {key:number(spill.get(key),'spill.'+key) for key in fields}
     return out
 
 

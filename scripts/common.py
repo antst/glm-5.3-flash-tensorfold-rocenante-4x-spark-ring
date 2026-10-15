@@ -177,6 +177,16 @@ def load_config(path):
     from engine_binding import identity as engine_identity, flags as engine_flags
     engine_flags(cfg)
     engine_identity(cfg)
+    if cfg.get('tier') is not None:
+        t=cfg['tier']
+        required={'root','gib','min_free_gib','min_tokens','turns','host_mib','read_host_mib','stage_mib','read_blocks'}
+        if not isinstance(t,dict) or set(t)!=required: raise ValueError('Exact NVMe tier settings required')
+        _absolute(t['root'],'tier.root')
+        if not str(t['root']).startswith('/var/tmp/spark-ring-nvme-tier'): raise ValueError('Owned local NVMe tier path required')
+        if type(t['gib']) is not int or not 16<=t['gib']<=256: raise ValueError('Bounded tier.gib16..256')
+        if t['min_free_gib']!=64 or t['min_tokens']!=8192 or t['turns']!=4: raise ValueError('Pinned tier retention/disk floor required')
+        if t['host_mib']!=512 or t['read_host_mib']!=256 or t['stage_mib']!=256 or t['read_blocks']!=16: raise ValueError('Pinned tier staging budget required')
+        if cfg.get('engine_flags',{}).get('TF_GLM_POOL_TOKENS') not in ('6098944','262144','524288'): raise ValueError('Explicit tier RAM pool ceiling required')
     return cfg
 
 

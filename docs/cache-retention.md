@@ -1,5 +1,18 @@
 # Long-context retained cache profile
 
+The qualified v0.1.5 profile adds the [local NVMe tier](nvme-tier.md) to the
+4096-row prefill source. It retains the 39.5625 GiB cache request, P8 admission,
+64 RAM snapshots and 4 GiB state cap, and explicitly limits the RAM token pool
+to 6,098,944 rows. Disk quota/floor are 256/64 GiB per rank. The 64K pressure and
+clean-restart checks passed. The full private eight-near-1M retention suite
+also passed all 24 requests, followed by 30 P8 semantic requests and both
+transport qualifications. The same profile was restored to API 8888 and passed
+live four-worker source/readiness and fresh matching-monitor checks.
+See [the sanitized qualification and production result](../results/nvme-tier-p8-20261015.json)
+and [the measured NVMe scope](nvme-tier.md#completed-full-profile-private-qualification).
+This does not change the historical tables below.
+
+
 Release v0.1.3 qualified a six-lane Mia107 configuration for retaining six large,
 independent conversations. Cache qualification passed on 2026-10-13T19:58:15.370151+00:00: **48
 private growth/replay requests**, followed by **24 private P6 semantic requests**.
@@ -7,9 +20,9 @@ The [sanitized result](../results/six-lane-cache-qualification.json) binds the
 selected profile and source to these 72 exclusive requests. Production returned
 to API8888 with an empty cache. No P6 throughput improvement is claimed.
 
-The new P8 compute overlay retains the same cache request and budgets, but the
+The historical v0.1.4 P8 compute overlay retained the same cache request and budgets, but the
 historical six-near-1M replay test does not qualify that workload on the new
-source/profile. See the [current measured prefill study](sparkdash-native.md).
+source/profile. See the [latest measured v0.1.4 prefill study, without NVMe](sparkdash-native.md).
 
 ## Historical selected configurations
 
@@ -32,7 +45,7 @@ TF_GLM_KEEP_REASONING and TF_GLM_KEEP_REASONING_MB on every rank. The last
 setting counts characters in this pinned engine; it is not a precise RAM
 limit. Omitted optional fields preserve existing engine behavior. The module's
 fallback profile remains historical. The current example selects P8 admission
-with a prefill source overlay; use the complete recorded historical configuration
+with the NVMe prefill source overlay and a smaller explicit pool; use the complete recorded historical configuration
 when reproducing the P6 result.
 
 For that historical P6 trim, image, model and draft weights, compute code, network plan, prepared
@@ -72,6 +85,11 @@ for another large branch. On another cluster, check actual startup pool and
 all-host memory rather than assuming the requested budget yields this pool.
 
 ## What expires and what occupies memory
+
+The following describes the RAM cache. The new disk tier extends eligible
+checkpoints beyond RAM eviction and compatible clean worker restarts; its
+quota, free-space, generation and persistence limits are [separate](nvme-tier.md#what-retention-means).
+
 
 The pinned engine has no time-based TTL for prompt snapshots. Count,
 saved-state byte budget and pressure on its preallocated token pool can evict

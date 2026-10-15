@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Reproduce the frozen Mia107 prefill source overlay. Default --plan is offline."""
+"""Reproduce the frozen Mia107 prefill and NVMe-v3 source overlays. Default --plan is offline."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -21,9 +21,18 @@ EXPECTED = {
     "patches/mia107-prefill.patch": "dd1e8848d19c8a084a713bd7220a6e16bcaa1235f91d5f961105ba1652ec95c4",
     "manifests/source-2048.json": "3abe7f60184aaaaed1f97eca49ae4fdfe7ba08a0267a722b25d7e7470aadd958",
     "manifests/source-4096.json": "75c0035ad3ab4ac4950a9250af8f1ac6ea4ae5aacfb92d84bd3aacbbaf099666",
+    "source-after-nvme.json": "f31e0d200755083a42d6290323ee8682b37e24d9091ae4e4b9782c4701f11ee0",
+    "patches/mia107-nvme-v3.patch": "05c4a44926878b18d2e0514904a04db18f9784bcfc2265eaeae3454c47e01f94",
+    "manifests/source-4096-nvme.json": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
+    "source-manifest.json": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
 }
 MODIFIED = {"families/glm5_next/cuda/" + name for name in
             ("engine.py", "forward.py", "hcsplit.py", "latent.py", "sparse.py", "own_front.py", "microbatch.py")}
+
+NVME_MODIFIED = {"cuda/spill_blocks.py", "cuda/tier_protocol.py", "server/metrics.py",
+                 "families/glm5_next/cuda/engine.py", "families/glm5_next/cuda/multi.py"}
+VARIANTS = ("2048", "4096", "4096-nvme")
+DEFAULT_VARIANT = "4096-nvme"
 
 
 def sha(path):
@@ -42,25 +51,45 @@ def validate_names(files):
 
 
 def assets(variant):
-    if variant not in ("2048", "4096"):
-        raise ValueError("manifest variant must be2048 or4096")
+    if variant not in VARIANTS:
+        raise ValueError("manifest variant must be2048,4096 or4096-nvme")
     for name, wanted in EXPECTED.items():
         path = ASSETS / name
         if path.is_symlink() or sha(path) != wanted:
             raise RuntimeError("packaged source asset changed: " + name)
+    # Inventory includes documentation, licenses, tests and builder itself. Critical
+    # source/patch hashes above remain pinned independently of this self inventory.
+    package = json.loads((ASSETS / "package-manifest.json").read_text())
+    if package.get("schema") != "glm-prefill-nvme-public-engine-package/v2":
+        raise ValueError("wrong engine package inventory schema")
+    validate_names(package.get("files"))
+    actual_package = inventory(ASSETS)
+    actual_package.pop("package-manifest.json", None)
+    if actual_package != package["files"]:
+        raise RuntimeError("packaged asset inventory/hash mismatch")
     before = json.loads((ASSETS / "source-before.json").read_text())
-    after = json.loads((ASSETS / "source-after.json").read_text())["files"]
-    validate_names(before)
-    validate_names(after)
-    if len(before) != 439 or len(after) != 441:
+    prefill = json.loads((ASSETS / "source-after.json").read_text())["files"]
+    nvme_document = json.loads((ASSETS / "source-after-nvme.json").read_text())
+    nvme = nvme_document["files"]
+    for names in (before, prefill, nvme):
+        validate_names(names)
+    if len(before) != 439 or len(prefill) != 441 or len(nvme) != 443:
         raise ValueError("wrong source cardinality")
-    changed = {name for name in set(before) | set(after) if before.get(name) != after.get(name)}
-    if changed != MODIFIED:
-        raise ValueError("port no longer modifies exactly the seven frozen files")
+    changed = lambda a, b: {name for name in set(a) | set(b) if a.get(name) != b.get(name)}
+    if changed(before, prefill) != MODIFIED:
+        raise ValueError("prefill port no longer modifies exactly the seven frozen files")
+    if changed(prefill, nvme) != NVME_MODIFIED:
+        raise ValueError("NVMe port no longer modifies exactly the five frozen files")
+    if (nvme_document.get("file_count") != 443
+            or nvme_document.get("base_manifest_sha256") != EXPECTED["manifests/source-4096.json"]
+            or nvme_document.get("source_manifest_sha256") != EXPECTED["manifests/source-4096-nvme.json"]):
+        raise ValueError("NVMe source chain differs from frozen inventories")
+    after = nvme if variant == "4096-nvme" else prefill
     template = ASSETS / "manifests" / ("source-" + variant + ".json")
     value = json.loads(template.read_text())
+    source_id = "mia107-tp4-prefill-nvme-tier-v3" if variant == "4096-nvme" else "mia107-tp4-prefill-port-v1"
     if (value.get("schema") != "glm-prefill-engine-source/v1"
-            or value.get("source_id") != "mia107-tp4-prefill-port-v1" or value.get("files") != after):
+            or value.get("source_id") != source_id or value.get("files") != after):
         raise ValueError("runtime manifest differs from frozen output tree")
     return before, after, template
 
@@ -129,7 +158,7 @@ def extract_image(work):
             "tensorfold_or_torch_imported": False, "extraction_stdout": result.stdout.strip()}
 
 
-def build(output, *, variant="4096", source_package=None):
+def build(output, *, variant=DEFAULT_VARIANT, source_package=None):
     before, after, template = assets(variant)
     output = Path(output).absolute()
     if output.exists() or output.is_symlink():
@@ -143,10 +172,11 @@ def build(output, *, variant="4096", source_package=None):
         raise RuntimeError("GNU patch is required")
     # Validate every packaged input before creating the new output directory.
     output.mkdir(parents=True)
-    receipt = {"schema": "glm-prefill-engine-build/v1", "passed": False,
+    receipt = {"schema": "glm-prefill-nvme-engine-build/v2", "passed": False,
                "base_image": IMAGE, "manifest_variant": variant,
                "source_manifest_sha256": sha(template), "input_sha256": dict(EXPECTED),
-               "before_file_count": 439, "after_file_count": 441,
+               "before_file_count": len(before), "after_file_count": len(after),
+               "intermediate_file_count": 441, "patch_steps": [],
                "source_mode": "offline-source-package" if source is not None else "cpu-only-pinned-image",
                "gpu_work": False, "performance_qualified": False}
     try:
@@ -157,21 +187,35 @@ def build(output, *, variant="4096", source_package=None):
             else:
                 shutil.copytree(source, work / "tensorfold")
             verify_tree(work / "tensorfold", before)
-            proc = subprocess.run(["patch", "--batch", "--forward", "--fuzz=0",
-                                   "--no-backup-if-mismatch", "--reject-file=/dev/null", "-p1",
-                                   "-d", str(work), "-i", str(ASSETS / "patches/mia107-prefill.patch")],
-                                  capture_output=True, text=True, timeout=60)
-            (output / "patch.log").write_text(proc.stdout + proc.stderr)
-            if proc.returncode:
-                raise RuntimeError("frozen source patch failed")
+            prefill = json.loads((ASSETS / "source-after.json").read_text())["files"]
+            steps = [("mia107-prefill.patch", prefill)]
+            if variant == "4096-nvme":
+                steps.append(("mia107-nvme-v3.patch", after))
+            logs = []
+            for patch_name, wanted in steps:
+                proc = subprocess.run(["patch", "--batch", "--forward", "--fuzz=0",
+                                       "--no-backup-if-mismatch", "--reject-file=/dev/null", "-p1",
+                                       "-d", str(work), "-i", str(ASSETS / "patches" / patch_name)],
+                                      capture_output=True, text=True, timeout=60)
+                log = proc.stdout + proc.stderr
+                logs.append(patch_name + "\n" + log)
+                (output / "patch.log").write_text("\n".join(logs))
+                (output / (patch_name + ".log")).write_text(log)
+                if proc.returncode:
+                    raise RuntimeError("frozen source patch failed: " + patch_name)
+                verify_tree(work / "tensorfold", wanted)
+                receipt["patch_steps"].append({"patch": patch_name,
+                    "sha256": EXPECTED["patches/" + patch_name],
+                    "output_file_count": len(wanted), "all_source_hashes_verified": True})
             verify_tree(work / "tensorfold", after)
             if source is not None:
                 verify_tree(source, before)
-            shutil.move(str(work / "tensorfold"), str(output / "tensorfold"))
-            shutil.copyfile(template, output / "source-manifest.json")
             assets(variant)
+            shutil.copyfile(template, output / "source-manifest.json")
             if sha(output / "source-manifest.json") != EXPECTED["manifests/source-" + variant + ".json"]:
                 raise RuntimeError("output manifest changed during build")
+            shutil.move(str(work / "tensorfold"), str(output / "tensorfold"))
+            verify_tree(output / "tensorfold", after)
             receipt["passed"] = True
             receipt["all_source_hashes_verified"] = True
     except BaseException as exc:
@@ -185,8 +229,8 @@ def build(output, *, variant="4096", source_package=None):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True, help="NEW private overlay directory")
-    parser.add_argument("--manifest", choices=["2048", "4096"], default="4096",
-                        help="exact runtime manifest template; source bytes are identical")
+    parser.add_argument("--manifest", choices=VARIANTS, default=DEFAULT_VARIANT,
+                        help="4096-nvme (default) adds NVMe-v3;2048/4096 retain the original prefill tree")
     parser.add_argument("--source-package", type=Path,
                         help="offline439-file preimage package; omit to extract the pinned local image")
     parser.add_argument("--run", action="store_true", help="actually create overlay; omitted means offline plan")

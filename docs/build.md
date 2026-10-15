@@ -104,3 +104,37 @@ recipe. The rank-zero client URL stays stable, without a redirect. Follow
 Existing model snapshots can be reused. An existing image can be reused only when its digest matches this checkout’s pin. Both recipes retain separate
 libraries, local compiler/HF caches, containers, bootstrap ports and qualification
 receipts.
+
+# Build and enable the NVMe overlay
+
+The native NCCL/marker pins above are retained. The NVMe update needs a separate
+CPU-only source reconstruction using the existing pinned Mia image:
+
+```sh
+python3 -B engine/build.py --output local/engine-nvme --manifest 4096-nvme --plan
+python3 -B engine/build.py --output local/engine-nvme --manifest 4096-nvme --run
+```
+
+The second command runs an isolated CPU extraction container or can use a
+separately retained exact original package through --source-package. It performs
+no CUDA work and does not pull images or install packages. The output must be
+new. Bind its complete 443-file manifest and the selected flags exactly as in
+config.example.json; the current default builder variant is 4096-nvme.
+See [engine provenance and verification](../engine/README.md).
+
+On every Spark, verify that /var/tmp/spark-ring-nvme-tier-v2 resolves to the
+intended host-local NVMe filesystem, then create/reuse only that owned directory.
+Record filesystem/device identity, free space, directory ownership and changes
+in the private system ledger. It must not be a shared filesystem or tmpfs.
+The runtime mounts this path read/write as /snapshots; model and source mounts
+remain read-only. The 256 GiB quota is a maximum, not preallocation; the local
+64 GiB free-space floor and actual working-set requirements still apply.
+
+The source builder does not create snapshot directories, start models, alter
+NICs/routes/forwarding or qualify serving. After configuration/source changes,
+run fresh source-bound transport and model/cache qualification on a private API,
+with all-host memory/paging monitoring. This profile's full private qualification
+and production readiness on API 8888 passed; see the
+[sanitized result](../results/nvme-tier-p8-20261015.json).
+Every other installation still needs its own source-bound checks.
+See [the tier guide](nvme-tier.md).

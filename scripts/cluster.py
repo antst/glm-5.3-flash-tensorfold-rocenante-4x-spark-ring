@@ -107,6 +107,16 @@ class Operator:
                "--mount", f"type=bind,src={cache},dst=/cache"]
         from engine_binding import mounts as engine_mounts
         cmd += engine_mounts(cfg)
+        if cfg.get('tier'):
+            t=cfg['tier']
+            cmd += ['--mount','type=bind,src='+t['root']+',dst=/snapshots']
+            for key,value in {'TF_GLM_SPILL_HOST_MIB':t['host_mib'],
+                              'TF_GLM_SPILL_READ_HOST_MIB':t['read_host_mib'],
+                              'TF_GLM_SPILL_STAGE_MIB':t['stage_mib'],
+                              'TF_GLM_SPILL_READ_BLOCKS':t['read_blocks'],
+                              'TF_GLM_SPILL_TURNS':t['turns'],
+                              'TF_GLM_SPILL_LOAD_TIMEOUT_S':300}.items():
+                cmd += ['-e',key+'='+str(value)]
         for key, value in sorted(environment(cfg, rank, digest).items()):
             cmd += ["-e", key + "=" + value]
         cmd += [IMAGE, "python", "/opt/spark-ring/scripts/runtime.py", "serve", "/models/glm53-exl3",
@@ -114,6 +124,10 @@ class Operator:
                 "--master-port", str(cfg["bootstrap_port"]), "--context", str(p["context"]),
                 "--parallel", str(p["parallel"]), "--max-tokens", str(p["max_tokens"]),
                 "--drafter", "/models/dflash2", "--thinking", "--vision"]
+        if cfg.get('tier'):
+            t=cfg['tier']
+            cmd += ['--snapshot-dir','/snapshots','--spill-gib',str(t['gib']),
+                    '--spill-min-tokens',str(t['min_tokens']), '--spill-min-free-gib',str(t['min_free_gib'])]
         if rank == 0:
             cmd += ["--name", "GLM-5.3-Flash-EXL3", "--host", "0.0.0.0", "--port", str(cfg["api_port"])]
         return cache, cmd
@@ -213,7 +227,7 @@ print(json.dumps({'image_id':image['Id'],'library_sha256':data['sha256'],'rails'
         archive = logs / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ") + "-" + node["name"] + ".log")
         self.event("container_stop_begin", host=node["name"], container_id=current["id"], archive=str(archive))
         archive.write_text(self.remote(rank, shlex.join(["docker", "logs", "--timestamps", cfg["container_name"]]) + " 2>&1"))
-        self.remote(rank, shlex.join(["docker", "stop", "-t", "30", cfg["container_name"]]) + "\n" +
+        self.remote(rank, shlex.join(["docker", "stop", "-t", "90" if cfg.get("tier") else "30", cfg["container_name"]]) + "\n" +
                     shlex.join(["docker", "rm", cfg["container_name"]]))
         self.event("container_stop_complete", host=node["name"], container_id=current["id"])
         return {"changed": True, "log_archive": str(archive)}

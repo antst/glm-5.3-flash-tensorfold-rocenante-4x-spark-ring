@@ -1,0 +1,494 @@
+{
+  "clean_process_restart_64K": {
+    "all_four_workers_restarted_and_store_preserved": true,
+    "all_replays_fully_cached": true,
+    "completion_tokens_each": 32,
+    "disk_hit_replays": 8,
+    "empty_RAM_start_verified": true,
+    "exact_continuation_comparisons": 8,
+    "fresh_controls_submitted": 0,
+    "inference_requests": 8,
+    "passed": true,
+    "prompt_tokens_each": 65536,
+    "scope": "controlled clean four-worker process restart; no power-loss or host-reboot qualification",
+    "wall_seconds": {
+      "maximum": 0.5942133404314518,
+      "median": 0.5342440828680992,
+      "minimum": 0.49005768820643425,
+      "samples": 8
+    }
+  },
+  "full_profile_semantics": {
+    "all_16_HCA_payloads_verified": true,
+    "cases": [
+      "code",
+      "fact",
+      "arithmetic"
+    ],
+    "inference_requests": 30,
+    "passed": true,
+    "serial_drafted_and_P8_outputs_equal": true
+  },
+  "full_profile_transports": {
+    "NCCL_control_qualified": true,
+    "adjacent_ring_exchange_qualified": true,
+    "all_16_HCA_payloads_verified": true,
+    "prepared_RoCEnante_qualified": true
+  },
+  "limits": [
+    "Eight near1M histories are retained between turns; eight full1M contexts do not simultaneously fit this RAM pool.",
+    "Synthetic greedy32-token continuation equality does not prove arbitrary real-agent branches, edited reasoning/tool histories or long-generation quality.",
+    "Controlled clean worker restart is not arbitrary power-loss or host-reboot qualification.",
+    "Representative byte checks use bounded tensor/state geometry and separately inventoried probe instrumentation; full-model evidence is reported separately.",
+    "Sampled GLM/cgroup swap and kernel checks do not exclude every transient or attribute systemwide paging to a particular victim process.",
+    "Quota/per-conversation/fork/shared-prefix victim policies have bounded CPU/representative coverage, not an exhaustive production workload proof.",
+    "No new throughput benchmark, v0.1.4 tokens-per-second result with NVMe, co-resident workload or DSH timeout guarantee is claimed."
+  ],
+  "offline_validation": {
+    "builder_tests_passed": 22,
+    "engine_CPU_tests_passed": 55,
+    "portable_tests_passed": 167,
+    "portable_tests_skipped": 2,
+    "scope": "CPU/source/packaging contracts; no hardware result inferred from offline tests"
+  },
+  "pool_rows": 6098944,
+  "pressure_64K": {
+    "RAM_hit_replays": 3,
+    "all_histories_disk_restored": true,
+    "all_replays_fully_cached": true,
+    "completion_tokens_each": 32,
+    "disk_hit_replays": 13,
+    "exact_continuation_comparisons": 16,
+    "exact_replay_requests": 16,
+    "fresh_control_wall_seconds": {
+      "maximum": 21.397254295647144,
+      "median": 21.29571408778429,
+      "minimum": 21.179357800632715,
+      "samples": 8
+    },
+    "histories": 8,
+    "inference_requests": 24,
+    "latency_scope": "HTTP request through32-token response, including restore/prefill and decode; excludes subsequent durability polling; not transfer-only latency or a throughput benchmark",
+    "passed": true,
+    "pool_rows": 262144,
+    "prompt_tokens_each": 65536,
+    "replay_wall_seconds_RAM_hit_subset": {
+      "maximum": 0.44980917125940323,
+      "median": 0.39987167343497276,
+      "minimum": 0.3807526081800461,
+      "samples": 3
+    },
+    "replay_wall_seconds_all": {
+      "maximum": 0.5846749916672707,
+      "median": 0.5188641361892223,
+      "minimum": 0.3807526081800461,
+      "samples": 16
+    },
+    "replay_wall_seconds_disk_hit_subset": {
+      "maximum": 0.5846749916672707,
+      "median": 0.5330654457211494,
+      "minimum": 0.4901980981230736,
+      "samples": 13
+    },
+    "retained_prompt_tokens_total": 524288
+  },
+  "production": {
+    "API_port": 8888,
+    "admission_lanes": 8,
+    "all_four_worker_source_bindings_verified": true,
+    "context_tokens": 1048576,
+    "control_protocol": 3,
+    "fresh_matching_monitor_verified": true,
+    "monitor_sample_utc": "2026-10-15T09:21:35.333849+00:00",
+    "monitor_script_sha256": "0afa2f1409b169f28f161d96d3b5e70446a3f4ebe6f813670e6787ff5c0ffd6d",
+    "no_production_inference_submitted_by_finalizer": true,
+    "pool_rows": 6098944
+  },
+  "production_ready_as_verified": true,
+  "profile": {
+    "cache_entries": 64,
+    "cache_gib": 39.5625,
+    "context": 1048576,
+    "keep_reasoning_entries": 8192,
+    "keep_reasoning_mb": 128,
+    "kept_bytes_gib": 4.0,
+    "max_tokens": 32768,
+    "multi_window": 64,
+    "nccl_channels": 4,
+    "parallel": 8,
+    "protocol": "auto",
+    "reserve_gib": 16.0,
+    "thread_thresholds": null
+  },
+  "qualified": true,
+  "raw_proof_sha256": {
+    "CPU55_revalidation": "51e5260df9c8c32087cf63c6d4c8d96ca9b3eb998fb19229c7b229df40cbed90",
+    "api_pressure": "e1a29f0025b3a71d3ad1e6732bd0f66ea3a26340641815bfd1ad706968198466",
+    "builder22": "4073e28c337c5677fe822c499e2abfdb9fb274f7943db6361371b193602c3a93",
+    "cpu": "64c78e343089c59e2511bfba958e6d5e325c6b2b79f75720e765109e3c9e21af",
+    "eight_histories": "0ad81677faefc56d576e87b40e40788f422cb7ee8efd7d2bc5a49938de534808",
+    "final_private_qualification": "752c38407c72618b97e1e403209e21388ecc273d04a874f973158a0758aced2d",
+    "final_production_result": "3591ef7725fbd3c67439a5b60193155bea4899bd316dfb8c6e168f3220edb5e3",
+    "nvme_store": "0fa890b710bbe19bb4b6c7c7a26524037a018291196225be8ec250dbc827f984",
+    "portable_offline169": "74f4143ceb4141aef4db4deb04640b7371dbec8a6abd011b96c83e2ac9afe0ab",
+    "production_final_kernel": "0f761615be74a61a99acc458596a799bcb314690fd95596e22dacf7ea6b2bf11",
+    "production_monitor": "2d72e97d7154efb31749d057b84478653bdecb3e4ff1e20caa9b3bd47d47cad9",
+    "production_readiness": "811811ba0249f57f7c254f26cd8ef34bc8472a4d1cb5e86f54e95e06735eda3e",
+    "restart": "47b77f4929880412544fa83ea124e77276f508280bd84d4062fc49a9c7159ee8",
+    "semantic": "466104f2f2258543f970e76f82b82f61e91cfd8a347ebd56f9172ecb7b3c1a57",
+    "transport_nccl": "668a0aa3f555570c30d2f0ba8eb02854aa388dce91e37ba9c80cd86068b6fc65",
+    "transport_rocenante": "2e045f67497d1c0674073bb7aefb0cea7dbf3cc9727ee37330141b64c7887a1d"
+  },
+  "representative_CUDA_store_round_trip": {
+    "all_four_ranks_byte_exact": true,
+    "passed": true,
+    "ranks": [
+      {
+        "bytes_compared_exact": 1777336320,
+        "exact_byte_comparisons": 16,
+        "maximum_held_fixed_bytes": 4325440,
+        "pre_device_copy_cap_checks": 16,
+        "probe_result_sha256": "936318f60764e6bdadad8f26f8a4e6bb50d21595818fa5a3655692d208a99a51",
+        "rank": 0,
+        "separate_probe_manifest_sha256": "c1a84e5a7b7a035866f6500ef7717d979a901182a6622f4f6f0fe53dda342aef"
+      },
+      {
+        "bytes_compared_exact": 1777336320,
+        "exact_byte_comparisons": 16,
+        "maximum_held_fixed_bytes": 4325440,
+        "pre_device_copy_cap_checks": 16,
+        "probe_result_sha256": "3366d4977361cf05de9592c3baea631b9dcf29710a966667111cfab46e8b802c",
+        "rank": 1,
+        "separate_probe_manifest_sha256": "c1a84e5a7b7a035866f6500ef7717d979a901182a6622f4f6f0fe53dda342aef"
+      },
+      {
+        "bytes_compared_exact": 1777336320,
+        "exact_byte_comparisons": 16,
+        "maximum_held_fixed_bytes": 4325440,
+        "pre_device_copy_cap_checks": 16,
+        "probe_result_sha256": "d20362da2e4c05c55c3c46342c9a05adcf447695254942b01b8cb8bd89458a09",
+        "rank": 2,
+        "separate_probe_manifest_sha256": "c1a84e5a7b7a035866f6500ef7717d979a901182a6622f4f6f0fe53dda342aef"
+      },
+      {
+        "bytes_compared_exact": 1777336320,
+        "exact_byte_comparisons": 16,
+        "maximum_held_fixed_bytes": 4325440,
+        "pre_device_copy_cap_checks": 16,
+        "probe_result_sha256": "806fcd43b07756cc52fb456e15de3df6d6f33242519df9ec2ce0257076aa4c74",
+        "rank": 3,
+        "separate_probe_manifest_sha256": "c1a84e5a7b7a035866f6500ef7717d979a901182a6622f4f6f0fe53dda342aef"
+      }
+    ],
+    "scope": "representative real-CUDA tensor/state store round trips and reopen; separately inventoried model-free probe package derived from canonical source; full-model API phases use the exact frozen443-file engine"
+  },
+  "retention_near1M": {
+    "RAM_hit_replays": 5,
+    "all_histories_disk_restored": true,
+    "all_replays_fully_cached": true,
+    "completion_tokens_each": 32,
+    "disk_hit_replays": 11,
+    "exact_continuation_comparisons": 16,
+    "exact_replay_requests": 16,
+    "fresh_control_wall_seconds": {
+      "maximum": 377.1572120860219,
+      "median": 376.3919957187027,
+      "minimum": 374.44513278082013,
+      "samples": 8
+    },
+    "histories": 8,
+    "inference_requests": 24,
+    "latency_scope": "HTTP request through32-token response, including restore/prefill and decode; excludes subsequent durability polling; not transfer-only latency or a throughput benchmark",
+    "passed": true,
+    "pool_rows": 6098944,
+    "prompt_tokens_each": 1046528,
+    "replay_wall_seconds_RAM_hit_subset": {
+      "maximum": 2.2958879731595516,
+      "median": 1.9572691321372986,
+      "minimum": 1.884624931961298,
+      "samples": 5
+    },
+    "replay_wall_seconds_all": {
+      "maximum": 3.8268581107258797,
+      "median": 3.262137833982706,
+      "minimum": 1.884624931961298,
+      "samples": 16
+    },
+    "replay_wall_seconds_disk_hit_subset": {
+      "maximum": 3.8268581107258797,
+      "median": 3.374753512442112,
+      "minimum": 3.126931194216013,
+      "samples": 11
+    },
+    "retained_prompt_tokens_total": 8372224
+  },
+  "sampled_memory_and_paging": {
+    "api_pressure": {
+      "minimum_MemAvailable_GiB": 59.17208480834961,
+      "ranks": [
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 12,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 59.17208480834961,
+          "rank": 0,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 128
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 9,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 61.19276809692383,
+          "rank": 1,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 128
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 14,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 60.726348876953125,
+          "rank": 2,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 128
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 1,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 61.092132568359375,
+          "rank": 3,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 128
+        }
+      ],
+      "scope": "sampled all-host availability/systemwide paging and selected GLM worker/cgroup swap; short transients and other-process victim attribution are not excluded"
+    },
+    "eight_histories": {
+      "minimum_MemAvailable_GiB": 20.838600158691406,
+      "ranks": [
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 69,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 20.838600158691406,
+          "rank": 0,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 2105
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 67,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 24.413860321044922,
+          "rank": 1,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 2105
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 69,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 23.834514617919922,
+          "rank": 2,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 2105
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 55,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 24.19131851196289,
+          "rank": 3,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 2105
+        }
+      ],
+      "scope": "sampled all-host availability/systemwide paging and selected GLM worker/cgroup swap; short transients and other-process victim attribution are not excluded"
+    },
+    "restart": {
+      "minimum_MemAvailable_GiB": 59.44865417480469,
+      "ranks": [
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 0,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 59.44865417480469,
+          "rank": 0,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 5
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 0,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 61.531009674072266,
+          "rank": 1,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 5
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 0,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 60.98662567138672,
+          "rank": 2,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 5
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 0,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 61.13243865966797,
+          "rank": 3,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 5
+        }
+      ],
+      "scope": "sampled all-host availability/systemwide paging and selected GLM worker/cgroup swap; short transients and other-process victim attribution are not excluded"
+    },
+    "semantic": {
+      "minimum_MemAvailable_GiB": 21.953853607177734,
+      "ranks": [
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 1,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 21.953853607177734,
+          "rank": 0,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 10
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 0,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 24.384475708007812,
+          "rank": 1,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 10
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 0,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 23.874290466308594,
+          "rank": 2,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 10
+        },
+        {
+          "host_vmstat_delta": {
+            "pgmajfault": 0,
+            "pswpin": 0,
+            "pswpout": 0
+          },
+          "maximum_worker_VmSwap_bytes": 0,
+          "maximum_worker_cgroup_swap_bytes": 0,
+          "minimum_MemAvailable_GiB": 24.147296905517578,
+          "rank": 3,
+          "sampled_OOM_kills": 0,
+          "sampled_kernel_diagnostic_events": 0,
+          "samples": 10
+        }
+      ],
+      "scope": "sampled all-host availability/systemwide paging and selected GLM worker/cgroup swap; short transients and other-process victim attribution are not excluded"
+    }
+  },
+  "schema": "glm53-tp4-p8-nvme-qualification/v1",
+  "source": {
+    "control_protocol": 3,
+    "engine_files": 443,
+    "engine_manifest_sha256": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
+    "source_id": "mia107-tp4-prefill-nvme-tier-v3",
+    "storage_format": "tensorfold-cuda-spill-blocks-generation-2"
+  },
+  "tier": {
+    "gib": 256,
+    "host_mib": 512,
+    "min_free_gib": 64,
+    "min_tokens": 8192,
+    "read_blocks": 16,
+    "read_host_mib": 256,
+    "stage_mib": 256,
+    "turns": 4
+  },
+  "verification_utc": "2026-10-15T09:21:35.333849+00:00"
+}

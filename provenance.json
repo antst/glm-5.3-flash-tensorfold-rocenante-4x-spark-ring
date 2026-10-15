@@ -1,6 +1,6 @@
 {
   "schema": "tensorfold-rocenante-provenance/v1",
-  "status": "v0.1.4 Mia107 P8 prefill update; matched115-request baseline/2048/4096 sweeps; selected4096 deployed on8888",
+  "status": "v0.1.5 Mia107 TP4/P8 local NVMe persistence and explicit6098944-row RAM pool; eight near1M histories and clean64K worker restart qualified; production8888 verified",
   "baseline_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring",
   "baseline_commit": "d6f455248bfc9c83187d89e000ec8fbdf7c19546",
   "image": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:14b5072e8e9918f1080153f57321415a387bc7d78cf9c9b44a7aeae2d4399ccf",
@@ -97,11 +97,11 @@
   },
   "recipe_repository": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring",
   "source_release": {
-    "version": "v0.1.3",
-    "url": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.3",
-    "scope": "Portable recipe sources and sanitized six-lane capacity/correctness evidence; external pinned image, native binary and model inputs. Publication attested separately."
+    "version": "v0.1.5",
+    "url": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.5",
+    "scope": "Portable corrected NVMe/prefill source builder, runtime, configuration, operation docs and sanitized capacity/correctness evidence; external image/native/model pins unchanged."
   },
-  "selected_configuration_scope": "Exact configuration and runtime source identity of retained v0.1.0 benchmarks; API8888 migration and current Mia107 evidence are separately bound in api_port_migration and engine_upgrade. The qualified v0.1.3 selected cache profile and measured cache evidence are separate in long_context_cache_profile.",
+  "selected_configuration_scope": "Current NVMe profile and source binding are recorded in nvme_tier_profile. Historical transport, cache, image-upgrade and v0.1.4 throughput measurements retain their original source/profile bindings; no NVMe throughput rerun is claimed.",
   "historical_v0_1_0_cpu_suite": {
     "tests": 89,
     "skipped": 0,
@@ -354,12 +354,12 @@
   },
   "cpu_suite": {
     "passed": true,
-    "tests": 126,
-    "passed_tests": 124,
+    "tests": 169,
+    "passed_tests": 167,
     "skipped": 2,
     "gpu_context_created": false,
     "pinned_image": false,
-    "scope": "Management-host offline release checks; image/Torch-dependent cases skipped."
+    "scope": "Management-host offline portable scripts/tests; two image/Torch-dependent tests skipped. Separate exact engine55 and builder22 checks passed."
   },
   "historical_transport_selected_configuration": {
     "image_digest": "ghcr.io/miaai-lab/glm-5.3-flash-exl3-2x-dgx-sparks-tensorfold@sha256:bc34d7d63f978cf601f42863b284bc95a567c50c10e9adb0866a635be568bf5f",
@@ -450,7 +450,7 @@
     },
     "scope": "Approved memory trim; source-bound transport, startup, short cache reuse and 24 semantic checks. Historical v0.1.3 near-1M proof remains separate."
   },
-  "current_p8_prefill_profile": {
+  "historical_v0_1_4_prefill_profile": {
     "profile": {
       "context": 1048576,
       "parallel": 8,
@@ -526,5 +526,120 @@
     "production_config_sha256": "a4df0be21be050244bf72cc152332554cc03315994f60a7af5755c7cc427b237",
     "production_result": "results/production-prefill-p8-20261014.json",
     "production_monitor_source_sha256": "657828c258d09802e919e772d2a848943f617e83b75d138aff40368467418191"
+  },
+  "historical_v0_1_3_source_release": {
+    "version": "v0.1.3",
+    "url": "https://github.com/antst/glm-5.3-flash-tensorfold-rocenante-4x-spark-ring/releases/tag/v0.1.3",
+    "scope": "Portable recipe sources and sanitized six-lane capacity/correctness evidence; external pinned image, native binary and model inputs. Publication attested separately."
+  },
+  "historical_v0_1_3_cpu_suite": {
+    "passed": true,
+    "tests": 126,
+    "passed_tests": 124,
+    "skipped": 2,
+    "gpu_context_created": false,
+    "pinned_image": false,
+    "scope": "Management-host offline release checks; image/Torch-dependent cases skipped."
+  },
+  "tensorfold_source_sha256_scope": "Historical adapter baseline guard values. Current complete443-file source is bound by nvme_tier_profile.engine_manifest_sha256.",
+  "nvme_tier_profile": {
+    "source_release": "v0.1.5",
+    "qualified": true,
+    "source_id": "mia107-tp4-prefill-nvme-tier-v3",
+    "engine_manifest": "engine/manifests/source-4096-nvme.json",
+    "engine_manifest_sha256": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
+    "engine_source_files": 443,
+    "control_protocol": 3,
+    "storage_format": "tensorfold-cuda-spill-blocks-generation-2",
+    "profile": {
+      "context": 1048576,
+      "parallel": 8,
+      "multi_window": 64,
+      "cache_entries": 64,
+      "max_tokens": 32768,
+      "cache_gib": 39.5625,
+      "reserve_gib": 16.0,
+      "protocol": "auto",
+      "thread_thresholds": null,
+      "nccl_channels": 4,
+      "kept_bytes_gib": 4.0,
+      "keep_reasoning_entries": 8192,
+      "keep_reasoning_mb": 128
+    },
+    "engine_flags": {
+      "TF_GLM_HC_EXCHANGE": "p2p",
+      "TF_GLM_PROMPT_OWN_FRONT": "1",
+      "TF_GLM_PROMPT_MICROBATCH": "1",
+      "TF_GLM_PREFILL_ROWS": "4096",
+      "TF_GLM_SIDE": "1",
+      "TF_GLM_PROMPT_PARTIALS": "fp32",
+      "TF_GLM_MSA": "0",
+      "TF_GLM_ONEPASS_SMALL_WARPS": "4",
+      "TF_GLM_HC_RING_RELAY": "1",
+      "TF_GLM_POOL_TOKENS": "6098944"
+    },
+    "fixed_pool_rows": 6098944,
+    "tier": {
+      "gib": 256,
+      "host_mib": 512,
+      "min_free_gib": 64,
+      "min_tokens": 8192,
+      "read_blocks": 16,
+      "read_host_mib": 256,
+      "stage_mib": 256,
+      "turns": 4
+    },
+    "upstream_PR124": {
+      "url": "https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/pull/124",
+      "head": "f32226b3cc5f443117d6d2411b1f2433c52f33a6",
+      "scope": "Corrected TP4 derivative; raw upstream patch is not deployed unchanged."
+    },
+    "source_patch": "engine/patches/mia107-nvme-v3.patch",
+    "source_patch_sha256": "05c4a44926878b18d2e0514904a04db18f9784bcfc2265eaeae3454c47e01f94",
+    "runtime_sources": {
+      "cache-monitor.py": "0afa2f1409b169f28f161d96d3b5e70446a3f4ebe6f813670e6787ff5c0ffd6d",
+      "capture-function-counters.py": "00efcb9d1eb93143f97517a1e08889a7a66d0859b1cf3acdd255a8a69c06779e",
+      "chat.py": "0e9bb3ced83443901e61f608e82683dd175509a6b32d473123f11fe2d46b8cd7",
+      "check-public.py": "92553e6d7d8deb155698acfcbc0023bfc697a17f5507c652e543fc9a7e3938ba",
+      "cluster.py": "8fa417627eb4f6d3b41f9b754b00c4056f4f359d4335295c0197254b5adca687",
+      "collective-probe.py": "07a97b8daf660130853a68e1e8bced27fb4fce3f794f087f96e2ac91f8b8c185",
+      "common.py": "cfcf455f234e107ab41d33b56509d80f6ea4e91dc24433ce852a5a3d5c7c36f7",
+      "download-models.py": "5ecc4e1defb3007fc248f5f33a6305d8d5c810ddd82666ee2bb31989e488f16e",
+      "engine_binding.py": "bf7badc70f8c0b75e7bcd571c04d9677765c24eb2517a6eea58eda4638989d30",
+      "experiment.py": "c392658242efde54d955eaf50171863c26d45e68fbd6cf83284a85ae8f9c3a55",
+      "network.py": "fde85acda585aead2460ca036e9de9ccb7becb4a2b6d4422cd19cc044ecd66cd",
+      "qualify.py": "994f1ef5979abfc2773c7e7baec27b187f672ac7d145ae1fe4c2c8fe980e5b6c",
+      "ring_exchange.py": "c2f635183cc46bc88e7a0c4876f6020d843c11ecaa09ea40208376758e5f77c3",
+      "rocenante-probe.py": "15b023b1d757b09642cf6e68614bab8b8b8f43e96de68168772cd2066b7e1376",
+      "rocenante_adapter.py": "6657ef9190c1cced12db6c5cc1d67a30952da98b23e3c37ab6733c1549362a6d",
+      "run-rigmark.py": "326efc308b075926fcc9dbd89ba12d6d6b3f34a83a51a27a31c792936d629eb1",
+      "run-sparkdash.py": "cb00c9f2f47cefa23140f43be61affd9bf4ec6e1528669d2160b682346b754e2",
+      "runtime.py": "ebffd5537e8c7486ce99f9c075a833ddb07f4bb346593b26dbc9ffd5f69ec73b",
+      "validate-model.py": "ed77a74e60a4a5d5361705db3594d046d5a091a7b2ec9982639cd92ad4627130"
+    },
+    "result": "results/nvme-tier-p8-20261015.json",
+    "result_sha256": "c7396fb3ca0ca5a858f0cf8241865e44f06a1ae1cf4fe8b69343cb7a5845e3ec",
+    "report": "docs/nvme-tier.md",
+    "production_api_port": 8888,
+    "production_ready_verified_utc": "2026-10-15T09:21:35.333849+00:00",
+    "same_model_draft_image_and_native_binary_pins": true,
+    "network_changes": false,
+    "qualification_model_API_requests": 86,
+    "full_context_retention_requests": 24,
+    "retained_near1M_histories": 8,
+    "near1M_prompt_tokens_each": 1046528,
+    "near1M_replays_exact": 16,
+    "near1M_histories_each_restored_from_disk": true,
+    "clean_restart_scope": "Eight64K disk replays after actualall4 worker replacement with emptyRAM; not hostreboot/powerloss.",
+    "eight_simultaneous_full1M_resident_contexts_claimed": false,
+    "new_throughput_benchmark_claimed": false,
+    "historical_throughput_profile": "v0.1.4 source75c003 before NVMe; see historical_v0_1_4_prefill_profile and docs/performance.md",
+    "offline_validation": {
+      "builder_tests_passed": 22,
+      "engine_CPU_tests_passed": 55,
+      "portable_tests_passed": 167,
+      "portable_tests_skipped": 2,
+      "scope": "CPU/source/packaging contracts; no hardware result inferred from offline tests"
+    }
   }
 }

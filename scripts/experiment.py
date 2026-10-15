@@ -206,6 +206,14 @@ print(json.dumps({'sources_verified':True,'vendor_verified':True,'gpu_idle':True
         return result
 
 
+def stop_owned(op):
+    """Keep followers alive while rank0 performs its bounded all-rank tier flush."""
+    if not op.config.get('tier'):
+        return op.parallel(op.stop_one)
+    first=op.stop_one(0)
+    return op.parallel(lambda rank:first if rank==0 else op.stop_one(rank))
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('action',nargs='?',choices=('plan','check','start','status','stop','logs','wait'))
@@ -224,7 +232,7 @@ def main():
             'commands':[{'rank':r,'host':n['ssh'],'cache':str(op.command(r,library,digest)[0]),'argv':op.command(r,library,digest)[1]} for r,n in enumerate(cfg['nodes'])]},indent=2));return
     if any(ipaddress.IPv4Address(n['management_address']) in ipaddress.IPv4Network('192.0.2.0/24') for n in cfg['nodes']):p.error('Configure real management addresses before host operations')
     if args.action=='status':print(json.dumps(op.parallel(op.inspect),indent=2));return
-    if args.action=='stop':print(json.dumps(op.parallel(op.stop_one),indent=2));return
+    if args.action=='stop':print(json.dumps(stop_owned(op),indent=2));return
     if args.action=='logs':
         for rank,node in enumerate(cfg['nodes']):print(node['name']+'\n'+op.remote(rank,shlex.join(['docker','logs','--tail','100',cfg['container_name']])+' 2>&1'))
         return

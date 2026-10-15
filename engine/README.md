@@ -1,4 +1,50 @@
-# Reproducible Mia107 prefill source overlay
+# Reproducible Mia107 prefill and NVMe-v3 source overlays
+
+The current default, `4096-nvme`, reconstructs exactly 443 files with source-manifest
+SHA256 `9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b`. It applies the original
+prefill patch first (439 -> 441 files), verifies that complete intermediate tree,
+then applies the separate NVMe-v3 patch (441 -> 443) and verifies every final file.
+The explicit `2048` and `4096` variants remain available and produce the original
+441-file trees and byte-for-byte original manifest templates. No model weights,
+CUDA runtime binaries, network changes or service lifecycle actions are included.
+
+```sh
+python3 -B engine/build.py --output local/engine-nvme --plan
+python3 -B engine/build.py --output local/engine-nvme --manifest 4096-nvme --run
+```
+
+The second command uses the already-present pinned image through the CPU-only
+extraction path described below. For a separately retained exact original439-file
+package, supply `--source-package /absolute/original/tensorfold`; this performs
+both patches and all checks entirely offline without Docker. The builder never
+pulls an image or imports TensorFold/Torch. Python 3.10+ and GNU `patch` are required.
+The complete package asset inventory includes this documentation, notices,
+licenses, builder and tests; critical patch/manifest hashes are also pinned in
+`build.py`. Builds reject altered/missing/extra source files, symlinks, asset drift
+and existing outputs. Each patch and source-check result is retained in
+`build-receipt.json` and per-patch logs. A failed receipt does not qualify an overlay.
+
+NVMe-v3 is a locally corrected derivative of MiaAI-Lab PR124 rather than a raw PR
+application. It stores bounded blocks of cache rows plus the snapshot's fixed
+state and token IDs on each rank's local disk; restores require a common committed
+computation generation across all four ranks. It uses the new
+`tensorfold-cuda-spill-blocks-generation-2` namespace and control protocol 3, so raw
+PR snapshots are not accepted as equivalent. Bounded staging, all-rank admission
+and release backpressure remain necessary. The engine source does not enable or
+size NVMe storage by itself; use separately qualified runtime flags, local disk
+paths and memory budgets. RAM capacity, full-context accuracy, restart and serving
+performance require their own model/hardware evidence. See `nvme-provenance.json`.
+The exact historical final manifest bytes are retained, including its original
+qualification note; builder success is a source-equivalence result only.
+
+To verify all three full builds and rejection tests with an immutable439-file
+preimage:
+
+```sh
+PREFILL_TEST_ORIGINAL=/absolute/original/tensorfold python3 -B -m unittest discover -s engine/tests -v
+```
+
+# Retained prefill overlay details
 
 This directory reconstructs the exact seven-file port of selected MiaAI-Lab TP4
 optimizations onto the pinned Mia107 image. It distributes a source patch and
