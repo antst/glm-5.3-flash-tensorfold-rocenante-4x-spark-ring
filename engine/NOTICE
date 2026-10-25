@@ -12,6 +12,16 @@ the source they modify retain Apache-2.0 and the historical TensorFold MIT
 notice where applicable. See licenses/ and provenance.json for exact sources.
 New builder/tests in this directory use Apache-2.0.
 
+The current cache package also preserves the deployed shared-token-history,
+allocator/SSE maintenance and two-hour recency changes. Its four additional
+cache fixes are adapted from Mia main bf5f94523a8251029cedae86bf61f8ce37fac218:
+continued-chat identity by Robert Wojciechowski (wojo); fork-point retention by
+BadAd84 following RyanLeeUPC's diagnosis/proposal; linear kept-reasoning restore
+by cawilliamson; and NoRoom restore retry handling by nanashi66 with the Mia
+follow-up. The portable cache regression scripts retain their upstream text
+apart from explicit fake-decoder adaptations for the local generation protocol.
+See cache-provenance.json for the exact two patch stages and preserved licenses.
+
 Design credit retained from the new own_front.py and microbatch.py modules:
 drowzeys (https://github.com/drowzeys/TensorFold, glm53-tp4-2026-10-05) designed
 the replicated-front sequence partitioning and two-microbatch communication

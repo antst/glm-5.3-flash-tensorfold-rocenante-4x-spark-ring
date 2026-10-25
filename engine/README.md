@@ -1,22 +1,28 @@
-# Reproducible Mia107 prefill and NVMe-v3 source overlays
+# Reproducible Mia107 prefill and cache source overlays
 
-The current default, `4096-nvme`, reconstructs exactly 443 files with source-manifest
-SHA256 `9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b`. It applies the original
-prefill patch first (439 -> 441 files), verifies that complete intermediate tree,
-then applies the separate NVMe-v3 patch (441 -> 443) and verifies every final file.
-The explicit `2048` and `4096` variants remain available and produce the original
-441-file trees and byte-for-byte original manifest templates. No model weights,
+The current default, `4096-cache`, reconstructs the exact deployed **446-file**
+overlay with manifest SHA256
+`7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a`.
+The verified chain is original image (439 files), prefill (441), NVMe-v3 (443),
+deployed cache foundation (446), then four upstream cache backports (446).
+Every intermediate and final file is hash-checked. The foundation includes the
+already-deployed allocator reclamation, SSE handling, shared token histories and
+two-hour recency journal; the last patch contains only the four cache fixes.
+See `cache-provenance.json` for changed paths, credits and exact patch identities.
+
+The explicit `2048`, `4096` and `4096-nvme` variants retain their historical
+source trees and byte-for-byte original manifest templates. No model weights,
 CUDA runtime binaries, network changes or service lifecycle actions are included.
 
 ```sh
 python3 -B engine/build.py --output local/engine-nvme --plan
-python3 -B engine/build.py --output local/engine-nvme --manifest 4096-nvme --run
+python3 -B engine/build.py --output local/engine-nvme --manifest 4096-cache --run
 ```
 
 The second command uses the already-present pinned image through the CPU-only
 extraction path described below. For a separately retained exact original439-file
 package, supply `--source-package /absolute/original/tensorfold`; this performs
-both patches and all checks entirely offline without Docker. The builder never
+all four patches and checks entirely offline without Docker. The builder never
 pulls an image or imports TensorFold/Torch. Python 3.10+ and GNU `patch` are required.
 The complete package asset inventory includes this documentation, notices,
 licenses, builder and tests; critical patch/manifest hashes are also pinned in
@@ -24,7 +30,7 @@ licenses, builder and tests; critical patch/manifest hashes are also pinned in
 and existing outputs. Each patch and source-check result is retained in
 `build-receipt.json` and per-patch logs. A failed receipt does not qualify an overlay.
 
-NVMe-v3 is a locally corrected derivative of MiaAI-Lab PR124 rather than a raw PR
+The historical NVMe-v3 layer is a locally corrected derivative of MiaAI-Lab PR124 rather than a raw PR
 application. It stores bounded blocks of cache rows plus the snapshot's fixed
 state and token IDs on each rank's local disk; restores require a common committed
 computation generation across all four ranks. It uses the new
@@ -34,8 +40,39 @@ and release backpressure remain necessary. The engine source does not enable or
 size NVMe storage by itself; use separately qualified runtime flags, local disk
 paths and memory budgets. RAM capacity, full-context accuracy, restart and serving
 performance require their own model/hardware evidence. See `nvme-provenance.json`.
-The exact historical final manifest bytes are retained, including its original
+The exact historical NVMe manifest bytes are retained, including its original
 qualification note; builder success is a source-equivalence result only.
+
+The current cache layer moves repeated token histories and large checkpoint
+metadata out of the RAM index. RAM and disk hits update live LRU immediately;
+changed recency timestamps are coalesced into a transaction every **7,200 seconds**
+and flushed on clean shutdown. Cache hits do not rewrite KV blocks. An abrupt
+exit can lose unflushed recency, while already durable checkpoints remain intact.
+The storage format is `tensorfold-cuda-spill-blocks-generation-3-shared-history`.
+Use a separate host-local root for this format; old generation-2 snapshots are
+not automatically migrated. The exact compatibility alias in the current
+manifest preserves checkpoints from the matching shared-history releases only;
+it does not authorize arbitrary source, layout or model substitutions.
+
+The four backports prevent repeated disk reads on `NoRoom` retries, retain chat
+identity through recoverable continuations, protect fork points as shared
+prefixes, and restore reasoning in one pass over a tool history. They are adapted
+from Mia main at `bf5f94523a8251029cedae86bf61f8ce37fac218`; no KV sharding is enabled.
+The [sanitized validation summary](../results/cache-backports-20261025.json)
+records the actual scope: 117 CPU regression checks, 300 reasoning histories,
+both native transports and a disk/RAM replay with 15,936 cached tokens. This does
+not rerun the historical full-capacity or throughput benchmarks.
+
+To rerun the portable cache regressions in a CPU environment with the pinned
+image's Torch/NumPy/safetensors dependencies, using a built overlay:
+
+```sh
+python3 -B engine/check_cache.py --source-root local/engine-nvme
+```
+
+The runner hides CUDA devices and loads no model. On a GPU host, use a container
+without GPU devices or model mounts. Run the builder's stdlib equivalence tests
+separately; they require no Torch installation.
 
 To verify all three full builds and rejection tests with an immutable439-file
 preimage:

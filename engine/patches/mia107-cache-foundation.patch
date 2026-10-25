@@ -1,0 +1,1528 @@
+--- /dev/null
++++ b/tensorfold/cuda/allocator_reclaim.py
+@@ -0,0 +1,162 @@
++"""Bound unused CUDA reservations at explicit serving boundaries.
++
++The decoder schedules the boundary on every rank. This module never performs a
++collective, evicts a model/cache object, resets peaks, or changes graph pools.
++"""
++from __future__ import annotations
++
++import math
++import time
++from dataclasses import dataclass
++
++GIB = 1 << 30
++WIRE_FIELDS = (
++    "allocated_bytes", "reserved_bytes", "active_bytes", "inactive_split_bytes",
++    "peak_allocated_bytes", "peak_reserved_bytes", "checks", "reclaims",
++    "released_bytes", "last_released_bytes", "last_duration_us", "errors",
++    "error_code", "last_before_bytes", "last_after_bytes", "last_unused_bytes", "retry_pending",
++)
++
++
++@dataclass(frozen=True)
++class ReclaimPolicy:
++    unused_bytes: int = 4 * GIB
++    inspect_s: float = 5.0
++    cooldown_s: float = 30.0
++    growth_bytes: int = 512 << 20
++
++    def __post_init__(self):
++        for name in ("unused_bytes", "growth_bytes"):
++            if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
++                raise ValueError(f"{name} must be a positive integer")
++        for name in ("inspect_s", "cooldown_s"):
++            value = getattr(self, name)
++            if not math.isfinite(value) or value <= 0:
++                raise ValueError(f"{name} must be finite and positive")
++
++
++def pack_report(report):
++    """The control transport uses int32; preserve byte counters exactly in base2^31."""
++    out = []
++    for name in WIRE_FIELDS:
++        value = report[name]
++        if type(value) is not int or not 0 <= value < 1 << 62:
++            raise ValueError(f"invalid allocator counter: {name}")
++        out.extend((value & ((1 << 31) - 1), value >> 31))
++    return out
++
++
++def unpack_report(words):
++    if len(words) != 2 * len(WIRE_FIELDS) or any(type(v) is not int or not 0 <= v < 1 << 31 for v in words):
++        raise ValueError("invalid allocator report")
++    out = {name: words[2 * i] + (words[2 * i + 1] << 31) for i, name in enumerate(WIRE_FIELDS)}
++    if not (out["allocated_bytes"] <= out["active_bytes"] <= out["reserved_bytes"]
++            and out["inactive_split_bytes"] <= out["reserved_bytes"] - out["allocated_bytes"]
++            and out["peak_allocated_bytes"] >= out["allocated_bytes"]
++            and out["peak_reserved_bytes"] >= out["reserved_bytes"]
++            and out["retry_pending"] in (0, 1)):
++        raise ValueError("inconsistent allocator report")
++    return out
++
++
++class AllocatorReclaimer:
++    def __init__(self, cuda, device, *, policy=None, clock=time.monotonic):
++        self.cuda, self.device, self.clock = cuda, device, clock
++        self.policy = policy or ReclaimPolicy()
++        self.enabled = str(device).split(":")[0] == "cuda"
++        self.next_check = 0.0
++        self.last_attempt = -math.inf
++        self.post_unused = None
++        self.was_idle = False
++        self.last_error = None
++        self.values = dict.fromkeys(WIRE_FIELDS, 0)
++
++    def request(self):
++        # An eviction can request an earlier inspection, never an eager trim.
++        self.next_check = min(self.next_check, self.clock() + self.policy.inspect_s)
++
++    def note_activity(self):
++        # A request may start AND finish between two finish() calls.
++        self.was_idle = False
++
++    def due(self, *, idle):
++        transition = idle and not self.was_idle
++        self.was_idle = idle
++        return self.enabled and (transition or self.clock() >= self.next_check)
++
++    def _sample(self):
++        stats = self.cuda.memory_stats(self.device)
++        keys = {
++            "allocated_bytes": "allocated_bytes.all.current",
++            "reserved_bytes": "reserved_bytes.all.current",
++            "active_bytes": "active_bytes.all.current",
++            "inactive_split_bytes": "inactive_split_bytes.all.current",
++            "peak_allocated_bytes": "allocated_bytes.all.peak",
++            "peak_reserved_bytes": "reserved_bytes.all.peak",
++        }
++        sample = {name: stats[key] for name, key in keys.items()}
++        if any(type(v) is not int or not 0 <= v < 1 << 62 for v in sample.values()):
++            raise ValueError("allocator returned invalid counters")
++        a, r, active = sample["allocated_bytes"], sample["reserved_bytes"], sample["active_bytes"]
++        if not (a <= active <= r and sample["inactive_split_bytes"] <= r - a
++                and sample["peak_allocated_bytes"] >= a and sample["peak_reserved_bytes"] >= r):
++            raise ValueError("allocator returned inconsistent counters")
++        return sample
++
++    def inspect(self):
++        """Called ONLY by the decoder's ordered engine-thread maintenance op.
++
++        All exceptions become telemetry so peers still enter their one common
++        report collective. A successful trim never discards live tensors.
++        """
++        now = self.clock()
++        self.next_check = now + self.policy.inspect_s
++        self.values["checks"] += 1
++        self.values["retry_pending"] = 0
++        if not self.enabled:
++            return pack_report(self.values)
++        stage, started = 1, None
++        try:
++            sample = self._sample()
++            self.values.update(sample)
++            self.values["error_code"] = 0
++            self.last_error = None
++            unused = sample["reserved_bytes"] - sample["active_bytes"]
++            if unused < self.policy.unused_bytes:
++                return pack_report(self.values)
++            if self.post_unused is not None and unused < self.post_unused + self.policy.growth_bytes:
++                return pack_report(self.values)
++            if now - self.last_attempt < self.policy.cooldown_s:
++                self.values["retry_pending"] = 1
++                return pack_report(self.values)
++            # Record an attempt before calls that can fail; failure must not
++            # cause an expensive retry on every serving iteration.
++            self.last_attempt = now
++            started = self.clock()
++            stage = 2
++            self.cuda.synchronize(self.device)
++            before = self._sample()
++            self.values.update(before)
++            if before["reserved_bytes"] - before["active_bytes"] >= self.policy.unused_bytes:
++                self.values["last_before_bytes"] = before["reserved_bytes"]
++                stage = 3
++                self.cuda.empty_cache()
++                stage = 4
++                after = self._sample()
++                self.values.update(after)
++                released = max(0, before["reserved_bytes"] - after["reserved_bytes"])
++                self.values["reclaims"] += 1
++                self.values["released_bytes"] += released
++                self.values["last_released_bytes"] = released
++                self.values["last_after_bytes"] = after["reserved_bytes"]
++                self.post_unused = after["reserved_bytes"] - after["active_bytes"]
++                self.values["last_unused_bytes"] = self.post_unused
++        except Exception as exc:
++            self.values["errors"] += 1
++            self.values["error_code"] = stage
++            self.values["retry_pending"] = 1
++            self.last_error = f"{type(exc).__name__}: {exc}"[:256]
++        finally:
++            if started is not None:
++                self.values["last_duration_us"] = max(0, round((self.clock() - started) * 1e6))
++        return pack_report(self.values)
+--- a/tensorfold/cuda/http.py
++++ b/tensorfold/cuda/http.py
+@@ -14,6 +14,7 @@
+ from tensorfold.server.http import Server
+ from tensorfold.server.request_body import read_body
+ from tensorfold.server.stacks import Rearming
++from tensorfold.server.sse import KEEPALIVE_S, WRITE_TIMEOUT_S, SSEWriter
+ 
+ if TYPE_CHECKING:
+     from tensorfold.cuda.server import App
+@@ -40,7 +41,8 @@
+     traceback.print_exception(exc)
+ 
+ 
+-def make_handler(app: App):
++def make_handler(app: App, *, sse_keepalive_s: float = KEEPALIVE_S,
++                 sse_write_timeout_s: float = WRITE_TIMEOUT_S):
+     class Handler(Rearming):              # USR1's stack dump armed again after each request
+         protocol_version = "HTTP/1.1"
+ 
+@@ -70,14 +72,10 @@
+             except RequestError:
+                 pass
+ 
+-        def _stream_error(self, error: dict[str, Any]) -> None:
++        def _stream_error(self, error: dict[str, Any], writer: SSEWriter) -> None:
+             """End an open stream with an error event and ``[DONE]``, as the MLX server does."""
+ 
+-            try:
+-                self.wfile.write(f"data: {json.dumps({'error': error})}\n\ndata: [DONE]\n\n".encode())
+-                self.wfile.flush()
+-            except OSError:
+-                pass
++            writer.write(f"data: {json.dumps({'error': error})}\n\ndata: [DONE]\n\n".encode(), final=True)
+             self.close_connection = True
+ 
+         def do_GET(self):
+@@ -154,55 +152,50 @@
+                 except RequestError as exc:
+                     code, _hd = admission_response(exc)
+                     return self._json(code, {"error": error_body(exc, field)}, headers=_hd)
++                self.close_connection = True
+                 self.send_response(200)
+                 self.send_header("Content-Type", "text/event-stream")
+                 self.send_header("Cache-Control", "no-cache")
++                self.send_header("X-Accel-Buffering", "no")
+                 self.send_header("Connection", "close")
+                 self.end_headers()
+-
+-                def emit(delta: dict[str, Any]) -> bool:
++                self.wfile.flush()
++
++                with SSEWriter(self, gone, interval=sse_keepalive_s, write_timeout=sse_write_timeout_s) as writer:
++                    def emit(delta: dict[str, Any]) -> bool:
++                        return writer.write(f"data: {json.dumps(chunk(delta))}\n\n".encode())
++
++                    if chat and not emit({"role": "assistant"}):
++                        return
+                     try:
+-                        self.wfile.write(f"data: {json.dumps(chunk(delta))}\n\n".encode())
+-                        self.wfile.flush()
+-                        return True
+-                    except OSError:             # reset, broken pipe, timed out, host unreachable: the client has gone
+-                        return False
+-
+-                if chat:
+-                    emit({"role": "assistant"})
+-                try:
+-                    result = app.run(body, chat, emit, prepared=prepared, cancelled=cancelled)
+-                except RequestCancelled:
++                        result = app.run(body, chat, emit, prepared=prepared, cancelled=cancelled)
++                    except RequestCancelled:
++                        self.close_connection = True
++                        return
++                    except RequestError as exc:
++                        return self._stream_error(error_body(exc, field), writer)
++                    except Exception as exc:
++                        _log_error(exc)
++                        return self._stream_error({"message": _error_message(exc), "type": "server_error"}, writer)
++                    if result["final"]:
++                        emit(result["final"])
++                    for delta in result.get("call_deltas") or ():      # the end of calls streamed as they were written
++                        emit(delta)
++                    if result["calls"]:
++                        for i, call in enumerate(result["calls"]):
++                            if i < result.get("calls_streamed", 0):      # sent as deltas already
++                                continue
++                            emit({"tool_calls": [{"index": i, "id": call["id"], "type": "function",
++                                                  "function": {"name": call["function"]["name"],
++                                                               "arguments": call["function"]["arguments"]}}]})
++                    end = chunk({}, result["finish"])
++                    if result.get("stop_sequence") is not None:
++                        end["stop_sequence"] = result["stop_sequence"]
++                    end["tensorfold"] = result["stats"]
++                    end["usage"] = usage_of(result)          # every stream, as the Mac server's: clients count from it
++                    writer.write(f"data: {json.dumps(end)}\n\ndata: [DONE]\n\n".encode(), final=True)
+                     self.close_connection = True
+                     return
+-                except RequestError as exc:
+-                    return self._stream_error(error_body(exc, field))
+-                except Exception as exc:
+-                    _log_error(exc)
+-                    return self._stream_error({"message": _error_message(exc), "type": "server_error"})
+-                if result["final"]:
+-                    emit(result["final"])
+-                for delta in result.get("call_deltas") or ():      # the end of calls streamed as they were written
+-                    emit(delta)
+-                if result["calls"]:
+-                    for i, call in enumerate(result["calls"]):
+-                        if i < result.get("calls_streamed", 0):      # sent as deltas already
+-                            continue
+-                        emit({"tool_calls": [{"index": i, "id": call["id"], "type": "function",
+-                                              "function": {"name": call["function"]["name"],
+-                                                           "arguments": call["function"]["arguments"]}}]})
+-                end = chunk({}, result["finish"])
+-                if result.get("stop_sequence") is not None:
+-                    end["stop_sequence"] = result["stop_sequence"]
+-                end["tensorfold"] = result["stats"]
+-                end["usage"] = usage_of(result)          # every stream, as the Mac server's: clients count from it
+-                try:
+-                    self.wfile.write(f"data: {json.dumps(end)}\n\ndata: [DONE]\n\n".encode())
+-                    self.wfile.flush()
+-                except (BrokenPipeError, ConnectionResetError):
+-                    pass
+-                self.close_connection = True
+-                return
+             try:
+                 result = app.run(body, chat, lambda delta: True, prepared=prepared, cancelled=cancelled)
+             except RequestCancelled:
+--- a/tensorfold/cuda/spill.py
++++ b/tensorfold/cuda/spill.py
+@@ -165,6 +165,22 @@
+         for path in sorted(p for p in base.rglob("*") if p.suffix in (".py", ".cu", ".cuh", ".cpp", ".h")):
+             digest.update(path.relative_to(pkg).as_posix().encode())
+             digest.update(path.read_bytes())
++    # This exact metadata-only release retains the previous KV compatibility ID.
++    # Any other source bytes get their own ID; an unpinned manifest cannot opt in.
++    source_digest = digest.hexdigest()
++    manifest_path = os.environ.get("SPARK_RING_ENGINE_MANIFEST")
++    manifest_sha = os.environ.get("SPARK_RING_ENGINE_MANIFEST_SHA256")
++    if manifest_path and manifest_sha:
++        raw = Path(manifest_path).read_bytes()
++        if hashlib.sha256(raw).hexdigest() != manifest_sha:
++            raise ValueError("engine manifest changed while selecting cache compatibility")
++        alias = json.loads(raw).get("cache_source_compatibility", {})
++        if (alias.get("family") == families.detect(model_dir).module
++                and alias.get("current_sources_sha256") == source_digest):
++            previous = alias.get("compatible_sources_sha256", "")
++            if len(previous) != 64 or any(c not in "0123456789abcdef" for c in previous):
++                raise ValueError("invalid cache source compatibility identity")
++            source_digest = previous
+     run = f"torch={torch.__version__}|cuda={torch.version.cuda}"
+     if torch.cuda.is_available():
+         p = torch.cuda.get_device_properties(torch.cuda.current_device())
+@@ -175,7 +191,7 @@
+     except OSError:
+         pass
+     drafter = f"|drafter={Path(drafter_dir).resolve()}" if drafter_dir is not None else ""
+-    return f"{Path(model_dir).resolve()}{drafter}|tensorfold={__version__}|sources={digest.hexdigest()[:16]}|{run}"
++    return f"{Path(model_dir).resolve()}{drafter}|tensorfold={__version__}|sources={source_digest[:16]}|{run}"
+ 
+ 
+ def weights_id(*dirs) -> str:
+--- a/tensorfold/cuda/spill_blocks.py
++++ b/tensorfold/cuda/spill_blocks.py
+@@ -13,11 +13,12 @@
+   (another prompt chunking: other bits) never share a block by name; a block whose bytes equal one already on disk is
+   linked to it instead of written again (content dedup: two streams that prefilled the same system prompt at once
+   store it once);
+-- a point a state: ``points/<key>.ids`` (its ids; with pictures its keyed ids and its tokens), ``points/<key>.st``
+-  (its small state, safetensors), then ``points/<key>.json`` naming its blocks with a CRC-32 of each, written LAST, so
+-  a point with its json is complete. Every file goes to a temporary name, is fsynced and renamed; the folders are
+-  fsynced before a point's json is. Blocks are written with O_DIRECT where the file system takes it (the page cache
+-  shares a unified-memory GPU's memory).
++- per-point manifests and fixed recurrent/draft state, plus a shared SQLite token-history
++  directory. Immutable 2048-token nodes share complete prefixes across turns and branches.
++  Checkpoint entries retain only root hashes, lengths and scalar fields; full token arrays
++  are materialized only while validating or restoring one selected checkpoint. Large block
++  lists and CRC/digest metadata are accessed through a bounded manifest cache. History
++  roots are committed before the manifest; recovery reconciles unpublished roots.
+ 
+ Writes go through a bounded ring of pinned host slots: when a state is kept only its small state, and the block its
+ end cuts (a pooled-key row there is still filling), are copied to the host; its other rows stay in the pool until
+@@ -71,6 +72,7 @@
+ import os
+ import queue
+ import shutil
++import sqlite3
+ import struct
+ import threading
+ import time
+@@ -83,9 +85,10 @@
+ import torch
+ 
+ from . import spill as _sp
+-
+-# Version 2 is deliberately incompatible with token-only PR124 points.
+-FORMAT = "tensorfold-cuda-spill-blocks-generation-2"
++from .token_history import HistoryRef, TokenHistories, PrefixMatcher, ManifestCache, AccessTimes
++
++# Version 3 preserves generation safety and introduces shared token-history storage.
++FORMAT = "tensorfold-cuda-spill-blocks-generation-3-shared-history"
+ HOST_MIB = 256                 # pending small tensors/IDs/metadata, separate from preallocated row rings
+ SMALL_IO_BYTES = 1 << 20       # one reusable aligned direct-write buffer
+ MAX_MANIFEST_BYTES = 2 << 20   # recovery refuses unbounded/corrupt metadata files
+@@ -434,22 +437,66 @@
+ 
+ # -- the index ---------------------------------------------------------------------------------------------------------
+ class Point:
+-    """A complete state on this rank's disk."""
+-
+-    __slots__ = ("blocks", "chain", "crcs", "digests", "fields", "head", "ids", "key", "lineage", "n", "shared",
+-                 "small_bytes", "small_crc", "tokens", "used", "token_key", "generation", "state_bytes", "host_bytes", "index_bytes", "header_bytes")
++    """A checkpoint directory entry; large metadata and token history stay on NVMe."""
++    __slots__ = ("_blocks", "_crcs", "_digests", "_fields", "_lineage", "_ids", "_tokens",
++                 "history", "tokens_history", "_histories", "_metadata", "chain", "head", "key", "n", "shared",
++                 "small_bytes", "small_crc", "used", "token_key", "generation", "state_bytes", "host_bytes", "index_bytes", "header_bytes")
+ 
+     def __init__(self, key, n, ids, tokens, lineage, blocks, crcs, digests, small_crc, small_bytes, shared, head,
+-                 used, chain, fields=None, *, token_key="", generation="", state_bytes=0, host_bytes=0, header_bytes=0) -> None:
+-        self.key, self.n, self.ids, self.tokens, self.lineage = key, n, ids, tokens, lineage
+-        self.blocks, self.crcs, self.digests = blocks, crcs, digests
++                 used, chain, fields=None, *, token_key="", generation="", state_bytes=0, host_bytes=0, header_bytes=0):
++        self._metadata = self._histories = None
++        self.history = self.tokens_history = None
++        self.key, self.n, self._ids, self._tokens, self._lineage = key, n, ids, tokens, lineage
++        self._blocks, self._crcs, self._digests = blocks, crcs, digests
+         self.small_crc, self.small_bytes, self.shared, self.head = small_crc, small_bytes, shared, head
+-        self.used, self.chain, self.fields = used, chain, fields or {}
++        self.used, self.chain, self._fields = used, chain, fields or {}
+         self.token_key, self.generation = token_key, generation
+-        self.state_bytes, self.host_bytes = int(state_bytes), int(host_bytes)
+-        self.header_bytes = int(header_bytes)
+-        self.index_bytes = ids.nbytes + (0 if tokens is None else tokens.nbytes) + 2048 * len(blocks) + 65536
+-        self.index_bytes += len(json.dumps(self.fields).encode()) + len(lineage.encode()) + len(generation.encode())
++        self.state_bytes, self.host_bytes, self.header_bytes = int(state_bytes), int(host_bytes), int(header_bytes)
++        self.index_bytes = 4096 + len(key.encode()) + len(token_key.encode()) + len(generation.encode())
++
++    def freeze(self, histories, metadata, history, tokens_history=None):
++        self._histories, self._metadata = histories, metadata
++        self.history, self.tokens_history = history, tokens_history
++        self._ids = self._tokens = self._blocks = self._crcs = self._digests = self._fields = self._lineage = None
++        self.chain = None
++
++    @property
++    def ids(self):
++        return self._ids if self.history is None else np.frombuffer(self._histories.read(self.history), dtype=np.int64)
++
++    @property
++    def tokens(self):
++        if self._metadata is None:
++            return self._tokens
++        return None if self.tokens_history is None else np.frombuffer(self._histories.read(self.tokens_history), dtype=np.int64)
++
++    @property
++    def blocks(self):
++        return self._blocks if self._metadata is None else self._metadata.get(self.key)["blocks"]
++
++    @property
++    def crcs(self):
++        return self._crcs if self._metadata is None else self._metadata.get(self.key)["crcs"]
++
++    @crcs.setter
++    def crcs(self, value):
++        self._crcs = value
++
++    @property
++    def digests(self):
++        return self._digests if self._metadata is None else [bytes.fromhex(x) for x in self._metadata.get(self.key)["digests"]]
++
++    @digests.setter
++    def digests(self, value):
++        self._digests = value
++
++    @property
++    def fields(self):
++        return self._fields if self._metadata is None else self._metadata.get(self.key).get("fields", {})
++
++    @property
++    def lineage(self):
++        return self._lineage if self._metadata is None else self._metadata.get(self.key)["lineage"]
+ 
+ 
+ def _chain(ids: np.ndarray, block: int) -> list[str]:
+@@ -561,7 +608,7 @@
+         self.reads: queue.Queue = queue.Queue()
+         self.backlog = 0
+         self.host_pending = 0
+-        self.index_host_bytes = 0
++        self.index_host_bytes = 16 << 20  # bounded SQLite/manifest caches and their bookkeeping
+         self.read_host_pending = 0
+         self.active_reads = 0
+         self.host_cap = _count("TF_GLM_SPILL_HOST_MIB", HOST_MIB, "MiB") << 20
+@@ -587,15 +634,20 @@
+                 os.makedirs(d, mode=0o700, exist_ok=True)
+                 os.chmod(d, 0o700)
+                 _chown(d, self.owner)
++            # Keep the bounded token and manifest directories separate from write staging.
++            self.histories = TokenHistories(os.path.join(self.dir, "token-history.sqlite"))
++            self.manifests = ManifestCache(self.points_dir)
++            self.accesses = AccessTimes(os.path.join(self.dir, "access-times.sqlite"))
+             pruned_builds = self._prune_builds()
+             self._scan()
+-        except OSError as exc:
++        except (OSError, ValueError, sqlite3.Error) as exc:
+             problem = repr(exc)
+         flags = gather([int(bool(problem))]) if self.world > 1 and gather is not None else [[int(bool(problem))]]
+         bad = [r for r, row in enumerate(flags) if row[0]]
+         if bad:                                           # every rank stops alike: none waits on another
+             raise RuntimeError(f"--snapshot-dir {cfg.root}: rank(s) {bad} cannot use it"
+                                + (f": {problem}" if problem else ""))
++        self.accesses.reconcile(self.index)
+         self.slots: list[torch.Tensor] = []
+         self.free_slots: queue.Queue = queue.Queue()
+         self.dev_slot: torch.Tensor | None = None
+@@ -646,7 +698,7 @@
+ 
+     def stored(self) -> int:
+         with self.lock:
+-            return self.block_bytes_on_disk + self.small_on_disk
++            return self.block_bytes_on_disk + self.small_on_disk + self.histories.storage_bytes()
+ 
+     def _block_path(self, h: str) -> str:
+         return os.path.join(self.blocks_dir, f"{h}.bin")
+@@ -658,6 +710,8 @@
+         """Lock held: block ``h`` is on disk (its inode counted once whatever names it)."""
+ 
+         st = os.stat(self._block_path(h))
++        if h not in self.have:
++            self.index_host_bytes += 512  # compact block directory, independent of checkpoint token counts
+         self.have[h] = (crc, st.st_ino, digest or bytes(16))
+         if st.st_ino not in self.inodes:
+             self.inodes[st.st_ino] = [_up(st.st_size), set()]
+@@ -672,6 +726,7 @@
+         got = self.have.pop(h, None)
+         if got is None:
+             return
++        self.index_host_bytes -= 512
+         ent = self.inodes.get(got[1])
+         if ent is not None:
+             ent[1].discard(h)
+@@ -710,6 +765,7 @@
+                 except OSError:
+                     pass
+         for used, key in sorted(metas, reverse=True):
++            used = self.accesses.saved(key, used)
+             try:
+                 manifest_path = self._point_path(key, ".json")
+                 if os.stat(manifest_path).st_size > MAX_MANIFEST_BYTES:
+@@ -719,29 +775,28 @@
+                 if m.get("format") != FORMAT or m["key"] != key:
+                     raise ValueError("another format")
+                 n = int(m["n"])
+-                id_size = os.stat(self._point_path(key, ".ids")).st_size
+-                if n < 1 or id_size not in (8 * n, 16 * n) or id_size > self.host_cap:
+-                    raise ValueError("IDs exceed bounded point geometry")
+-                with open(self._point_path(key, ".ids"), "rb") as fh:
+-                    raw = fh.read()
+-                if zlib.crc32(raw) != m["ids_crc"] or not os.path.exists(self._point_path(key, ".st")):
+-                    raise ValueError("ids or small state")
+-                arr = np.frombuffer(raw, dtype=np.int64)
+-                n = int(m["n"])
+-                ids, tokens = arr[:n].copy(), (arr[n:].copy() if len(arr) > n else None)
++                if not 0 < n <= self.host_cap // 8 or not os.path.exists(self._point_path(key, ".st")):
++                    raise ValueError("history or fixed state exceeds bounded geometry")
++                history = self.histories.bind(key + "/ids", m["history"])
++                tokens_history = self.histories.bind(key + "/tokens", m["tokens_history"]) if m.get("tokens_history") else None
++                if history.n != n or (tokens_history is not None and tokens_history.n != n):
++                    raise ValueError("history length differs from checkpoint")
++                ids = np.frombuffer(self.histories.read(history), dtype=np.int64)
+                 blocks = list(m["blocks"])
+-                if (len(ids) != n or snapshot_key(ids, m["generation"]) != key or m["token_key"] != point_key(ids) or not all(b in present for b in blocks)
++                if (snapshot_key(ids, m["generation"]) != key or m["token_key"] != point_key(ids)
++                        or not all(b in present for b in blocks)
+                         or [h for _, _, h in block_hashes(ids, self.block, m["lineage"])] != blocks):
+                     raise ValueError("blocks")
+-                pt = Point(key, n, ids, tokens, m["lineage"], blocks, [int(c) for c in m["crcs"]],
++                if tokens_history is not None:
++                    self.histories.read(tokens_history)  # verify keyed and original histories independently
++                pt = Point(key, n, None, None, m["lineage"], blocks, [int(c) for c in m["crcs"]],
+                            [bytes.fromhex(x) for x in m["digests"]], int(m["small_crc"]), int(m["small_bytes"]),
+-                           bool(m["shared"]), bool(m["head"]), float(used), _chain(ids, self.block),
++                           bool(m["shared"]), bool(m["head"]), float(used), None,
+                            m.get("fields") or {}, token_key=m["token_key"], generation=m["generation"],
+                            state_bytes=m["state_bytes"], host_bytes=m["host_bytes"], header_bytes=m["header_bytes"])
+-                if self.index_host_bytes + pt.index_bytes > self.host_cap:
+-                    raise ValueError("bounded index metadata capacity exhausted")
+                 if len(pt.crcs) != len(blocks) or len(pt.digests) != len(blocks) or pt.state_bytes < 0 or pt.host_bytes < 0 or pt.header_bytes < 0 or pt.header_bytes > MAX_MANIFEST_BYTES:
+                     raise ValueError("invalid bounded point geometry")
++                pt.freeze(self.histories, self.manifests, history, tokens_history)
+                 self.index_host_bytes += pt.index_bytes
+                 self.index[key] = pt
+                 for b, c, dg in zip(blocks, pt.crcs, pt.digests):
+@@ -761,6 +816,8 @@
+                 os.remove(self._block_path(b))
+             except OSError:
+                 pass
++        self.histories.reconcile({key + suffix for key, pt in self.index.items()
++                                  for suffix in (("/ids", "/tokens") if pt.tokens_history is not None else ("/ids",))})
+         for pt in sorted(self.index.values(), key=lambda p: p.n):
+             self.parent[pt.key] = self._parent_of(pt)
+             self._ref(pt.blocks, 1)
+@@ -878,7 +935,7 @@
+ 
+     @staticmethod
+     def _small_read_bytes(pt: Point) -> int:
+-        return _up(pt.host_bytes) + 8 * pt.header_bytes + 16384
++        return _up(pt.host_bytes) + 16 * pt.n + 8 * pt.header_bytes + 16384
+ 
+     def small_read_reservation(self, key: str) -> int | None:
+         """Authoritative host reservation, before ordered all-rank LOAD admission."""
+@@ -907,14 +964,13 @@
+         return self.status(key)
+ 
+     def touch(self, key: str) -> None:
+-        with self.lock:
+-            pt = self.index.get(key)
++        """Every RAM/disk hit updates LRU now; the writer batches durable recency."""
++        with self.lock:
++            job = self.waiting.get(key)
++            pt = self.index.get(key) or (job.point if job is not None else None)
+             if pt is not None:
+-                pt.used = time.time()
+-        try:
+-            os.utime(self._point_path(key, ".json"), None)
+-        except OSError:
+-            pass
++                pt.used = max(pt.used, time.time())
++                self.accesses.mark(key, pt.used)
+ 
+     def persist(self, ids: Sequence[int], obj, *, extent, lineage: str, tokens: Sequence[int] | None = None,
+                 shared: bool = False, head: bool = False, skip: Sequence[str] = (), fields: dict | None = None,
+@@ -938,7 +994,7 @@
+                 return "failed"
+             if key in self.index or key in self.waiting:
+                 pt = self.index.get(key) or self.waiting[key].point
+-                pt.used = time.time()
++                self.touch(key)
+                 if shared and not pt.shared:
+                     pt.shared = True
+                     self.version += 1
+@@ -1042,7 +1098,7 @@
+                 self._ref(pt.blocks, 1)
+             try:
+                 host_items = [(k, _host(t)) for k, t in items]
+-                ids_bytes = ids.tobytes() + (b"" if tokens is None else np.asarray(tokens, dtype=np.int64).tobytes())
++                ids_bytes = None  # token history streams from the immutable staged arrays in bounded chunks
+                 job = Job(pt, [b for b in new if b not in tails], (host_items, layer), need, extent, ids_bytes)
+                 job.host_bytes = host_need
+                 job.cut = [h for _, _, h in tails]
+@@ -1162,7 +1218,9 @@
+                 return False
+         synced = threading.Event()                          # (behind every rewrite those jobs or a keep queued)
+         self.jobs.put(("sync", None, None, synced))
+-        return synced.wait(None if end is None else max(0.0, end - time.monotonic()))
++        if not synced.wait(None if end is None else max(0.0, end - time.monotonic())):
++            return False
++        return synced.recency_ok
+ 
+     def prepare_release(self, extent, keep: int) -> bool:
+         """Nonblocking bounded-ring progress before destructive extent mutation.
+@@ -1257,7 +1315,11 @@
+ 
+     def _writer(self) -> None:
+         while True:
+-            kind, job, h, item = self.jobs.get()
++            self.accesses.flush()
++            try:
++                kind, job, h, item = self.jobs.get(timeout=60)
++            except queue.Empty:
++                continue
+             t0 = time.perf_counter()
+             if kind == "block":
+                 slot, nb, ev = item
+@@ -1275,7 +1337,8 @@
+                     self.free_slots.put(slot)
+                 self.stats["write_s"] += time.perf_counter() - t0
+                 continue
+-            if kind == "sync":                              # (``drain``: everything queued before it is done)
++            if kind == "sync":                              # clean shutdown: include batched access timestamps
++                item.recency_ok = self.accesses.flush(force=True)
+                 item.set()
+                 continue
+             if kind == "shared":
+@@ -1313,6 +1376,7 @@
+             return
+         meta["shared"] = True
+         _put(path, json.dumps(meta).encode(), self.owner)
++        self.manifests.forget(key)
+         _fsync_dir(self.points_dir)
+         with self.lock:
+             gone = self.index.get(key) is not pt
+@@ -1324,6 +1388,8 @@
+ 
+     def _write_point(self, job: Job) -> None:
+         pt = job.point
++        point_blocks = list(pt.blocks)
++        registered = False
+         try:
+             if job.failed is not None or job.cancelled.is_set():
+                 raise job.failed or RuntimeError("cancelled")
+@@ -1335,17 +1401,18 @@
+                 pt.digests = [d for _, _, d in got]
+                 shared = pt.shared                          # (kept again as shared after this: rewritten below)
+             _fsync_dir(self.blocks_dir)                     # the blocks' renames before the point naming them
+-            ids_crc = _put(self._point_path(pt.key, ".ids"), job.ids_bytes, self.owner)
++            history = self.histories.put(pt.key + "/ids", pt._ids)
++            tokens_history = self.histories.put(pt.key + "/tokens", pt._tokens) if pt._tokens is not None else None
+             parts = _small_parts(*job.small)
+             pt.small_crc = _put(self._point_path(pt.key, ".st"), parts, self.owner, direct=self.small_direct,
+                                 scratch=self.small_io_buf)
+             _fsync_dir(self.points_dir)
+             meta = {"format": FORMAT, "key": pt.key, "token_key": pt.token_key, "generation": pt.generation,
+                     "state_bytes": pt.state_bytes, "host_bytes": pt.host_bytes, "header_bytes": pt.header_bytes, "n": pt.n, "lineage": pt.lineage, "blocks": pt.blocks,
+-                    "crcs": pt.crcs, "digests": [d.hex() for d in pt.digests], "ids_crc": ids_crc,
+-                    "small_crc": pt.small_crc, "small_bytes": _up(sum(len(m) for m in parts)) + _up(len(job.ids_bytes)) + _up(8192 + len(json.dumps(pt.fields).encode()) + len(pt.blocks) * 128),
++                    "crcs": pt.crcs, "digests": [d.hex() for d in pt.digests], "history": history.to_json(),
++                    "tokens_history": None if tokens_history is None else tokens_history.to_json(),
++                    "small_crc": pt.small_crc, "small_bytes": _up(sum(len(m) for m in parts)) + _up(8192 + len(json.dumps(pt.fields).encode()) + len(pt.blocks) * 128),
+                     "shared": shared, "head": pt.head, "fields": pt.fields}
+-            pt.chain = _chain(pt.ids, self.block)
+             if job.cancelled.is_set():
+                 raise RuntimeError(job.cancel_reason or "cancelled")
+             _put(self._point_path(pt.key, ".json"), json.dumps(meta).encode(), self.owner)
+@@ -1359,8 +1426,11 @@
+                         except OSError:
+                             pass
+                     raise RuntimeError("a block it names was dropped while it was written")
++                self.manifests.forget(pt.key)
++                pt.freeze(self.histories, self.manifests, history, tokens_history)
+                 self._remember(pt.key, "committed", token_key=pt.token_key, generation=pt.generation)
+                 self.index[pt.key] = pt
++                registered = True
+                 self.index_host_bytes += pt.index_bytes
+                 self._ref(pt.blocks, 1)                     # (its own reference; the waiting one goes below)
+                 self._adopt(pt)
+@@ -1374,7 +1444,15 @@
+         except Exception as exc:                            # noqa: BLE001  (only this state is not kept on disk)
+             job.failed = exc
+             self.stats["write_failed"] += 1
++            if registered:
++                with self.lock:
++                    # Do not consult a manifest that may itself have failed.
++                    pt._metadata = None
++                    pt._blocks = point_blocks
++                    self._remove(pt.key, "dropped")
+             self._remember(pt.key, "failed", repr(exc), token_key=pt.token_key, generation=pt.generation)
++            self.histories.remove(pt.key + "/ids")
++            self.histories.remove(pt.key + "/tokens")
+             for suffix in (".json", ".st", ".ids"):
+                 try:
+                     os.remove(self._point_path(pt.key, suffix))
+@@ -1393,8 +1471,8 @@
+                 self.inflight.discard(pt.key)
+                 self.inflight.difference_update([h for _, _, h in job.new] + job.cut)
+                 self.waiting.pop(pt.key, None)
+-                self._ref(pt.blocks, -1)
+-                self._gc(pt.blocks)
++                self._ref(point_blocks, -1)
++                self._gc(point_blocks)
+             job.done.set()
+ 
+     # -- room ----------------------------------------------------------------------------------------------------------
+@@ -1424,6 +1502,10 @@
+             return
+         self.version += 1
+         self.index_host_bytes -= pt.index_bytes
++        self.manifests.forget(key)
++        self.accesses.forget(key)
++        self.histories.remove(key + "/ids")
++        self.histories.remove(key + "/tokens")
+         self._ref(pt.blocks, -1)
+         up = self.parent.pop(key, None)                     # its children's longest ancestor is now its parent
+         for k, v in self.parent.items():
+@@ -1445,18 +1527,20 @@
+ 
+         if q.n >= p.n:
+             return False
+-        for x in (p, q):
+-            if x.chain is None:
+-                x.chain = _chain(x.ids, self.block)
+-        k = len(q.chain)
+-        return q.chain == p.chain[:k] and np.array_equal(p.ids[k * self.block:q.n], q.ids[k * self.block:])
++        if p.history is not None and q.history is not None:
++            return self.histories.matcher(p.history).matches(q.history)
++        return np.array_equal(p.ids[:q.n], q.ids)
+ 
+     def _parent_of(self, p: Point) -> str | None:
+         """Lock held: the longest point in the index ``p``'s ids extend."""
+ 
++        matcher = self.histories.matcher(p.history) if p.history is not None else None
+         best = None
+         for q in self.index.values():
+-            if q is not p and (best is None or q.n > best.n) and self._extends(p, q):
++            if q is p or q.n >= p.n or (best is not None and q.n <= best.n):
++                continue
++            matches = matcher.matches(q.history) if matcher is not None and q.history is not None else self._extends(p, q)
++            if matches:
+                 best = q
+         return None if best is None else best.key
+ 
+@@ -1604,6 +1688,7 @@
+         exact (token_key,generation) identities across ranks before loading.
+         """
+         arr = np.asarray(prompt, dtype=np.int64)
++        matcher = PrefixMatcher.from_buffer(arr)
+         with self.lock:
+             points = sorted(self.index.values(), key=lambda p: (-p.n, -p.used, p.key))
+             return [pt for pt in points
+@@ -1611,7 +1696,7 @@
+                     and (not grid or pt.n % grid == 0)
+                     and (pt.n != len(arr) or pt.head)
+                     and (usable is None or usable(pt)) and self.has(pt.key)
+-                    and np.array_equal(arr[:pt.n], pt.ids)]
++                    and matcher.matches(pt.history)]
+ 
+     def best(self, prompt: Sequence[int], longer_than: int = 0, grid: int = 0, usable=None) -> Point | None:
+         points = self.candidates(prompt, longer_than, grid, usable)
+@@ -2122,6 +2207,9 @@
+                 "stored_gib": round(stored / (1 << 30), 2), "stored_bytes": stored,
+                 "disk_free_bytes": self.disk_free(), "host_pending_bytes": self.host_pending,
+                 "host_pending_cap_bytes": self.host_cap, "index_metadata_bytes": self.index_host_bytes,
++                "manifest_cache_bytes": self.manifests.bytes, "manifest_cache_cap_bytes": self.manifests.cap_bytes,
++                "token_history": self.histories.info(),
++                "recency": self.accesses.info(),
+                 "read_small_pending_bytes": self.read_host_pending,
+                 "read_small_cap_bytes": self.read_host_cap, "small_io_scratch_bytes": self.small_io_buf.nbytes,
+                 "pending_disk_bytes": self.backlog,
+--- /dev/null
++++ b/tensorfold/cuda/token_history.py
+@@ -0,0 +1,404 @@
++"""Shared immutable token histories, with a disk-backed, bounded-cache directory.
++
++Each node adds at most 2048 int64 tokens to a prefix. Checkpoints retain only a
++root hash and length. Nodes and payloads are shared across turns and branches;
++checkpoint roots are committed before the checkpoint manifest is published.
++This module is stdlib-only and performs no model or CUDA operations.
++"""
++from __future__ import annotations
++
++from bisect import bisect_left
++from collections import OrderedDict
++from dataclasses import dataclass
++import hashlib
++import json
++import os
++from pathlib import Path
++import sqlite3
++import struct
++import sys
++import threading
++import time
++
++BLOCK = 2048
++EMPTY = bytes(32)
++
++
++def node_hash(parent: bytes, payload_hash: bytes, n: int) -> bytes:
++    return hashlib.sha256(b"TF-token-history-v1\0" + parent + payload_hash + struct.pack("<Q", n)).digest()
++
++
++@dataclass(frozen=True)
++class HistoryRef:
++    head: bytes
++    n: int
++
++    def to_json(self):
++        return {"head": self.head.hex(), "n": self.n}
++
++    @classmethod
++    def parse(cls, value):
++        if not isinstance(value, dict) or set(value) != {"head", "n"}:
++            raise ValueError("invalid token-history descriptor")
++        if type(value["n"]) is not int or value["n"] <= 0:
++            raise ValueError("invalid token-history length")
++        head = bytes.fromhex(value["head"])
++        if len(head) != 32:
++            raise ValueError("invalid token-history root")
++        return cls(head, value["n"])
++
++
++class PrefixMatcher:
++    """Temporary prefix fingerprints; retains no full history in the index."""
++    def __init__(self, parts):
++        self.parts = list(parts)  # (end position, node hash, parent hash, payload bytes)
++        self.ends = [p[0] for p in self.parts]
++        self.n = self.ends[-1] if self.ends else 0
++
++    @classmethod
++    def from_buffer(cls, values):
++        raw = memoryview(values).cast("B")
++        if len(raw) % 8:
++            raise ValueError("token history requires int64 values")
++        parts, parent = [], EMPTY
++        for start in range(0, len(raw), 8 * BLOCK):
++            data = bytes(raw[start:start + 8 * BLOCK])
++            end = (start + len(data)) // 8
++            head = node_hash(parent, hashlib.sha256(data).digest(), end)
++            parts.append((end, head, parent, data))
++            parent = head
++        return cls(parts)
++
++    def head_at(self, n):
++        if not 0 < n <= self.n:
++            return None
++        i = bisect_left(self.ends, n)
++        end, head, parent, data = self.parts[i]
++        if n == end:
++            return head
++        start = 0 if i == 0 else self.ends[i - 1]
++        return node_hash(parent, hashlib.sha256(data[:8 * (n - start)]).digest(), n)
++
++    def matches(self, ref):
++        return self.head_at(ref.n) == ref.head
++
++
++class TokenHistories:
++    def __init__(self, path, *, cache_kib=4096):
++        self.path = Path(path)
++        self.path.parent.mkdir(parents=True, exist_ok=True)
++        self.lock = threading.RLock()
++        self.db = sqlite3.connect(self.path, check_same_thread=False)
++        self.db.execute("PRAGMA journal_mode=WAL")
++        self.db.execute("PRAGMA synchronous=FULL")
++        self.db.execute("PRAGMA mmap_size=0")
++        self.db.execute(f"PRAGMA cache_size=-{int(cache_kib)}")
++        self.db.execute("PRAGMA wal_autocheckpoint=256")
++        self.db.executescript("""
++          CREATE TABLE IF NOT EXISTS payloads (hash BLOB PRIMARY KEY, data BLOB NOT NULL, refs INTEGER NOT NULL);
++          CREATE TABLE IF NOT EXISTS nodes (hash BLOB PRIMARY KEY, parent BLOB NOT NULL,
++            payload BLOB NOT NULL, n INTEGER NOT NULL, refs INTEGER NOT NULL);
++          CREATE TABLE IF NOT EXISTS roots (owner TEXT PRIMARY KEY, head BLOB NOT NULL, n INTEGER NOT NULL);
++        """)
++        self.db.commit()
++        fd = os.open(self.path.parent, os.O_RDONLY | os.O_DIRECTORY)
++        try:
++            os.fsync(fd)
++        finally:
++            os.close(fd)
++        self.written_payload_bytes = 0
++
++    def put(self, owner, values):
++        raw = memoryview(values).cast("B")
++        if not len(raw) or len(raw) % 8:
++            raise ValueError("token history requires nonempty int64 values")
++        parent, written = EMPTY, 0
++        with self.lock, self.db:
++            for start in range(0, len(raw), 8 * BLOCK):
++                data = bytes(raw[start:start + 8 * BLOCK])
++                n = (start + len(data)) // 8
++                ph = hashlib.sha256(data).digest()
++                head = node_hash(parent, ph, n)
++                existing = self.db.execute("SELECT parent,payload,n FROM nodes WHERE hash=?", (head,)).fetchone()
++                if existing is None:
++                    payload = self.db.execute("SELECT data FROM payloads WHERE hash=?", (ph,)).fetchone()
++                    if payload is None:
++                        self.db.execute("INSERT INTO payloads VALUES (?,?,0)", (ph, data))
++                        written += len(data)
++                    elif payload[0] != data:
++                        raise ValueError("token payload hash collision or corruption")
++                    self.db.execute("UPDATE payloads SET refs=refs+1 WHERE hash=?", (ph,))
++                    self.db.execute("INSERT INTO nodes VALUES (?,?,?,?,0)", (head, parent, ph, n))
++                    if parent != EMPTY:
++                        if self.db.execute("UPDATE nodes SET refs=refs+1 WHERE hash=?", (parent,)).rowcount != 1:
++                            raise ValueError("missing token-history parent")
++                elif existing != (parent, ph, n):
++                    raise ValueError("token-history node identity mismatch")
++                parent = head
++            ref = HistoryRef(parent, len(raw) // 8)
++            old = self.db.execute("SELECT head,n FROM roots WHERE owner=?", (owner,)).fetchone()
++            if old != (ref.head, ref.n):
++                self.db.execute("UPDATE nodes SET refs=refs+1 WHERE hash=?", (ref.head,))
++                self.db.execute("INSERT OR REPLACE INTO roots VALUES (?,?,?)", (owner, ref.head, ref.n))
++                if old is not None:
++                    self._drop_reference(old[0])
++        self.written_payload_bytes += written
++        return ref
++
++    def bind(self, owner, descriptor):
++        ref = HistoryRef.parse(descriptor)
++        with self.lock:
++            row = self.db.execute("SELECT head,n FROM roots WHERE owner=?", (owner,)).fetchone()
++            if row != (ref.head, ref.n):
++                raise ValueError("checkpoint/token-history root mismatch")
++        return ref
++
++    def _parts(self, ref):
++        """Lock held; validate the chain before exposing token values."""
++        parts, head, end = [], ref.head, ref.n
++        while head != EMPTY:
++            row = self.db.execute("SELECT parent,payload,n FROM nodes WHERE hash=?", (head,)).fetchone()
++            if row is None or row[2] != end:
++                raise ValueError("missing or inconsistent token-history node")
++            parent, ph, n = row
++            payload = self.db.execute("SELECT data FROM payloads WHERE hash=?", (ph,)).fetchone()
++            if payload is None:
++                raise ValueError("missing token-history payload")
++            data = payload[0]
++            count = (n - 1) % BLOCK + 1
++            if (len(data) != 8 * count or hashlib.sha256(data).digest() != ph
++                    or node_hash(parent, ph, n) != head):
++                raise ValueError("corrupt token-history payload")
++            parts.append((n, head, parent, data))
++            end -= count
++            head = parent
++            if end < 0 or (head == EMPTY) != (end == 0):
++                raise ValueError("invalid token-history chain geometry")
++        parts.reverse()
++        return parts
++
++    def matcher(self, ref):
++        with self.lock:
++            return PrefixMatcher(self._parts(ref))
++
++    def read(self, ref):
++        with self.lock:
++            return b"".join(row[3] for row in self._parts(ref))
++
++    def digest(self, ref):
++        h = hashlib.sha256()
++        with self.lock:
++            for row in self._parts(ref):
++                h.update(row[3])
++        return h.hexdigest()
++
++    def _drop_reference(self, head):
++        """Transaction/lock held. Reclaim only nodes no child or checkpoint uses."""
++        while head != EMPTY:
++            row = self.db.execute("SELECT parent,payload,refs FROM nodes WHERE hash=?", (head,)).fetchone()
++            if row is None or row[2] < 1:
++                raise ValueError("token-history reference underflow")
++            parent, ph, refs = row
++            if refs > 1:
++                self.db.execute("UPDATE nodes SET refs=refs-1 WHERE hash=?", (head,))
++                return
++            self.db.execute("DELETE FROM nodes WHERE hash=?", (head,))
++            self.db.execute("UPDATE payloads SET refs=refs-1 WHERE hash=?", (ph,))
++            self.db.execute("DELETE FROM payloads WHERE hash=? AND refs=0", (ph,))
++            head = parent
++
++    def remove(self, owner):
++        with self.lock, self.db:
++            row = self.db.execute("SELECT head FROM roots WHERE owner=?", (owner,)).fetchone()
++            if row is not None:
++                self.db.execute("DELETE FROM roots WHERE owner=?", (owner,))
++                self._drop_reference(row[0])
++
++    def reconcile(self, owners):
++        """After validating checkpoint manifests, discard pre-publication orphans."""
++        wanted = set(owners)
++        with self.lock:
++            old = [r[0] for r in self.db.execute("SELECT owner FROM roots")]
++        for owner in old:
++            if owner not in wanted:
++                self.remove(owner)
++
++    def info(self):
++        with self.lock:
++            payloads, size = self.db.execute("SELECT count(*),coalesce(sum(length(data)),0) FROM payloads").fetchone()
++            nodes = self.db.execute("SELECT count(*) FROM nodes").fetchone()[0]
++            roots, logical = self.db.execute("SELECT count(*),coalesce(sum(n),0)*8 FROM roots").fetchone()
++            pages = self.db.execute("PRAGMA page_count").fetchone()[0]
++            free = self.db.execute("PRAGMA freelist_count").fetchone()[0]
++            page_size = self.db.execute("PRAGMA page_size").fetchone()[0]
++            return {"payloads": payloads, "nodes": nodes, "roots": roots,
++                    "payload_bytes": size, "logical_token_bytes": logical,
++                    "stored_bytes": (pages - free) * page_size,
++                    "new_payload_bytes": self.written_payload_bytes,
++                    "sqlite_cache_cap_bytes": abs(self.db.execute("PRAGMA cache_size").fetchone()[0]) * 1024}
++
++    def storage_bytes(self):
++        """Allocated live DB pages; free pages can be reused without disk growth."""
++        with self.lock:
++            pages = self.db.execute("PRAGMA page_count").fetchone()[0]
++            free = self.db.execute("PRAGMA freelist_count").fetchone()[0]
++            return (pages - free) * self.db.execute("PRAGMA page_size").fetchone()[0]
++
++    def close(self):
++        with self.lock:
++            self.db.execute("PRAGMA wal_checkpoint(TRUNCATE)")
++            self.db.close()
++
++
++class AccessTimes:
++    """Coalesced checkpoint recency; no disk writes on request/cache-hit paths.
++
++    The writer flushes changed timestamps in one transaction every two hours.
++    A clean shutdown forces a flush. An abrupt exit can lose recent access
++    timestamps, but never checkpoint/KV data. RAM decisions use exact live times.
++    """
++    INTERVAL = 2 * 60 * 60
++
++    def __init__(self, path, *, clock=time.monotonic):
++        self.clock = clock
++        self.lock = threading.RLock()
++        self.io_lock = threading.Lock()
++        self.db = sqlite3.connect(path, check_same_thread=False)
++        self.db.execute('PRAGMA journal_mode=WAL')
++        self.db.execute('PRAGMA synchronous=FULL')
++        self.db.execute('PRAGMA mmap_size=0')
++        self.db.execute('PRAGMA cache_size=-512')
++        self.db.execute('CREATE TABLE IF NOT EXISTS access_times (key TEXT PRIMARY KEY, used REAL NOT NULL)')
++        self.db.commit()
++        fd = os.open(Path(path).parent, os.O_RDONLY | os.O_DIRECTORY)
++        try:
++            os.fsync(fd)
++        finally:
++            os.close(fd)
++        self.dirty = {}
++        self.persisted = {row[0] for row in self.db.execute('SELECT key FROM access_times')}
++        self.inflight = set()
++        self.last_flush = clock()
++        self.last_attempt = None
++        self.flushes = self.flushed_entries = self.hits = self.errors = 0
++        self.last_error = None
++
++    def saved(self, key, fallback):
++        with self.io_lock:
++            row = self.db.execute('SELECT used FROM access_times WHERE key=?', (key,)).fetchone()
++        return max(fallback, row[0]) if row is not None else fallback
++
++    def mark(self, key, used):
++        with self.lock:
++            previous = self.dirty.get(key)
++            self.dirty[key] = max(used, previous) if previous is not None else used
++            self.hits += 1
++
++    def forget(self, key):
++        with self.lock:
++            if key in self.persisted or key in self.inflight:
++                self.dirty[key] = None
++            else:
++                self.dirty.pop(key, None)
++
++    def reconcile(self, valid):
++        """Recovery discards access records whose checkpoint no longer exists."""
++        wanted = set(valid)
++        with self.io_lock:
++            gone = [(row[0],) for row in self.db.execute('SELECT key FROM access_times') if row[0] not in wanted]
++            if gone:
++                with self.db:
++                    self.db.executemany('DELETE FROM access_times WHERE key=?', gone)
++        with self.lock:
++            self.persisted.difference_update(row[0] for row in gone)
++
++    def _persist(self, batch):
++        with self.io_lock, self.db:
++            updates = [(key, used) for key, used in batch.items() if used is not None]
++            deletes = [(key,) for key, used in batch.items() if used is None]
++            self.db.executemany('INSERT INTO access_times VALUES (?,?) ON CONFLICT(key) DO UPDATE SET used=max(used,excluded.used)', updates)
++            self.db.executemany('DELETE FROM access_times WHERE key=?', deletes)
++
++    def flush(self, *, force=False):
++        now = self.clock()
++        with self.lock:
++            if not self.dirty:
++                return True
++            if not force and (now - self.last_flush < self.INTERVAL or
++                              (self.last_attempt is not None and now - self.last_attempt < 60)):
++                return True
++            batch = dict(self.dirty)
++            self.inflight.update(batch)
++            self.last_attempt = now
++        try:
++            self._persist(batch)
++        except (OSError, sqlite3.Error) as exc:
++            with self.lock:
++                self.errors += 1
++                self.last_error = repr(exc)[:512]
++                self.inflight.difference_update(batch)
++            return False
++        with self.lock:
++            for key, used in batch.items():
++                if used is None:
++                    self.persisted.discard(key)
++                else:
++                    self.persisted.add(key)
++                if key in self.dirty and self.dirty[key] == used:
++                    del self.dirty[key]
++            self.inflight.difference_update(batch)
++            self.last_flush = now
++            self.flushes += 1
++            self.flushed_entries += len(batch)
++            self.last_error = None
++        return True
++
++    def info(self):
++        with self.lock:
++            return {'flush_interval_s': self.INTERVAL, 'dirty_entries': len(self.dirty),
++                    'hits': self.hits, 'flushes': self.flushes,
++                    'flushed_entries': self.flushed_entries, 'flush_errors': self.errors,
++                    'last_error': self.last_error, 'kv_rewrites': 0}
++
++
++def object_bytes(value):
++    if isinstance(value, dict):
++        return sys.getsizeof(value) + sum(object_bytes(k) + object_bytes(v) for k, v in value.items())
++    if isinstance(value, (list, tuple)):
++        return sys.getsizeof(value) + sum(object_bytes(v) for v in value)
++    return sys.getsizeof(value)
++
++
++class ManifestCache:
++    """A byte-bounded RAM window over complete checkpoint manifests on NVMe."""
++    def __init__(self, directory, *, cap_bytes=4 << 20, max_file_bytes=2 << 20):
++        self.directory = Path(directory)
++        self.cap_bytes, self.max_file_bytes = cap_bytes, max_file_bytes
++        self.rows = OrderedDict()
++        self.bytes = 0
++        self.lock = threading.RLock()
++
++    def get(self, key):
++        with self.lock:
++            if key in self.rows:
++                row = self.rows.pop(key); self.rows[key] = row
++                return row[0]
++            path = self.directory / (key + ".json")
++            with path.open("rb") as fh:
++                raw = fh.read(self.max_file_bytes + 1)
++            if len(raw) > self.max_file_bytes:
++                raise ValueError("checkpoint manifest exceeds cache parser bound")
++            value = json.loads(raw)
++            size = object_bytes(value)
++            if size <= self.cap_bytes:
++                while self.rows and self.bytes + size > self.cap_bytes:
++                    _, (_, old_size) = self.rows.popitem(last=False)
++                    self.bytes -= old_size
++                self.rows[key] = (value, size); self.bytes += size
++            return value
++
++    def forget(self, key):
++        with self.lock:
++            row = self.rows.pop(key, None)
++            if row is not None:
++                self.bytes -= row[1]
+--- a/tensorfold/families/glm5_next/cuda/multi.py
++++ b/tensorfold/families/glm5_next/cuda/multi.py
+@@ -50,6 +50,7 @@
+ from tensorfold.cuda.scheduler import Scheduler
+ from tensorfold.server.errors import CapacityError  # TFCAP-0075
+ from tensorfold.cuda.streams import Stream, next_fill
++from tensorfold.cuda.allocator_reclaim import AllocatorReclaimer, unpack_report
+ 
+ from . import multi_prefill, sliced_fill
+ from .multi_tune import MultiSettings, RoundProfile, allocate, reach_of, sample_packed, scaled_confidence
+@@ -58,11 +59,12 @@
+ 
+ ADMIT, EVICT, MOVE, GROW, FILL, ROUND, FINISH, IDLE, SLOT, MFILL, FILLPART, MFILLPART, LOAD, FLUSH, LOADED, \
+     HAS, LOADPART, TIER_STATUS, TIER_RELEASE, TIER_ABORT, LOADPOLL, LOADABORT, TIER_RETRY = range(1, 24)
++ALLOCATOR = 24
+ OPS = {ADMIT: "ADMIT", EVICT: "EVICT", MOVE: "MOVE", GROW: "GROW", FILL: "FILL", ROUND: "ROUND", FINISH: "FINISH",
+        IDLE: "IDLE", SLOT: "SLOT", MFILL: "MFILL", FILLPART: "FILLPART", MFILLPART: "MFILLPART", LOAD: "LOAD",
+        FLUSH: "FLUSH", LOADED: "LOADED", HAS: "HAS", LOADPART: "LOADPART",
+        TIER_STATUS: "TIER_STATUS", TIER_RELEASE: "TIER_RELEASE", TIER_ABORT: "TIER_ABORT",
+-       LOADPOLL: "LOADPOLL", LOADABORT: "LOADABORT", TIER_RETRY: "TIER_RETRY"}
++       LOADPOLL: "LOADPOLL", LOADABORT: "LOADABORT", TIER_RETRY: "TIER_RETRY", ALLOCATOR: "ALLOCATOR"}
+ # TF_GLM_SPILL_LOAD_MS (default 40): the most a step of the reads in flight copies between two rounds (rank 0's time)
+ LOAD_MS_DEFAULT = 40.0
+ 
+@@ -569,6 +571,9 @@
+         self.watchdog = watchdog_seconds()               # stack dumps of a stalled iteration (TF_GLM_MULTI_WATCHDOG_S)
+         watchdog_exits()                                  # TF_GLM_MULTI_WATCHDOG_EXIT read now: a typo fails at start
+         self.iteration_since = None                       # when rank 0's current iteration began (/health)
++        self.allocator = AllocatorReclaimer(torch.cuda, self.w.device)
++        self.allocator_rows = []
++        self.allocator_observed = None
+         self.sent = self.received = 0                     # messages sealed on rank 0, unsealed on rank 1
+         self.lanes: dict[int, Lane] = {}                 # by sid, in admission order
+         self.kept: list = []                             # kept prompts (decode.Snapshot + kid, extent), oldest first
+@@ -632,6 +637,7 @@
+                 "pool_tokens": self.pool.rows, "pool_free_tokens": self.pool.free_rows(),
+                 "kept_prompts": len(self.kept),
+                 "kept_bytes": self._held_bytes(), "kept_bytes_cap": self.kept_bytes_cap,
++                "allocator": self._allocator_health(),
+                 # what the slots are holding. own = a conversation's turn-boundary state (capped by
+                 # TF_GLM_KEEP_PER_CHAT); shared = a shared-prefix point or a mid-prefill pause state (not capped);
+                 # by_chat shows one conversation id per entry, so a long session that keeps forking its prefix
+@@ -1109,6 +1115,8 @@
+ 
+     def _touch(self, c) -> None:
+         self.kept = [k for k in self.kept if k is not c] + [c]
++        if self.disk is not None and getattr(c, "spill_key", None) is not None:
++            self.disk.touch(c.spill_key)
+ 
+     def _keep(self, lane: Lane, n: int, head=None, own: bool = False) -> None:
+         """Both ranks: the lane's state at prompt position n (== its pos) becomes a kept prompt in its extent;
+@@ -1156,6 +1164,7 @@
+                     holds = lane.extent.spill_holds = {}
+                 holds[gen] = n
+                 token_key = point_key(self._ident(snap))
++                snap.spill_key = snapshot_key_from_token(token_key, gen)
+                 self.tier_records[gen] = {"x": lane.extent, "n": n,
+                                           "key": snapshot_key_from_token(token_key, gen),
+                                           "result": "refused", "aborting": False, "released": False,
+@@ -1186,20 +1195,53 @@
+                 self._evict(victim, spill=False)
+ 
+     def _release(self) -> None:
+-        """Hand cached-but-unused blocks back to the driver, but only when torch is actually hoarding them (with
+-        TF_GLM_KEPT_BYTES_GIB set).
+-
+-        `engine._remember`/`_take_over` call empty_cache after dropping states, and the parallel path never did -- the
+-        free memory the hosts lost (down to 0.1 GB) never came back. Calling it on every drop is too blunt though:
+-        measured by the author, that cost ~16% of decode speed (50.5 against 60.4 tok/s), because every round then had
+-        to ask the driver for its blocks again. So pay it only when the allocator holds a lot of unused memory."""
+-
+-        try:
+-            if torch.cuda.memory_reserved() - torch.cuda.memory_allocated() < (512 << 20):
+-                return
+-            torch.cuda.empty_cache()
+-        except Exception:
+-            pass
++        """Request a check at an ordered boundary; never reclaim inside an eviction/load mutation."""
++        allocator = getattr(self, "allocator", None)
++        if allocator is not None:
++            allocator.request()
++
++    def _allocator_health(self) -> dict:
++        observed = getattr(self, "allocator_observed", None)
++        return {"schema": 1, "inspect_s": 5.0, "cooldown_s": 30.0,
++                "unused_trigger_bytes": 4 << 30, "growth_trigger_bytes": 512 << 20,
++                "observed_ago_s": None if observed is None else round(time.monotonic() - observed, 3),
++                "ranks": list(getattr(self, "allocator_rows", []))}
++
++    def _allocator_boundary(self) -> None:
++        """Rank0 schedules this even during continuous requests; never inside a partially yielded forward."""
++        allocator = getattr(self, "allocator", None)
++        if allocator is None or self.broken is not None or self.partial is not None:
++            return
++        idle = int(not self.lanes)
++        if not allocator.due(idle=bool(idle)):
++            return
++        self._emit(ALLOCATOR, [1, idle])
++        self._flush()
++        self._allocator_maintenance(1, idle)
++
++    def _allocator_idle_wait(self):
++        """A cooldown/error pending on ANY rank must be revisited even with no new requests."""
++        allocator = getattr(self, "allocator", None)
++        if allocator is None or not allocator.enabled:
++            return None
++        rows = getattr(self, "allocator_rows", [])
++        if not rows or any(row["retry_pending"] for row in rows):
++            return max(0.01, min(allocator.policy.inspect_s, allocator.next_check - allocator.clock()))
++        return None
++
++    def _allocator_maintenance(self, version: int, idle: int) -> None:
++        """All ranks: local reclaim branch, then ONE unconditional matching report gather."""
++        if version != 1 or idle not in (0, 1) or idle != int(not self.lanes) or self.partial is not None:
++            raise RuntimeError("allocator maintenance outside an agreed serving boundary")
++        wire = self.allocator.inspect()
++        rows = self.g._gather_ints(wire) if self.w.world > 1 else [wire]
++        if len(rows) != self.w.world:
++            raise RuntimeError("allocator report did not include every rank")
++        reports = [{"rank": rank, **unpack_report(row)} for rank, row in enumerate(rows)]
++        self.allocator_rows = reports
++        self.allocator_observed = time.monotonic()
++        if self.allocator.last_error:
++            print(f"[tensorfold] allocator rank {self.rank}: {self.allocator.last_error}", flush=True)
+ 
+     def _held_bytes(self) -> int:
+         """What every kept prompt owns outside the pool (its KDA states, conv windows, a kept DFlash2 window, the
+@@ -1213,11 +1255,6 @@
+         """Forget a kept prompt; its extent goes when nothing else holds it, else shrinks to what is kept. (With the
+         spill tier on it was written when it was kept; ``spill`` is kept for the EVICT op's payload.)"""
+ 
+-        held = 0
+-        if self.kept_bytes_cap:
+-            from .decode import snapshot_bytes
+-
+-            held = snapshot_bytes(c)
+         self.kept = [k for k in self.kept if k is not c]
+         x = c.extent
+         x.kept = [k for k in x.kept if k is not c]
+@@ -1225,8 +1262,7 @@
+         c.tail = c.head = None
+         c.drafter_rows = None
+         self._settle(x)
+-        if held >= (64 << 20):
+-            self._release()
++        self._release()                     # small evictions also request the bounded boundary check
+ 
+     def _settle(self, x) -> None:
+         if x.owner is not None:
+@@ -1775,9 +1811,11 @@
+             self.pool.remove(x)
+             self._release()
+             return False
+-        ids = [int(t) for t in (pt.tokens if pt.tokens is not None else pt.ids)]
+-        keyed = [int(t) for t in pt.ids] if pt.tokens is not None else None
++        token_ids, keyed_ids = pt.tokens, pt.ids
++        ids = [int(t) for t in (token_ids if token_ids is not None else keyed_ids)]
++        keyed = [int(t) for t in keyed_ids] if token_ids is not None else None
+         snap.lineage, snap.spill_generation = pt.lineage, pt.generation
++        snap.spill_key = pt.key
+         snap.ids = ids
+         snap.pending, snap.mtp_len, snap.rows, snap.nbytes = None, -1, None, 0
+         snap.kid = self.next_kid
+@@ -1939,6 +1977,9 @@
+         """Rank 0: one prompt chunk or one decode round; returns the streams that finished."""
+ 
+         self._check()
++        allocator = getattr(self, "allocator", None)
++        if self.lanes and allocator is not None:
++            allocator.note_activity()
+         _watch(self.watchdog, "iteration")               # cancelled at the end of ``finish``
+         self.iteration_since = time.monotonic()           # /health's iteration_s
+         try:
+@@ -2517,6 +2558,7 @@
+                 s.out and s.out[-1] in self._ends(lane)) else DONE
+             self._emit(FINISH, [lane.sid, reason])
+             self._finish(lane.sid)
++        self._allocator_boundary()
+         if not self.lanes and not self.idle and self.broken is None:
+             self.decode_due = self.short_round_due = False
+             self._emit(IDLE, [])
+@@ -2704,6 +2746,10 @@
+                 self._reslot(self.lanes[p[0]], p[1])
+             elif op == FINISH:
+                 self._finish(p[0])
++            elif op == ALLOCATOR:
++                if len(p) != 2:
++                    raise RuntimeError("invalid allocator maintenance payload")
++                self._allocator_maintenance(*p)
+             elif op == IDLE:
+                 if self.lanes:
+                     raise RuntimeError(f"rank 1 holds {len(self.lanes)} streams rank 0 has finished")
+@@ -3010,7 +3056,19 @@
+             time.sleep(0.002)                    # only reads in flight: poll them
+         if not self.decoder.live() and self.decoder.tier_records:
+             time.sleep(0.002)
+-        first = self.waiting.get() if idle else None                # idle: wait for a request
++        first = None
++        if idle:
++            # Tier maintenance may have woken followers before removing its last
++            # record. Park them before rank 0 blocks for another request.
++            self.decoder.finish([])
++            # Usually block for a request; a pending allocator retry has its own
++            # timed wake so the last request cannot strand memory in cooldown.
++            timeout = self.decoder._allocator_idle_wait()
++            try:
++                first = self.waiting.get(timeout=timeout)
++            except queue.Empty:
++                self.decoder.finish([])
++                return
+         until = time.monotonic() + self.gather_s if idle and self.gather_s > 0 else None
+         done = self._admit(first, until)
+         try:
+--- a/tensorfold/server/responses.py
++++ b/tensorfold/server/responses.py
+@@ -133,6 +133,7 @@
+         self.status: int | None = None
+         self.stream = False
+         self.data = bytearray()
++        self.comment: Callable[[bytes], None] | None = None
+ 
+     def write(self, data: bytes) -> int:
+         self.data += data
+@@ -150,6 +151,8 @@
+         while self.stream and (end := self.data.find(b"\n\n")) >= 0:
+             block = bytes(self.data[:end])
+             del self.data[:end + 2]
++            if block.startswith(b":") and self.comment is not None:
++                self.comment(block + b"\n\n")
+             for line in block.split(b"\n"):
+                 if line.startswith(b"data: "):
+                     try:
+@@ -165,6 +168,11 @@
+ def _run_chat(handler: Any, body: dict[str, Any], wire: Wire) -> None:
+     """The server's own chat-completions handler on ``body``, over this connection, its response written to ``wire``."""
+ 
++    def comment(data: bytes) -> None:
++        handler.wfile.write(data)
++        handler.wfile.flush()
++
++    wire.comment = comment
+     data = json.dumps(body).encode()
+     inner = type(handler).__new__(type(handler))
+     inner.__dict__.update(handler.__dict__)
+--- /dev/null
++++ b/tensorfold/server/sse.py
+@@ -0,0 +1,81 @@
++"""Serialized SSE writes with bounded, request-owned silence keepalives.
++
++The model stays on its existing request thread. The only added thread writes
++comments, and is stopped and joined before the response releases its socket.
++"""
++from __future__ import annotations
++
++import math
++import threading
++import time
++
++KEEPALIVE_S = 20.0
++WRITE_TIMEOUT_S = 5.0
++COMMENT = b": keepalive\n\n"
++
++
++class SSEWriter:
++    def __init__(self, handler, cancellation, *, interval=KEEPALIVE_S, write_timeout=WRITE_TIMEOUT_S):
++        if any(not math.isfinite(v) or v <= 0 for v in (interval, write_timeout)):
++            raise ValueError("SSE intervals must be finite and positive")
++        self.handler, self.cancellation = handler, cancellation
++        self.interval, self.write_timeout = interval, write_timeout
++        self.lock = threading.Lock()
++        self.stopped = threading.Event()
++        self.last_write = time.monotonic()
++        self.thread = threading.Thread(target=self._keepalive, name="tensorfold-sse-keepalive", daemon=True)
++        self.previous_timeout = None
++
++    def __enter__(self):
++        connection = self.handler.connection
++        self.previous_timeout = connection.gettimeout()
++        timeout = self.write_timeout if self.previous_timeout is None else min(self.previous_timeout, self.write_timeout)
++        connection.settimeout(timeout)
++        try:
++            self.thread.start()
++        except BaseException:
++            connection.settimeout(self.previous_timeout)
++            raise
++        return self
++
++    def _failed(self):
++        self.cancellation.cancel()
++        self.stopped.set()
++
++    def _write_locked(self, data, final=False):
++        if self.stopped.is_set() or self.cancellation.cancelled:
++            self.stopped.set()
++            return False
++        try:
++            self.handler.wfile.write(data)
++            self.handler.wfile.flush()
++            self.last_write = time.monotonic()
++            return True
++        except OSError:
++            self._failed()
++            return False
++        finally:
++            if final:
++                self.stopped.set()  # under the write lock: no heartbeat can follow DONE/error
++
++    def write(self, data, *, final=False):
++        with self.lock:
++            return self._write_locked(data, final)
++
++    def _keepalive(self):
++        try:
++            while not self.stopped.wait(max(0.001, self.interval - (time.monotonic() - self.last_write))):
++                with self.lock:
++                    if time.monotonic() - self.last_write >= self.interval:
++                        if not self._write_locked(COMMENT):
++                            return
++        except Exception:
++            self._failed()  # a background writer failure must cancel, never leave generation abandoned
++
++    def __exit__(self, exc_type, exc, tb):
++        self.stopped.set()
++        self.thread.join()  # socket writes have the bounded timeout installed above
++        try:
++            self.handler.connection.settimeout(self.previous_timeout)
++        except OSError:  # a disconnected socket may already have been closed
++            pass

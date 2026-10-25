@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Reproduce the frozen Mia107 prefill and NVMe-v3 source overlays. Default --plan is offline."""
+"""Reproduce the frozen Mia107 prefill, NVMe and cache source overlays. Plans are offline."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -24,15 +24,26 @@ EXPECTED = {
     "source-after-nvme.json": "f31e0d200755083a42d6290323ee8682b37e24d9091ae4e4b9782c4701f11ee0",
     "patches/mia107-nvme-v3.patch": "05c4a44926878b18d2e0514904a04db18f9784bcfc2265eaeae3454c47e01f94",
     "manifests/source-4096-nvme.json": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
-    "source-manifest.json": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
+    "source-after-recency.json": "61a034d04f366527106ac7aa8100bfef2d2b6ed49e134400f36838d398425bc0",
+    "source-after-cache.json": "38eeefde77d1fbb6eacffdf2e7a51ad7310a6cc190c30a4b8e7fd0c67afa7160",
+    "patches/mia107-cache-foundation.patch": "d347f545dcee87b6daa2dd8a5952d3abb4904cbf7925b56f169f2058c38bb94e",
+    "patches/mia107-cache-backports.patch": "d53265d62dbdeb07ecac44da35461094c9e79441096f970bc5049d6786ee597a",
+    "manifests/source-4096-recency.json": "63239e7857e0b88391a51c37423bd7180db402f3dcd386c17ea2232583864ab2",
+    "manifests/source-4096-cache.json": "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a",
+    "source-manifest.json": "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a",
 }
 MODIFIED = {"families/glm5_next/cuda/" + name for name in
             ("engine.py", "forward.py", "hcsplit.py", "latent.py", "sparse.py", "own_front.py", "microbatch.py")}
 
 NVME_MODIFIED = {"cuda/spill_blocks.py", "cuda/tier_protocol.py", "server/metrics.py",
                  "families/glm5_next/cuda/engine.py", "families/glm5_next/cuda/multi.py"}
-VARIANTS = ("2048", "4096", "4096-nvme")
-DEFAULT_VARIANT = "4096-nvme"
+CACHE_FOUNDATION_MODIFIED = {"cuda/allocator_reclaim.py", "cuda/http.py", "cuda/spill.py",
+    "cuda/spill_blocks.py", "cuda/token_history.py", "families/glm5_next/cuda/multi.py",
+    "server/responses.py", "server/sse.py"}
+CACHE_BACKPORT_MODIFIED = {"families/glm5_next/cuda/multi.py",
+    "families/glm5_next/cuda/kept_reasoning.py", "server/metrics.py"}
+VARIANTS = ("2048", "4096", "4096-nvme", "4096-cache")
+DEFAULT_VARIANT = "4096-cache"
 
 
 def sha(path):
@@ -52,7 +63,7 @@ def validate_names(files):
 
 def assets(variant):
     if variant not in VARIANTS:
-        raise ValueError("manifest variant must be2048,4096 or4096-nvme")
+        raise ValueError("unsupported manifest variant")
     for name, wanted in EXPECTED.items():
         path = ASSETS / name
         if path.is_symlink() or sha(path) != wanted:
@@ -71,7 +82,10 @@ def assets(variant):
     prefill = json.loads((ASSETS / "source-after.json").read_text())["files"]
     nvme_document = json.loads((ASSETS / "source-after-nvme.json").read_text())
     nvme = nvme_document["files"]
-    for names in (before, prefill, nvme):
+    recency_document = json.loads((ASSETS / "source-after-recency.json").read_text())
+    cache_document = json.loads((ASSETS / "source-after-cache.json").read_text())
+    recency, cache = recency_document["files"], cache_document["files"]
+    for names in (before, prefill, nvme, recency, cache):
         validate_names(names)
     if len(before) != 439 or len(prefill) != 441 or len(nvme) != 443:
         raise ValueError("wrong source cardinality")
@@ -80,14 +94,27 @@ def assets(variant):
         raise ValueError("prefill port no longer modifies exactly the seven frozen files")
     if changed(prefill, nvme) != NVME_MODIFIED:
         raise ValueError("NVMe port no longer modifies exactly the five frozen files")
+    if (len(recency) != 446 or len(cache) != 446
+            or changed(nvme, recency) != CACHE_FOUNDATION_MODIFIED
+            or changed(recency, cache) != CACHE_BACKPORT_MODIFIED):
+        raise ValueError("cache source chain differs from frozen inventories")
+    for document, base, final in [
+        (recency_document, "4096-nvme", "4096-recency"),
+        (cache_document, "4096-recency", "4096-cache"),
+    ]:
+        if (document.get("file_count") != 446
+                or document.get("base_manifest_sha256") != EXPECTED["manifests/source-" + base + ".json"]
+                or document.get("source_manifest_sha256") != EXPECTED["manifests/source-" + final + ".json"]):
+            raise ValueError("cache source chain identity mismatch")
     if (nvme_document.get("file_count") != 443
             or nvme_document.get("base_manifest_sha256") != EXPECTED["manifests/source-4096.json"]
             or nvme_document.get("source_manifest_sha256") != EXPECTED["manifests/source-4096-nvme.json"]):
         raise ValueError("NVMe source chain differs from frozen inventories")
-    after = nvme if variant == "4096-nvme" else prefill
+    after = cache if variant == "4096-cache" else nvme if variant == "4096-nvme" else prefill
     template = ASSETS / "manifests" / ("source-" + variant + ".json")
     value = json.loads(template.read_text())
-    source_id = "mia107-tp4-prefill-nvme-tier-v3" if variant == "4096-nvme" else "mia107-tp4-prefill-port-v1"
+    source_id = ("mia107-tp4-cache-four-backports-v1" if variant == "4096-cache" else
+                 "mia107-tp4-prefill-nvme-tier-v3" if variant == "4096-nvme" else "mia107-tp4-prefill-port-v1")
     if (value.get("schema") != "glm-prefill-engine-source/v1"
             or value.get("source_id") != source_id or value.get("files") != after):
         raise ValueError("runtime manifest differs from frozen output tree")
@@ -189,8 +216,12 @@ def build(output, *, variant=DEFAULT_VARIANT, source_package=None):
             verify_tree(work / "tensorfold", before)
             prefill = json.loads((ASSETS / "source-after.json").read_text())["files"]
             steps = [("mia107-prefill.patch", prefill)]
-            if variant == "4096-nvme":
-                steps.append(("mia107-nvme-v3.patch", after))
+            if variant in ("4096-nvme", "4096-cache"):
+                nvme = json.loads((ASSETS / "source-after-nvme.json").read_text())["files"]
+                steps.append(("mia107-nvme-v3.patch", nvme))
+            if variant == "4096-cache":
+                recency = json.loads((ASSETS / "source-after-recency.json").read_text())["files"]
+                steps.extend([("mia107-cache-foundation.patch", recency), ("mia107-cache-backports.patch", after)])
             logs = []
             for patch_name, wanted in steps:
                 proc = subprocess.run(["patch", "--batch", "--forward", "--fuzz=0",
@@ -230,7 +261,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True, help="NEW private overlay directory")
     parser.add_argument("--manifest", choices=VARIANTS, default=DEFAULT_VARIANT,
-                        help="4096-nvme (default) adds NVMe-v3;2048/4096 retain the original prefill tree")
+                        help="4096-cache (default) reproduces deployed cache fixes; other variants retain historical bytes")
     parser.add_argument("--source-package", type=Path,
                         help="offline439-file preimage package; omit to extract the pinned local image")
     parser.add_argument("--run", action="store_true", help="actually create overlay; omitted means offline plan")

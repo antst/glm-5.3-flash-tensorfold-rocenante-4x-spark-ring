@@ -18,7 +18,16 @@ local NCCL control. These are measured point estimates, with ranges retained.
 The published [phase-one recipe](https://github.com/antst/glm-5.3-flash-tensorfold-4x-spark-ring/tree/v0.1.0)
 remains the independent baseline and recovery path.
 
-**v0.1.5 NVMe profile — qualified and serving on API 8888.**
+**Current cache maintenance — 2026-10-25.** The default `4096-cache` builder
+reproduces the deployed 446-file overlay, including shared token histories,
+bounded checkpoint metadata, two-hour recency batches and four Mia cache
+backports. All 151 existing checkpoints per rank survived the update. The
+validation covered 117 CPU checks, 300 reasoning histories, both native
+transports and a live disk/RAM replay; it adds no throughput or full-capacity
+claim. See the [source builder](engine/README.md) and
+[sanitized result](results/cache-backports-20261025.json).
+
+**Historical v0.1.5 NVMe qualification.**
 The example selects a host-local persistent cache tier with a 6,098,944-row RAM
 ceiling, P8 admission and the unchanged 1M per-request context/39.5625 GiB cache
 request. Eight independent 1,046,528-token histories passed all 24 fresh/replay
@@ -141,7 +150,7 @@ Build the declared engine overlay on an ARM64 Docker host first, following
 [the CPU-only engine builder](engine/README.md). Keep the output at the same
 shared absolute path on all ranks, and set `engine_overlay_root`,
 `engine_manifest`, its SHA256 and the selected flags in `local/config.json`.
-Use builder variant `4096-nvme` and a new `local/engine-nvme` output. The explicit example requires this overlay; an unbuilt or changed manifest is
+Use builder variant `4096-cache` and a new `local/engine-nvme` output. The explicit example requires this overlay; an unbuilt or changed manifest is
 refused before launch. Review the builder plan before executing it.
 
 Check sources and perform an offline model launch plan:

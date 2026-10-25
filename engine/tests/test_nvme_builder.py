@@ -30,19 +30,19 @@ class NVMeAssets(unittest.TestCase):
         self.assertEqual({p for p in prefill.keys() | final.keys() if prefill.get(p) != final.get(p)}, builder.NVME_MODIFIED)
         self.assertEqual(set(final) - set(prefill), {"cuda/spill_blocks.py", "cuda/tier_protocol.py"})
 
-    def test_default_plan_is_current_without_process_or_creation(self):
+    def test_historical_plan_is_offline_without_creation(self):
         with tempfile.TemporaryDirectory() as temp, patch.object(builder.subprocess, "run", side_effect=AssertionError("plan ran process")):
             output = Path(temp) / "absent"
             with contextlib.redirect_stdout(io.StringIO()) as log:
-                self.assertEqual(builder.main(["--output", str(output)]), 0)
+                self.assertEqual(builder.main(["--output", str(output), "--manifest", "4096-nvme"]), 0)
             plan = json.loads(log.getvalue())
             self.assertEqual(plan["manifest"], "4096-nvme")
             self.assertEqual(plan["source_files"], 443)
             self.assertEqual(plan["source_manifest_sha256"], FINAL)
             self.assertFalse(output.exists())
 
-    def test_default_manifest_asset_is_exact_copy(self):
-        self.assertEqual((ENGINE / "source-manifest.json").read_bytes(), (ENGINE / "manifests/source-4096-nvme.json").read_bytes())
+    def test_historical_manifest_asset_retains_its_exact_hash(self):
+        self.assertEqual(builder.sha(ENGINE / "manifests/source-4096-nvme.json"), FINAL)
 
     def test_nvme_patch_tamper_rejected_before_creation(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -82,10 +82,10 @@ class NVMeEquivalence(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
 
-    def test_default_full439_to443_exact_bytes_and_both_steps(self):
+    def test_historical_full439_to443_exact_bytes_and_both_steps(self):
         output = self.root / "nvme-default"
         with patch.object(builder, "extract_image", side_effect=AssertionError("offline build called Docker")):
-            receipt = builder.build(output, source_package=self.original)
+            receipt = builder.build(output, variant="4096-nvme", source_package=self.original)
         self.assertTrue(receipt["passed"])
         self.assertEqual(receipt["manifest_variant"], "4096-nvme")
         self.assertEqual(receipt["source_manifest_sha256"], FINAL)
@@ -103,7 +103,7 @@ class NVMeEquivalence(unittest.TestCase):
             return real(command, **kwargs)
         output = self.root / "second-failed"
         with patch.object(builder.subprocess, "run", side_effect=run), self.assertRaisesRegex(RuntimeError, "nvme-v3.patch"):
-            builder.build(output, source_package=self.original)
+            builder.build(output, variant="4096-nvme", source_package=self.original)
         self.assertFalse((output / "tensorfold").exists())
         receipt = json.loads((output / "build-receipt.json").read_text())
         self.assertFalse(receipt["passed"])
@@ -121,7 +121,7 @@ class NVMeEquivalence(unittest.TestCase):
             return result
         output = self.root / "drift-failed"
         with patch.object(builder.subprocess, "run", side_effect=run), self.assertRaisesRegex(RuntimeError, "hash/cardinality"):
-            builder.build(output, source_package=self.original)
+            builder.build(output, variant="4096-nvme", source_package=self.original)
         self.assertFalse((output / "tensorfold").exists())
         self.assertFalse(json.loads((output / "build-receipt.json").read_text())["passed"])
 
@@ -137,7 +137,7 @@ class NVMeEquivalence(unittest.TestCase):
             return result
         output = self.root / "asset-race"
         with patch.object(builder, "ASSETS", copied), patch.object(builder.subprocess, "run", side_effect=run), self.assertRaisesRegex(RuntimeError, "asset inventory"):
-            builder.build(output, source_package=self.original)
+            builder.build(output, variant="4096-nvme", source_package=self.original)
         self.assertFalse((output / "tensorfold").exists())
 
 

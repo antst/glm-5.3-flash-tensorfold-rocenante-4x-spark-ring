@@ -15,7 +15,7 @@ from common import load_config
 from cluster import Operator
 from experiment import prepare_config, stop_owned
 
-MANIFEST = "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b"
+MANIFEST = "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a"
 
 
 class NvmeConfigTests(unittest.TestCase):
@@ -48,7 +48,7 @@ class NvmeConfigTests(unittest.TestCase):
         self.assertEqual(value["engine_manifest_sha256"], MANIFEST)
         self.assertEqual(value["engine_flags"]["TF_GLM_POOL_TOKENS"], "6098944")
         self.assertTrue(value["engine_overlay_root"].endswith("/local/engine-nvme"))
-        self.assertEqual(value["tier"], {"root": "/var/tmp/spark-ring-nvme-tier-v2", "gib": 256,
+        self.assertEqual(value["tier"], {"root": "/var/tmp/spark-ring-nvme-tier-shared-history-v3", "gib": 256,
                                         "min_free_gib": 64, "min_tokens": 8192, "turns": 4,
                                         "host_mib": 512, "read_host_mib": 256,
                                         "stage_mib": 256, "read_blocks": 16})
@@ -68,7 +68,7 @@ class NvmeConfigTests(unittest.TestCase):
                 patch.object(Path, "write_text", side_effect=AssertionError("command generation must be read-only")):
             commands = [Operator(cfg).command(rank, Path("/unused/libnccl.so.2"), "TEST")[1] for rank in range(4)]
         for argv in commands:
-            self.assertIn("type=bind,src=/var/tmp/spark-ring-nvme-tier-v2,dst=/snapshots", argv)
+            self.assertIn("type=bind,src=/var/tmp/spark-ring-nvme-tier-shared-history-v3,dst=/snapshots", argv)
             for setting in ("TF_GLM_POOL_TOKENS=6098944", "TF_GLM_SPILL_HOST_MIB=512",
                             "TF_GLM_SPILL_READ_HOST_MIB=256", "TF_GLM_SPILL_STAGE_MIB=256",
                             "TF_GLM_SPILL_READ_BLOCKS=16", "TF_GLM_SPILL_TURNS=4",
@@ -87,7 +87,7 @@ class NvmeConfigTests(unittest.TestCase):
 
     def test_tier_stop_finishes_rank_zero_before_stopping_followers(self):
         class FakeOperator:
-            config = {"tier": {"root": "/var/tmp/spark-ring-nvme-tier-v2"}}
+            config = {"tier": {"root": "/var/tmp/spark-ring-nvme-tier-shared-history-v3"}}
             calls = []
             def stop_one(self, rank):
                 self.calls.append(("stop", rank))

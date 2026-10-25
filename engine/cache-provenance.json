@@ -1,0 +1,67 @@
+{
+  "backports": [
+    "0088: keep the disk-read marker through NoRoom admission retries",
+    "0119: continued chat identity",
+    "0120: shared fork-point retention",
+    "0121: linear-time kept reasoning restoration"
+  ],
+  "compatibility": {
+    "compatible_manifest_sha256": "e97df4589d4f921f6c5022dab2a7bb8646e09602dd9bde8b9cc5110c3d66f82a",
+    "compatible_sources_sha256": "7fa76f7eb6fee0cf7817d13484f3144e03fd7abc40b334feadfbb0bb7305e7e1",
+    "current_sources_sha256": "995c85c1014d975922de57dba7eefc627182fe05a7e94a8bd380e105fd7f3f84",
+    "family": "tensorfold.families.glm5_next",
+    "reason": "Scheduler admission, retention classification and equivalent reasoning restoration only; unchanged KV computation/layout, snapshot generations and durable checkpoint format. The new optional after field is read with a missing-field fallback."
+  },
+  "credits": {
+    "0088": "nanashi66 and MiaAI-Lab follow-up",
+    "0119": "Robert Wojciechowski (wojo)",
+    "0120": "BadAd84; RyanLeeUPC diagnosis/proposed fix",
+    "0121": "cawilliamson"
+  },
+  "final_manifest_sha256": "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a",
+  "foundation": [
+    "Bounded allocator reclamation and telemetry",
+    "SSE keepalives and shutdown handling already present in deployed base",
+    "Shared token histories and bounded metadata caches",
+    "Two-hour coalesced recency persistence including RAM hits"
+  ],
+  "license": "Apache-2.0 and the retained TensorFold MIT/third-party notices; see licenses/.",
+  "schema": "glm-cache-backports-public-package/v1",
+  "scope": "Exact source reconstruction only. Existing image, GPU kernels, model weights and transport implementation are unchanged; runtime configuration and qualification remain separate.",
+  "source_file_counts": [
+    443,
+    446,
+    446
+  ],
+  "steps": [
+    {
+      "base_manifest_sha256": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
+      "changed_files": [
+        "cuda/allocator_reclaim.py",
+        "cuda/http.py",
+        "cuda/spill.py",
+        "cuda/spill_blocks.py",
+        "cuda/token_history.py",
+        "families/glm5_next/cuda/multi.py",
+        "server/responses.py",
+        "server/sse.py"
+      ],
+      "output_manifest_sha256": "63239e7857e0b88391a51c37423bd7180db402f3dcd386c17ea2232583864ab2",
+      "patch": "mia107-cache-foundation.patch",
+      "sha256": "d347f545dcee87b6daa2dd8a5952d3abb4904cbf7925b56f169f2058c38bb94e"
+    },
+    {
+      "base_manifest_sha256": "63239e7857e0b88391a51c37423bd7180db402f3dcd386c17ea2232583864ab2",
+      "changed_files": [
+        "families/glm5_next/cuda/kept_reasoning.py",
+        "families/glm5_next/cuda/multi.py",
+        "server/metrics.py"
+      ],
+      "output_manifest_sha256": "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a",
+      "patch": "mia107-cache-backports.patch",
+      "sha256": "d53265d62dbdeb07ecac44da35461094c9e79441096f970bc5049d6786ee597a"
+    }
+  ],
+  "upstream_commit": "bf5f94523a8251029cedae86bf61f8ce37fac218",
+  "upstream_repository": "MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold"
+}

@@ -1,0 +1,45 @@
+{
+  "completedUtc": "2026-10-25T13:21:21.020230+00:00",
+  "engineManifestSha256": "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a",
+  "fixes": [
+    "No repeated NVMe restores while admission waits for room",
+    "Conversation identity retained across rewinds and recoverable continuations",
+    "Fork-point/shared-prefix retention",
+    "Linear-time reasoning restoration"
+  ],
+  "preserved": {
+    "KVRewritesForRecency": 0,
+    "NVMeGiBPerRank": 256,
+    "metadataAndStagingMiB": 512,
+    "modelImageProfileAndEngineFlagsUnchanged": true,
+    "recencyBatchSeconds": 7200,
+    "sharedTokenHistories": true
+  },
+  "publicationValidation": {
+    "packagingTestsPassed": 28,
+    "portableCacheRunner": "117 checks and 300 reasoning histories passed on the rebuilt source in the pinned CPU-only runtime",
+    "rebuiltManifestSha256": "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a",
+    "rebuiltSourceFiles": 446,
+    "recipeTestsPassed": 167,
+    "recipeTestsSkipped": 2
+  },
+  "schema": "glm-cache-backports-validation/v1",
+  "scope": "117 CPU regression checks plus 300 reasoning histories, transport checks and a 15936-token disk/RAM replay. No new full-capacity, power-loss, throughput or long-generation qualification.",
+  "validation": {
+    "cacheTests": 39,
+    "chatIdentityChecks": 19,
+    "cpuRegressionChecks": 117,
+    "existingCheckpointKeysUnchangedOnAllRanks": true,
+    "existingCheckpointsPerRank": 151,
+    "liveDiskRestoreCachedTokens": 15936,
+    "nativeTransports": [
+      "nccl",
+      "rocenante"
+    ],
+    "reasoningConversations": 300,
+    "reasoningStepsRestoredIdentically": 1643,
+    "schedulerAndCancellationChecks": 23,
+    "secondRequestDiskLoads": 0,
+    "sharedPrefixChecks": 36
+  }
+}

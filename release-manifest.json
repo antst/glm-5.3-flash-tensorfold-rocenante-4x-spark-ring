@@ -5,8 +5,8 @@
       "sha256": "5c02b5e8710fde2a7b0c650af3047c41321cfa26326e3cbd0d2d6f0bb7bcd4f0"
     },
     ".github/workflows/check.yml": {
-      "bytes": 429,
-      "sha256": "6343adaf0e6c101d6af25a95d67ce4727aa0e2af2a85be6f6f4e1b185e1fbda7"
+      "bytes": 587,
+      "sha256": "8295c1c8c2a3e5e3eb66f6995c02f5bddfe6e6b64e9cce0733f1f8c7cc16a363"
     },
     ".gitignore": {
       "bytes": 486,
@@ -21,8 +21,8 @@
       "sha256": "3b42432f52e018d9947f3c7276c3a5754279b8bb9a308b7dec064c2b808d44eb"
     },
     "README.md": {
-      "bytes": 15855,
-      "sha256": "57851540bf7c1aeaf9828e0117a9c074853af9abdea44dc9169b697ebdc09b39"
+      "bytes": 16401,
+      "sha256": "eac1a2e8b6e73b5aaf9a447db6b47d25ee4ef238b4a63bc407f73f2ae9aa735e"
     },
     "benchmarks/sparkdash-native/.gitignore": {
       "bytes": 59,
@@ -129,8 +129,8 @@
       "sha256": "2b1c076c92ff491892f414fa733eb9c180914bee75b9ce6df2203a698654207f"
     },
     "config.example.json": {
-      "bytes": 8127,
-      "sha256": "3fd08858cc203647a0f8d0150d72ea2da095e9e0bf9d1a802bb022734f1ea3a5"
+      "bytes": 8142,
+      "sha256": "b0ff0916c0084536a89ba12d5b13b188375927dcc8fd4d906e702cc7dd70c099"
     },
     "docs/benchmark-method.md": {
       "bytes": 13032,
@@ -161,8 +161,8 @@
       "sha256": "434c0f844195dfb48b8f0d3a8f1792cabc4de45e362c93e8d3817bd251cbded7"
     },
     "docs/nvme-tier.md": {
-      "bytes": 12345,
-      "sha256": "ca4a4f97b993267f14043f28d4b0512a82d1c5c994f5a7895cf2fa694ea7d6ce"
+      "bytes": 13214,
+      "sha256": "0dd42baa5f745a1282665aa9c10ef7abea7786c327880b95076c2b857ada9f8c"
     },
     "docs/performance.md": {
       "bytes": 17230,
@@ -189,16 +189,52 @@
       "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
     },
     "engine/NOTICE": {
-      "bytes": 2099,
-      "sha256": "8ef0e7b2be1e5abfdb6c621c3a19dada9cdaa574010c0f1edcf30f6a55b90358"
+      "bytes": 2807,
+      "sha256": "4d89c5895de1e8b19697db1fde4b13c6d246757d476d07659c68b2e9d5c8b419"
     },
     "engine/README.md": {
-      "bytes": 9274,
-      "sha256": "37e00739c734781ec17c8672418fd511e2f6304b73f4860ed09f7090f29d1c72"
+      "bytes": 11431,
+      "sha256": "5bfa0e146693f91eda93a89cffffc4a5d1d6d62e374990d4448a1d239bd67fb6"
     },
     "engine/build.py": {
-      "bytes": 13475,
-      "sha256": "45584a85253176b1c0862f0feb155f98c43094ba622cb4f29f8b710d3f1c8e29"
+      "bytes": 15979,
+      "sha256": "48ee48d121f755262bf8bc524c33310915211c2f04a19b1046c2ab7f2a1af73e"
+    },
+    "engine/cache-provenance.json": {
+      "bytes": 3110,
+      "sha256": "984edd455991bbc3171eaedaa2a5b0ee090d3d985ff62a98660f0d8099010cd9"
+    },
+    "engine/cache-tests/chat_continued_check.py": {
+      "bytes": 8904,
+      "sha256": "37b1271452626d3f0812f291b23243647af5f79bc9e2eb05c8c03f53ef56bec3"
+    },
+    "engine/cache-tests/fork_point_check.py": {
+      "bytes": 19561,
+      "sha256": "05eacd8dbec17870cd4ad6408e5909cfaac3e815d0249574b93596a50972b868"
+    },
+    "engine/cache-tests/kept_reasoning_check.py": {
+      "bytes": 9471,
+      "sha256": "bece4e148621bbb8bf1517b5b3acaea61442c0e501ef7665a90f571c0c1678fb"
+    },
+    "engine/cache-tests/test_block_store_cpu.py": {
+      "bytes": 13924,
+      "sha256": "c4030c7e85a5466a4fd3456547609d1e9e3f6f33f73100e8baf61a62b870342b"
+    },
+    "engine/cache-tests/test_queued_cancellation.py": {
+      "bytes": 21943,
+      "sha256": "23d6cf1b75ffa6ad3023a2d0d210bf99a7d038e3adbc3927c0a508d501a688ef"
+    },
+    "engine/cache-tests/test_recency.py": {
+      "bytes": 5227,
+      "sha256": "878770173ac9d2f751be994354e6f75cb70084bcc5058fca9d69dfed6b013e24"
+    },
+    "engine/cache-tests/test_token_history.py": {
+      "bytes": 7478,
+      "sha256": "568a1bff859baa3945a5fa8baf06423238a67e01cc74c84e7ede596ed73a7408"
+    },
+    "engine/check_cache.py": {
+      "bytes": 1851,
+      "sha256": "6e8118e5ee764d3ce5ff43f1b80f1e3991f9c6349dd9449c5c2efa27517335e6"
     },
     "engine/licenses/Mia-LICENSE": {
       "bytes": 11358,
@@ -228,9 +264,17 @@
       "bytes": 46257,
       "sha256": "3abe7f60184aaaaed1f97eca49ae4fdfe7ba08a0267a722b25d7e7470aadd958"
     },
+    "engine/manifests/source-4096-cache.json": {
+      "bytes": 47788,
+      "sha256": "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a"
+    },
     "engine/manifests/source-4096-nvme.json": {
       "bytes": 46457,
       "sha256": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b"
+    },
+    "engine/manifests/source-4096-recency.json": {
+      "bytes": 47238,
+      "sha256": "63239e7857e0b88391a51c37423bd7180db402f3dcd386c17ea2232583864ab2"
     },
     "engine/manifests/source-4096.json": {
       "bytes": 46257,
@@ -241,8 +285,16 @@
       "sha256": "f461cb43a1a8903851431ab4fe99d27a8f89bf0a3c35368fb83b61de9d2ad162"
     },
     "engine/package-manifest.json": {
-      "bytes": 2412,
-      "sha256": "741caf6ef7b40d85c3661da10eda11065fb050033eeaee7053cd50bf6c4b4302"
+      "bytes": 4112,
+      "sha256": "a45a4bed27f4cc944ca7a605191dc8c6c3d21a13b3ad4281d7f2d4599db3eaa6"
+    },
+    "engine/patches/mia107-cache-backports.patch": {
+      "bytes": 16024,
+      "sha256": "d53265d62dbdeb07ecac44da35461094c9e79441096f970bc5049d6786ee597a"
+    },
+    "engine/patches/mia107-cache-foundation.patch": {
+      "bytes": 76214,
+      "sha256": "d347f545dcee87b6daa2dd8a5952d3abb4904cbf7925b56f169f2058c38bb94e"
     },
     "engine/patches/mia107-nvme-v3.patch": {
       "bytes": 184523,
@@ -256,9 +308,17 @@
       "bytes": 8770,
       "sha256": "c61ecb05abd3079a35d6ba9c464c9cda9236372f4b7a72e4dae261e7c508a049"
     },
+    "engine/source-after-cache.json": {
+      "bytes": 46474,
+      "sha256": "38eeefde77d1fbb6eacffdf2e7a51ad7310a6cc190c30a4b8e7fd0c67afa7160"
+    },
     "engine/source-after-nvme.json": {
       "bytes": 46193,
       "sha256": "f31e0d200755083a42d6290323ee8682b37e24d9091ae4e4b9782c4701f11ee0"
+    },
+    "engine/source-after-recency.json": {
+      "bytes": 46474,
+      "sha256": "61a034d04f366527106ac7aa8100bfef2d2b6ed49e134400f36838d398425bc0"
     },
     "engine/source-after.json": {
       "bytes": 46128,
@@ -269,16 +329,20 @@
       "sha256": "b4731db28fb34089b6f7be1a1cb8cdf1433f2f2a93704bd9b1d0153e6e0c1c83"
     },
     "engine/source-manifest.json": {
-      "bytes": 46457,
-      "sha256": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b"
+      "bytes": 47788,
+      "sha256": "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a"
     },
     "engine/tests/test_builder.py": {
       "bytes": 7248,
       "sha256": "90ad9eee31016ef85e7193df024b78eb298c42aeb47b39eadf3782f3b6691190"
     },
+    "engine/tests/test_cache_builder.py": {
+      "bytes": 5217,
+      "sha256": "b7f76dcaeca35772f41ed85a21ffd8d6436c21e827a509bd59f413393e044f71"
+    },
     "engine/tests/test_nvme_builder.py": {
-      "bytes": 7651,
-      "sha256": "e7525eece170b8a4690ec50424946f074536b4458abec0fc6ccfba3ef6a13c4a"
+      "bytes": 7726,
+      "sha256": "8cc0c3207ed5a29c27ffa5ec460a21fff9100baf0805c07a1e4ccd0bea4d8b5e"
     },
     "engine/upstream-manifest.json": {
       "bytes": 4068,
@@ -299,6 +363,10 @@
     "results/baseline-reference.json": {
       "bytes": 712,
       "sha256": "2798fa7c77bc960f1bd8c61531243206feb02703936e5dd54ac5c55d22177759"
+    },
+    "results/cache-backports-20261025.json": {
+      "bytes": 1757,
+      "sha256": "6f1035d43a1180546d3bae8ee536869129eadf4f1056ebae9a7e80cedd1344e3"
     },
     "results/cache-budget-trim-20261014.json": {
       "bytes": 2785,
@@ -473,8 +541,8 @@
       "sha256": "3b695ef5c3c0ae750f7a5c8e8cdf66708a068cccf3054916c88c45b9229a7db7"
     },
     "tests/test_nvme_config.py": {
-      "bytes": 5503,
-      "sha256": "bbf871a22ec0fd3150d38f598ce66d334fcf4be7bd8f4c433524f6bfc3590329"
+      "bytes": 5548,
+      "sha256": "9e9dd4f0a0c6eda4448d5a7ffc5b27e9cfc653ef45d2d7769a1207ddba285f6e"
     },
     "tests/test_prefill_adapter.py": {
       "bytes": 16163,

@@ -1,5 +1,19 @@
 # Local NVMe cache tier on four Sparks
 
+The current default is the 2026-10-25 shared-history cache maintenance overlay,
+`4096-cache`, with manifest
+`7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a`.
+It retains the memory/disk limits below, stores shared token histories outside
+the RAM index, and batches changed recency timestamps every two hours plus a
+clean-shutdown flush. RAM hits refresh priority immediately without KV rewrites.
+The four Mia backports improve restore retries, continued-chat identity, shared
+fork-point retention and reasoning-history processing. See the
+[current builder and compatibility notes](../engine/README.md) and
+[maintenance validation](../results/cache-backports-20261025.json).
+
+The following full-capacity measurements belong to the older v0.1.5 source.
+They were not rerun for the maintenance overlay.
+
 The v0.1.5 update adds a persistent local cache tier to the Mia107
 TensorFold prefill overlay. **Full-profile private qualification: PASSED.**
 Eight near-1M retained histories, full-profile semantics and both transports
@@ -25,13 +39,13 @@ measure the combined serving profile.
 | Explicit RAM token-pool ceiling | 6,098,944 rows |
 | Retained RAM snapshots / tensor-state cap | 64 / 4 GiB per rank |
 | Reasoning retention | 8,192 tool-call replies / 128 Mi characters |
-| Host-local store root | /var/tmp/spark-ring-nvme-tier-v2 |
+| Host-local store root | /var/tmp/spark-ring-nvme-tier-shared-history-v3 |
 | Local store quota / free-space floor | 256 / 64 GiB per rank |
 | Minimum persisted prompt / retained turns | 8,192 tokens / 4 per conversation |
 | Write/index host budget / small-state read budget | 512 / 256 MiB per rank |
 | Write staging target / read blocks | 256 MiB / 16 per rank |
 | Restore deadline | 300 seconds |
-| Control protocol / snapshot format | 3 / tensorfold-cuda-spill-blocks-generation-2 |
+| Control protocol / snapshot format | 3 / tensorfold-cuda-spill-blocks-generation-3-shared-history |
 
 The quota is a ceiling, not preallocation or a guarantee of free capacity. The
 64 GiB floor must remain available on each local filesystem; insufficient space
@@ -49,8 +63,8 @@ RAM admission and disk retention are different capacities.
 
 ## Source and TP4 coordination
 
-Build the `4096-nvme` overlay with the [portable engine builder](../engine/README.md).
-Its complete 443-file manifest is
+The historical `4096-nvme` layer remains available in the
+[portable engine builder](../engine/README.md). Its complete 443-file manifest is
 `9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b`.
 The source includes the original 4096-row prefill port plus a corrected derivative
 of [Mia PR124](https://github.com/MiaAI-Lab/GLM-5.3-Flash-EXL3-2x-DGX-Sparks-TensorFold/pull/124)
@@ -185,7 +199,7 @@ timeout guarantee remain outside these tests.
 
 Copy the full portable example into ignored local configuration; preserve your
 own inventory, trust store, paths, owner and model/native-library pins. Build a
-new source output, using `4096-nvme`, and bind its exact manifest and flags.
+new source output, using `4096-cache`, and bind its exact manifest and flags.
 The `tier.root` path is host-local and must never be the shared checkout.
 Give it sufficient local disk headroom; no model download or package upgrade
 is required when the existing pins are already present.
@@ -193,7 +207,7 @@ is required when the existing pins are already present.
 Review the offline plan before host operations:
 
 ```sh
-python3 -B engine/build.py --output local/engine-nvme --manifest 4096-nvme --plan
+python3 -B engine/build.py --output local/engine-nvme --manifest 4096-cache --plan
 python3 -B scripts/experiment.py plan --config local/config.json
 ```
 

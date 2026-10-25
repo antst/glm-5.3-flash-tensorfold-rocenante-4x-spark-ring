@@ -1,0 +1,303 @@
+--- a/tensorfold/families/glm5_next/cuda/kept_reasoning.py
++++ b/tensorfold/families/glm5_next/cuda/kept_reasoning.py
+@@ -14,6 +14,11 @@
+ 
+ ``TF_GLM_KEEP_REASONING``: replies kept (default 1024; 0 turns this off); ``TF_GLM_KEEP_REASONING_MB``: their text
+ at most (default 32 MiB); the oldest go first.
++
++Keys are one running SHA-256 over the conversation's message shapes (``_History``): ``restore`` copies it at each
++step, so a request costs one pass over its messages. Before, each step re-encoded every message before it, so a
++request cost the square of its length, with the GIL held: ~5 s at 404k tokens / 2,020 messages, the engine loop and
++every other stream stopped meanwhile.
+ """
+ 
+ from __future__ import annotations
+@@ -69,25 +74,54 @@
+     return out
+ 
+ 
++def _encode(value: Any) -> bytes:
++    text = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
++    return text.encode("utf-8", "surrogatepass")
++
++
++class _History:
++    """A running hash of a conversation's message shapes (role, text stripped as the template renders it, calls;
++    no ids or reasoning), each length-prefixed: the key of calls after any prefix costs one copy of the hash."""
++
++    def __init__(self) -> None:
++        self.hash = hashlib.sha256(b"tf-kept-reasoning-v2\0")
++
++    def add(self, m: Any) -> None:
++        if not isinstance(m, dict):
++            return
++        entry = [str(m.get("role") or ""), _text(m.get("content")).strip()]
++        if m.get("role") == "assistant" and m.get("tool_calls"):
++            entry.append(_calls(m.get("tool_calls")))
++        data = _encode(entry)
++        self.hash.update(len(data).to_bytes(8, "little"))
++        self.hash.update(data)
++
++    def key(self, calls: Any) -> str:
++        h = self.hash.copy()
++        data = _encode(_calls(calls))
++        h.update(b"\xffcalls")
++        h.update(len(data).to_bytes(8, "little"))
++        h.update(data)
++        return "sig:" + h.hexdigest()
++
++
+ def signature(history: list[Any], calls: Any) -> str:
+     """The key of ``calls`` written after ``history``: each message's role, text (stripped, as the template renders
+     it) and calls, without ids or reasoning, then the calls."""
+ 
+-    shape = []
++    run = _History()
+     for m in history:
+-        if not isinstance(m, dict):
+-            continue
+-        entry = [str(m.get("role") or ""), _text(m.get("content")).strip()]
+-        if m.get("role") == "assistant" and m.get("tool_calls"):
+-            entry.append(_calls(m.get("tool_calls")))
+-        shape.append(entry)
+-    text = json.dumps([shape, _calls(calls)], ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
+-    return "sig:" + hashlib.sha256(text.encode("utf-8", "surrogatepass")).hexdigest()
++        run.add(m)
++    return run.key(calls)
++
++
++def _ids(calls: Any) -> list[str]:
++    ids = [c.get("id") for c in calls if isinstance(c, dict)] if isinstance(calls, list) else []
++    return [i for i in ids if isinstance(i, str) and _OUR_ID.match(i)]
+ 
+ 
+ def _keys(history: list[Any], calls: Any) -> list[str]:
+-    ids = [c.get("id") for c in calls if isinstance(c, dict)] if isinstance(calls, list) else []
+-    return [i for i in ids if isinstance(i, str) and _OUR_ID.match(i)] + [signature(history, calls)]
++    return _ids(calls) + [signature(history, calls)]
+ 
+ 
+ class KeptReasoning:
+@@ -143,13 +177,15 @@
+         if not isinstance(messages, list) or not self.items:
+             return messages
+         out = None
++        run = _History()
+         for i, m in enumerate(messages):
+-            if not (isinstance(m, dict) and m.get("role") == "assistant" and m.get("tool_calls")
++            if (isinstance(m, dict) and m.get("role") == "assistant" and m.get("tool_calls")
+                     and not _text(m.get("reasoning_content")).strip() and not _text(m.get("reasoning")).strip()
+                     and "</think>" not in _text(m.get("content"))):
+-                continue
+-            kept = self._find(_keys(messages[:i], m["tool_calls"]))
+-            if kept is not None:
+-                out = out if out is not None else list(messages)
+-                out[i] = {**m, "reasoning_content": kept}
++                # the ids first (cheap), then the conversation's key: the order ``_keys`` gives them
++                kept = self._find(_ids(m["tool_calls"])) or self._find([run.key(m["tool_calls"])])
++                if kept is not None:
++                    out = out if out is not None else list(messages)
++                    out[i] = {**m, "reasoning_content": kept}
++            run.add(m)                       # the shape has no reasoning: the same before or after a restore
+         return messages if out is None else out
+--- a/tensorfold/families/glm5_next/cuda/multi.py
++++ b/tensorfold/families/glm5_next/cuda/multi.py
+@@ -242,9 +242,10 @@
+     prompts are prefixes of its rows, so one shorter than another in its extent is an earlier point of that
+     conversation, superseded by the longer one: the oldest of those goes first, then the least recently used of any.
+     A conversation taking many turns thus drops its own earlier turns instead of the only state of a conversation
+-    that is waiting on a long reply. A shared-prefix state (a system block, where prompts stop sharing) is never
+-    dropped as superseded: it is what the next conversation or run with that prefix resumes from, and its writer's
+-    longer state cannot serve them, so it goes by recency only, with the other conversations' latest states.
++    that is waiting on a long reply. A shared-prefix state (a system block: where prompts stop sharing, or where a
++    second conversation went on from a kept state, ``forks``) is never dropped as superseded: it is what the next
++    conversation or run with that prefix resumes from, and its writer's longer state cannot serve them, so it goes by
++    recency only, with the other conversations' latest states.
+     Deterministic in ``kept``'s order and extents, so both ranks drop the same one."""
+ 
+     longest: dict[int, int] = {}
+@@ -254,6 +255,56 @@
+         if len(c.ids) < longest[id(c.extent)] and not getattr(c, "shared", False):
+             return c
+     return kept[0]
++
++
++# a conversation's first reply: the tokens of it a later prompt must repeat to continue that conversation
++CHAT_MATCH = 32
++# a continued conversation's prefill from this many tokens on is logged (rank 0)
++CHAT_LOG_TOKENS = 4096
++
++
++def continued_chat(kept: list, prompt: list[int], roots: dict[int, int]):
++    """The kept state of the conversation a prompt continues when it did not resume from one of that conversation's own
++    turn states (it fell back to a shared prefix, to a state read back from disk or a paused prefill, or to nothing):
++    the most recently used own state whose ids repeat the prompt past its conversation's first prompt (``roots``: its
++    length) and the first ``CHAT_MATCH`` tokens of the reply to it. Only that conversation wrote those, so a second
++    conversation behind the same system prompt and opening message does not join it, and an edit of the first message
++    starts a new one. None when there is none. Deterministic in ``kept``'s order, so both ranks agree."""
++
++    for c in reversed(kept):
++        chat = getattr(c, "chat", 0)
++        if not getattr(c, "own", False) or chat not in roots or getattr(c, "images", False):
++            continue
++        n = roots[chat] + CHAT_MATCH
++        if len(c.ids) >= n and len(prompt) >= n and c.ids[n - 1] == prompt[n - 1] and c.ids[:n] == prompt[:n]:
++            return c
++    return None
++
++
++def common_prefix(a: list[int], b: list[int]) -> int:
++    """The tokens two id lists share from the start."""
++
++    n = min(len(a), len(b))
++    lo, hi = 0, n                       # a[:lo] == b[:lo]; the first difference is before hi
++    while lo < hi:
++        mid = (lo + hi + 1) // 2
++        if a[lo:mid] == b[lo:mid]:
++            lo = mid
++        else:
++            hi = mid - 1
++    return lo
++
++
++FORK_SPAN = 64                         # the ids past a kept state that tell one line from another there (``forks``)
++
++
++def forks(after, ids) -> bool:
++    """Two lines past a kept state part: ``after`` (the ids that followed it on the first prompt that wrote or resumed
++    it, up to FORK_SPAN) and ``ids`` (another prompt's) differ where both have ids. Nothing on either side: unknown,
++    False. A conversation's next turn goes on as its last prompt did; another conversation forked there."""
++
++    m = min(len(after), len(ids))
++    return m > 0 and tuple(after[:m]) != tuple(ids[:m])
+ 
+ 
+ def multi_code(code: list[int], dflash: bool, dflash_policy: list[int]) -> list[int]:
+@@ -607,6 +658,8 @@
+         self.disk = self._spill_store()                  # --spill-gib: the disk tier for kept prompts (cuda/spill.py)
+         self.next_sid = self.next_kid = self.next_order = 0
+         self.next_chat = 0
++        self.chat_roots: dict[int, int] = {}             # each conversation's first prompt length (continued_chat)
++        self.chats_continued = self.chats_continued_prefill = 0
+         self.outbox: list[int] = []
+         self.idle = True
+         self.broken: Exception | None = None
+@@ -636,6 +689,8 @@
+                             "paused": sum(l.decoding and l.paused for l in lanes)},
+                 "pool_tokens": self.pool.rows, "pool_free_tokens": self.pool.free_rows(),
+                 "kept_prompts": len(self.kept),
++                "chats_continued": self.chats_continued,
++                "chats_continued_prefill_tokens": self.chats_continued_prefill,
+                 "kept_bytes": self._held_bytes(), "kept_bytes_cap": self.kept_bytes_cap,
+                 "allocator": self._allocator_health(),
+                 # what the slots are holding. own = a conversation's turn-boundary state (capped by
+@@ -1038,13 +1093,29 @@
+         code = a["code"]
+         dflash = code[0] >= 10 and self.drafts is not None
+         policy = decode_policy(code, g.costs) if code[0] else None
+-        # the conversation this stream belongs to: the chain it resumed from when that state is a turn's own, else a
+-        # new one (a shared-prefix state belongs to everyone, so resuming from it starts no chain)
++        # Preserve a fork point as a shared prefix before choosing the conversation.
++        if hit is not None:
++            line = tuple((a["keyed"] if a.get("keyed") is not None else prompt)[cut:cut + FORK_SPAN])
++            after = getattr(hit, "after", None) or ()
++            if not after:
++                hit.after = line
++            elif forks(after, line):
++                hit.shared, hit.own = True, False
++        # Rewinds and disk restores can continue a chat without hitting its own kept turn.
+         if hit is not None and getattr(hit, "own", False) and getattr(hit, "chat", 0):
+             chat = hit.chat
+         else:
+-            self.next_chat += 1
+-            chat = self.next_chat
++            prior = None if a["images"] or not a["draft"] else continued_chat(self.kept, prompt, self.chat_roots)
++            if prior is not None:
++                chat = prior.chat
++                self._continued(chat, prior, hit, cut, prompt)
++            else:
++                self.next_chat += 1
++                chat = self.next_chat
++                self.chat_roots[chat] = len(prompt)
++                if len(self.chat_roots) > 4 * max(16, self.g.cache_entries):
++                    live = {getattr(c, "chat", 0) for c in self.kept} | {chat}
++                    self.chat_roots = {k: v for k, v in self.chat_roots.items() if k in live}
+         lane = Lane(s, a["sid"], a["slot"], x, st, self.next_order, code, spec, policy, dflash, feed=feed,
+                     constraint=constraint, images=a["images"], chat=chat)
+         # the computation its rows belong to: its kept state's up to the resume point (rows copied or taken over are
+@@ -1089,6 +1160,25 @@
+         lane.t0 = s.started
+         self.lanes[lane.sid] = lane
+ 
++    def _continued(self, chat: int, prior, hit, cut: int, prompt: list[int]) -> None:
++        """Both ranks: a stream continues conversation ``chat`` without resuming from its own turn state (``prior``:
++        that conversation's state it repeats; ``hit``: what it resumed from, None for nothing). Counted; rank 0 logs a
++        large prefill with where the prompt left the kept state and what it resumed from."""
++
++        self.chats_continued += 1
++        self.chats_continued_prefill += len(prompt) - cut
++        if self.rank or len(prompt) - cut < CHAT_LOG_TOKENS:
++            return
++        source = ("nothing" if hit is None else "a shared prefix" if getattr(hit, "shared", False)
++                  else "a state that is not a turn's own (read back from disk, or a paused prefill)")
++        at = common_prefix(prior.ids, prompt)
++        why = (f"it went back to token {at}, before that conversation's newest kept state ({len(prior.ids)} tokens)"
++               if at < len(prior.ids) else
++               f"its kept state of {len(prior.ids)} tokens could not serve it (no DFlash2 window, off the grid, or "
++               "draft:false)")
++        print(f"[tensorfold] conversation {chat}: resumed at {cut} of {len(prompt)} tokens from {source}, "
++              f"prefilling {len(prompt) - cut}; {why}", flush=True)
++
+     def _ctx(self, lane: Lane):
+         """The lane's slot's DFlash2 context."""
+         return self.drafts.contexts[lane.slot]
+@@ -1148,8 +1238,11 @@
+         snap.extent = lane.extent
+         snap.shared = n in lane.shared
+         snap.own, snap.chat = bool(own), int(lane.chat)
++        snap.after = tuple((lane.key if lane.images and lane.key is not None else lane.s.prompt)[n:n + FORK_SPAN])
+         # the same ids: the same prompt, unless pictures are in it (rank 1 has no keys; rank 0 resumes by key)
+         for c in [c for c in self.kept if c.ids == snap.ids and not (c.images or snap.images)]:
++            if getattr(c, "shared", False) or forks(getattr(c, "after", None) or (), snap.after):
++                snap.shared, snap.own = True, False
+             self._drop(c, spill=False)
+         snap.lineage = getattr(lane, "lineage", "")
+         lane.extent.kept.append(snap)
+@@ -2971,7 +3064,7 @@
+                 if read is not None:
+                     self.loading.append((read, item))
+                     continue
+-            self.staged.discard(id(stream))
++                self.staged.discard(id(stream))  # No read fit yet: allow another lookup if admission waits.
+             waiter = getattr(self.decoder, "prefix_wait", None)
+             if waiter is not None and not getattr(stream, "prefix_waited", False):
+                 w = waiter(stream)
+@@ -2982,11 +3075,13 @@
+             self.boxes[id(stream)] = box
+             try:
+                 self.decoder.admit(stream)
++                self.staged.discard(id(stream))
+             except NoRoom:
+                 self.boxes.pop(id(stream))
+                 self.held = item
+                 break
+             except Exception as exc:                 # noqa: BLE001  (this request fails, the others go on)
++                self.staged.discard(id(stream))
+                 self.boxes.pop(id(stream)).put(("error", exc))
+                 continue
+             if stream.done:
+--- a/tensorfold/server/metrics.py
++++ b/tensorfold/server/metrics.py
+@@ -200,6 +200,12 @@
+     ("pool_tokens", "Token rows in the concurrent engine's shared cache pool."),
+     ("pool_free_tokens", "Pool rows no stream or kept prompt holds."),
+     ("kept_prompts", "Prompt states kept in the pool for reuse."),
++)
++# the GLM engine's conversation counters: streams that continued a conversation without its own kept turn state
++_HEALTH_TOTALS += (
++    ("chats_continued", "counter",
++     "Streams that continued a conversation without resuming from its own turn state (a rewind, or it was dropped)."),
++    ("chats_continued_prefill_tokens", "counter", "Prompt tokens those streams prefilled."),
+ )
+ 
+ 

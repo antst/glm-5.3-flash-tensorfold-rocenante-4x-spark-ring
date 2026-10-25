@@ -254,7 +254,7 @@
   },
   "engine_overlay_root": "/shared/spark-ring-tensorfold-rocenante/local/engine-nvme",
   "engine_manifest": "/shared/spark-ring-tensorfold-rocenante/local/engine-nvme/source-manifest.json",
-  "engine_manifest_sha256": "9c83663da0f875931e5e721ca42e4177a3a83e2d3f0a72abe935a1a5364f1f7b",
+  "engine_manifest_sha256": "7cfaeb1b24790d31e9bc1508c0b4eef2528fdf0c1157c0530f1e2d820117c31a",
   "engine_flags": {
     "TF_GLM_HC_EXCHANGE": "p2p",
     "TF_GLM_PROMPT_OWN_FRONT": "1",
@@ -268,7 +268,7 @@
     "TF_GLM_POOL_TOKENS": "6098944"
   },
   "tier": {
-    "root": "/var/tmp/spark-ring-nvme-tier-v2",
+    "root": "/var/tmp/spark-ring-nvme-tier-shared-history-v3",
     "gib": 256,
     "min_free_gib": 64,
     "min_tokens": 8192,
